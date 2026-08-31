@@ -1,0 +1,10 @@
+{
+  "description": "This premium multi-page website showcases Dr. Deep Chakraborty's orthopedic expertise, offering patients easy access to treatments, resources, and appointment booking.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
