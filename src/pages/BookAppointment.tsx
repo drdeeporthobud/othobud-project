@@ -255,26 +255,28 @@ export default function BookAppointment() {
           </div>
 
           {/* Action Row 1: Calendar Downloads */}
-          <div className="grid grid-cols-2 gap-3 mt-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-5">
             <button
               type="button"
               onClick={() => downloadICSFile(calendarEventData)}
-              className="py-2.5 px-3 rounded-xl border-2 border-border/60 hover:border-teal text-navy hover:text-teal font-display font-600 text-xs flex items-center justify-center gap-2 transition-all"
+              className="h-12 px-4 rounded-xl border border-border/80 bg-white hover:bg-soft-gray text-navy hover:text-teal font-display font-600 text-xs sm:text-sm flex items-center justify-center gap-2.5 transition-all shadow-xs"
             >
-              <span>📥</span> Download iCal (.ics)
+              <img src="/icons/svg/calendar-plus.svg" alt="Add to Calendar" className="w-4 h-4 text-navy shrink-0" />
+              <span>Download iCal (.ics)</span>
             </button>
             <a
               href={getGoogleCalendarUrl(calendarEventData)}
               target="_blank"
               rel="noopener noreferrer"
-              className="py-2.5 px-3 rounded-xl border-2 border-border/60 hover:border-teal text-navy hover:text-teal font-display font-600 text-xs flex items-center justify-center gap-2 transition-all"
+              className="h-12 px-4 rounded-xl border border-border/80 bg-white hover:bg-soft-gray text-navy hover:text-teal font-display font-600 text-xs sm:text-sm flex items-center justify-center gap-2.5 transition-all shadow-xs"
             >
-              <span>📅</span> Add to Google Calendar
+              <img src="/icons/svg/google-calender-icon.svg" alt="Google Calendar" className="w-4 h-4 shrink-0" />
+              <span>Add to Google Calendar</span>
             </a>
           </div>
 
           {/* Action Row 2: WhatsApp & Google Maps */}
-          <div className="grid grid-cols-2 gap-3 mt-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
             <a
               href={getWhatsAppConfirmationUrl({
                 patientName: form.name,
@@ -287,7 +289,7 @@ export default function BookAppointment() {
               })}
               target="_blank"
               rel="noopener noreferrer"
-              className="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-display font-600 text-xs flex items-center justify-center gap-2 shadow-sm transition-all"
+              className="h-12 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-display font-600 text-xs sm:text-sm flex items-center justify-center gap-2.5 shadow-sm transition-all"
             >
               <span>💬</span> Send to WhatsApp
             </a>
@@ -295,7 +297,7 @@ export default function BookAppointment() {
               href={selectedClinic.googleMapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="py-2.5 px-3 rounded-xl border-2 border-border/60 hover:border-teal text-navy hover:text-teal font-display font-600 text-xs flex items-center justify-center gap-2 transition-all"
+              className="h-12 px-4 rounded-xl border border-border/80 bg-white hover:bg-soft-gray text-navy hover:text-teal font-display font-600 text-xs sm:text-sm flex items-center justify-center gap-2.5 transition-all shadow-xs"
             >
               <span>📍</span> Google Maps Pin
             </a>

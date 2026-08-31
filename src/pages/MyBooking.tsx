@@ -203,7 +203,7 @@ export default function MyBooking() {
             {/* Action Buttons */}
             {appointment.status !== 'cancelled' && (
               <div className="pt-2 border-t border-border/60 space-y-3">
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <button
                     type="button"
                     onClick={() =>
@@ -215,9 +215,10 @@ export default function MyBooking() {
                         timeSlot: appointment.timeSlot,
                       })
                     }
-                    className="py-2.5 px-3 rounded-xl border border-border text-navy hover:text-teal font-display font-600 text-xs flex items-center justify-center gap-1.5 transition-all"
+                    className="h-12 px-4 rounded-xl border border-border/80 bg-white hover:bg-soft-gray text-navy hover:text-teal font-display font-600 text-xs sm:text-sm flex items-center justify-center gap-2.5 transition-all shadow-xs"
                   >
-                    <span>📥</span> Add to Calendar (.ics)
+                    <img src="/icons/svg/calendar-plus.svg" alt="Add to Calendar" className="w-4 h-4 text-navy shrink-0" />
+                    <span>Add to Calendar (.ics)</span>
                   </button>
                   <a
                     href={getGoogleCalendarUrl({
@@ -229,28 +230,28 @@ export default function MyBooking() {
                     })}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="py-2.5 px-3 rounded-xl border border-border text-navy hover:text-teal font-display font-600 text-xs flex items-center justify-center gap-1.5 transition-all"
+                    className="h-12 px-4 rounded-xl border border-border/80 bg-white hover:bg-soft-gray text-navy hover:text-teal font-display font-600 text-xs sm:text-sm flex items-center justify-center gap-2.5 transition-all shadow-xs"
                   >
-                    <span>📅</span> Google Calendar
+                    <img src="/icons/svg/google-calender-icon.svg" alt="Google Calendar" className="w-4 h-4 shrink-0" />
+                    <span>Google Calendar</span>
                   </a>
                 </div>
 
-                <div className="flex gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <Link
                     to={`/book-appointment?clinic=${appointment.clinicId}&condition=${encodeURIComponent(
                       appointment.condition
                     )}`}
-                    className="flex-1 btn-outline justify-center text-xs py-2.5"
-                    style={{ color: '#0F172A', borderColor: '#CBD5E1' }}
+                    className="h-12 px-4 rounded-xl border border-border/80 bg-white hover:bg-soft-gray text-navy hover:text-teal font-display font-600 text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-xs"
                   >
-                    Reschedule (Book New Slot)
+                    <span>Reschedule (Book New Slot)</span>
                   </Link>
                   <button
                     type="button"
                     onClick={() => setCancelModal(true)}
-                    className="flex-1 py-2.5 rounded-xl border border-red-200 text-red-600 hover:bg-red-50 text-xs font-display font-600 transition-colors"
+                    className="h-12 px-4 rounded-xl border border-red-200/80 bg-red-50/50 hover:bg-red-100/60 text-red-600 font-display font-600 text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-xs"
                   >
-                    Cancel Appointment
+                    <span>Cancel Appointment</span>
                   </button>
                 </div>
               </div>
