@@ -738,20 +738,6 @@ export default function BookAppointment() {
               </form>
             )}
           </div>
-
-          {/* Reassurance Badges */}
-          <div className="mt-6 grid grid-cols-3 gap-4 text-center">
-            {[
-              { icon: '🔒', text: 'Zero Double-Booking' },
-              { icon: '🏥', text: '3 Kolkata Branches' },
-              { icon: '⚡', text: 'Instant Reference ID' },
-            ].map((item) => (
-              <div key={item.text} className="bg-white rounded-xl p-3 border border-border/50">
-                <div className="text-xl mb-1">{item.icon}</div>
-                <div className="text-xs text-navy-700 font-medium">{item.text}</div>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
     </div>

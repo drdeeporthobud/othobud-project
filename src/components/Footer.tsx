@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 const quickLinks = [
   { label: 'About Dr. Deep', href: '/about' },
@@ -20,20 +20,30 @@ const treatments = [
 ]
 
 export default function Footer() {
+  const location = useLocation()
+  const hideCta = location.pathname === '/book-appointment' || location.pathname === '/admin'
+
   return (
     <footer className="bg-navy text-white">
-      {/* Top CTA strip */}
-      <div className="bg-teal">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div>
-            <h3 className="font-display font-700 text-xl text-white">Ready to start your recovery journey?</h3>
-            <p className="text-white/80 mt-1 text-sm">Book a consultation with Dr. Deep Chakraborty across Salt Lake, Alipore, or Newtown.</p>
+      {/* Top CTA strip - Hidden on Booking & Admin pages */}
+      {!hideCta && (
+        <div className="bg-teal">
+          <div className="max-w-7xl mx-auto px-6 lg:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+              <h3 className="font-display font-700 text-xl text-white">Ready to start your recovery journey?</h3>
+              <p className="text-white/80 mt-1 text-sm">
+                Book a consultation with Dr. Deep Chakraborty across Salt Lake, Alipore, or Newtown.
+              </p>
+            </div>
+            <Link
+              to="/book-appointment"
+              className="bg-white text-teal font-display font-700 px-7 py-3 rounded-xl hover:bg-soft-gray transition-colors text-sm whitespace-nowrap"
+            >
+              Book Appointment →
+            </Link>
           </div>
-          <Link to="/book-appointment" className="bg-white text-teal font-display font-700 px-7 py-3 rounded-xl hover:bg-soft-gray transition-colors text-sm whitespace-nowrap">
-            Book Appointment →
-          </Link>
         </div>
-      </div>
+      )}
 
       {/* Main footer */}
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
