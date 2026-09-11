@@ -1,15 +1,49 @@
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useReveal } from '../hooks/useReveal'
+import drDeepImg from '../imports/Dr_Deep.png'
 
 const timeline = [
-  { year: '2003', event: 'MBBS from Medical College, Kolkata' },
-  { year: '2007', event: 'MS (Orthopedics) from IPGMER & SSKM Hospital, Kolkata' },
-  { year: '2009', event: 'DNB Orthopedics — National Board of Examinations' },
-  { year: '2010', event: 'Fellowship in Joint Arthroplasty — Endo-Klinik, Hamburg, Germany' },
-  { year: '2011', event: 'Commenced independent practice in Kolkata' },
-  { year: '2015', event: 'Introduced Robotic-Assisted Joint Replacement in Eastern India' },
-  { year: '2018', event: 'Best Orthopedic Surgeon Award — Calcutta Medical Association' },
-  { year: '2023', event: 'Completed 5,000th successful joint replacement surgery' },
+  {
+    year: '2003',
+    event: 'MBBS from Medical College, Kolkata',
+    desc: 'Graduated with academic honours from one of India’s most historic and premier medical institutions.',
+  },
+  {
+    year: '2007',
+    event: 'MS (Orthopedics) from IPGMER & SSKM Hospital, Kolkata',
+    desc: 'Specialized in complex trauma, reconstructive orthopedics, and joint preservation surgery.',
+  },
+  {
+    year: '2009',
+    event: 'DNB Orthopedics — National Board of Examinations',
+    desc: 'Awarded national board diplomate certification for the highest standard of orthopedic surgical competence.',
+  },
+  {
+    year: '2010',
+    event: 'Fellowship in Joint Arthroplasty — Endo-Klinik, Hamburg, Germany',
+    desc: 'Advanced fellowship training in high-volume primary and complex revision joint replacements.',
+  },
+  {
+    year: '2011',
+    event: 'Commenced independent practice in Kolkata',
+    desc: 'Established dedicated consultation clinics and surgical services prioritizing personalized patient care.',
+  },
+  {
+    year: '2015',
+    event: 'Introduced Robotic-Assisted Joint Replacement in Eastern India',
+    desc: 'Pioneered sub-millimeter precision robotic surgery in the region, dramatically reducing recovery times.',
+  },
+  {
+    year: '2018',
+    event: 'Best Orthopedic Surgeon Award — Calcutta Medical Association',
+    desc: 'Recognized for distinguished clinical excellence, outstanding patient outcomes, and surgical innovation.',
+  },
+  {
+    year: '2023',
+    event: 'Completed 5,000th successful joint replacement surgery',
+    desc: 'Crossed a landmark milestone in restorative joint procedures with over 98% patient satisfaction.',
+  },
 ]
 
 const awards = [
@@ -42,6 +76,45 @@ export default function About() {
   const awardsRef = useReveal()
   const hospitalsRef = useReveal()
   const mediaRef = useReveal()
+
+  // Timeline scroll animation state
+  const timelineContainerRef = useRef<HTMLDivElement>(null)
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([])
+  const [fillHeight, setFillHeight] = useState(0)
+  const [activeStep, setActiveStep] = useState(0)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const container = timelineContainerRef.current
+      if (!container) return
+
+      const rect = container.getBoundingClientRect()
+      // Trigger line at 55% of the viewport height
+      const triggerY = window.innerHeight * 0.55
+      const relativeY = triggerY - rect.top
+      const progress = Math.max(0, Math.min(relativeY, rect.height))
+      setFillHeight(progress)
+
+      let current = 0
+      itemRefs.current.forEach((el, idx) => {
+        if (!el) return
+        const itemRect = el.getBoundingClientRect()
+        if (itemRect.top + itemRect.height * 0.25 <= triggerY) {
+          current = idx
+        }
+      })
+      setActiveStep(current)
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('resize', handleScroll, { passive: true })
+    handleScroll()
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('resize', handleScroll)
+    }
+  }, [])
 
   return (
     <div className="min-h-screen pt-20">
@@ -84,7 +157,7 @@ export default function About() {
             <div className="relative reveal">
               <div className="aspect-[3/4] max-w-sm mx-auto rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-navy-800">
                 <img
-                  src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&h=800&fit=crop&auto=format"
+                  src={drDeepImg}
                   alt="Dr. Deep Chakraborty"
                   className="w-full h-full object-cover object-top"
                 />
@@ -131,80 +204,198 @@ export default function About() {
       <section className="py-20 bg-soft-gray" ref={timelineRef}>
         <div className="max-w-4xl mx-auto px-6 lg:px-8">
           <div className="section-label reveal mb-2">Career Timeline</div>
-          <h2 className="font-display font-800 text-4xl text-navy mb-12 reveal reveal-delay-1">
+          <h2 className="font-display font-800 text-4xl text-navy mb-4 reveal reveal-delay-1">
             Education & Milestones
           </h2>
+          <p className="text-navy-700/80 text-sm sm:text-base max-w-xl mb-12 reveal reveal-delay-2">
+            A continuous journey of specialized surgical training, academic honours, and pioneering advancements in orthopedic surgery.
+          </p>
 
-          <div className="relative">
-            <div className="absolute left-6 top-0 bottom-0 w-px bg-gradient-to-b from-teal via-border to-transparent" />
-            <div className="space-y-8 pl-16">
-              {timeline.map((item, i) => (
-                <div key={item.year} className={`reveal reveal-delay-${(i % 6) + 1} relative`}>
-                  <div className="absolute -left-10 top-1 w-8 h-8 rounded-full bg-white border-2 border-teal flex items-center justify-center">
-                    <div className="w-3 h-3 rounded-full bg-teal" />
+          <div className="relative" ref={timelineContainerRef}>
+            {/* Base Background Track Line (precisely centered on left-6 sm:left-8) */}
+            <div className="absolute left-6 sm:left-8 top-8 bottom-8 w-[3px] -translate-x-1/2 bg-slate-200 rounded-full" />
+
+            {/* Dynamic Animated Line connecting point-to-point */}
+            <div
+              className="absolute left-6 sm:left-8 top-8 w-[3px] -translate-x-1/2 bg-gradient-to-b from-teal via-teal-light to-teal rounded-full transition-[height] duration-150 ease-out"
+              style={{ height: `${fillHeight}px`, maxHeight: 'calc(100% - 64px)' }}
+            >
+              {/* Glowing leading indicator head dot */}
+              <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-teal-light shadow-[0_0_12px_#0ea5e9] animate-pulse" />
+            </div>
+
+            {/* Timeline Items */}
+            <div className="space-y-8">
+              {timeline.map((item, i) => {
+                const isPassed = i <= activeStep
+                const isCurrent = i === activeStep
+
+                return (
+                  <div
+                    key={item.year}
+                    ref={(el) => { itemRefs.current[i] = el }}
+                    className="relative pl-14 sm:pl-20"
+                  >
+                    {/* Node / Point (ALWAYS locked onto the line axis at left-6 sm:left-8, unaffected by card scaling) */}
+                    <div
+                      className={`absolute left-6 sm:left-8 top-8 -translate-x-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center origin-center transition-all duration-300 ease-out pointer-events-none ${
+                        isCurrent
+                          ? 'bg-white border-2 border-teal shadow-lg shadow-teal/30 scale-120 z-20'
+                          : isPassed
+                          ? 'bg-white border-2 border-teal shadow-sm scale-105 z-10'
+                          : 'bg-white border-2 border-slate-300 scale-90 z-0'
+                      }`}
+                    >
+                      {isCurrent && (
+                        <span className="absolute inset-0 rounded-full bg-teal/30 animate-ping opacity-75" />
+                      )}
+                      <div
+                        className={`rounded-full transition-all duration-300 origin-center ${
+                          isCurrent
+                            ? 'w-3.5 h-3.5 sm:w-4 sm:h-4 bg-teal shadow-xs'
+                            : isPassed
+                            ? 'w-3 h-3 sm:w-3.5 sm:h-3.5 bg-teal'
+                            : 'w-2.5 h-2.5 bg-slate-300'
+                        }`}
+                      />
+                    </div>
+
+                    {/* Milestone Card with Scaling & Elevation (Transform applied exclusively to the card) */}
+                    <div
+                      className={`transition-all duration-500 ease-out transform origin-left ${
+                        isCurrent
+                          ? 'scale-[1.02] sm:scale-[1.03] translate-x-1 sm:translate-x-2'
+                          : isPassed
+                          ? 'scale-100 translate-x-0 opacity-100'
+                          : 'scale-[0.98] opacity-60'
+                      }`}
+                    >
+                      <div
+                        className={`p-5 sm:p-6 rounded-2xl border transition-all duration-300 ${
+                          isCurrent
+                            ? 'bg-white border-teal/70 shadow-xl shadow-teal/10 ring-2 ring-teal/20'
+                            : isPassed
+                            ? 'bg-white border-border/70 shadow-sm hover:border-teal/40 hover:shadow-md'
+                            : 'bg-white/60 border-border/40 shadow-none'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3 mb-2">
+                          <span
+                            className={`font-display font-800 text-xs sm:text-sm px-3 py-1 rounded-full transition-all duration-300 ${
+                              isCurrent
+                                ? 'bg-teal text-white shadow-sm'
+                                : isPassed
+                                ? 'bg-teal/15 text-teal'
+                                : 'bg-slate-200/80 text-slate-500'
+                            }`}
+                          >
+                            {item.year}
+                          </span>
+                          <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+                            Milestone #{i + 1}
+                          </span>
+                        </div>
+                        <h3
+                          className={`font-display font-700 text-base sm:text-xl transition-colors duration-300 ${
+                            isCurrent ? 'text-teal-dark' : isPassed ? 'text-navy' : 'text-slate-700'
+                          }`}
+                        >
+                          {item.event}
+                        </h3>
+                        {item.desc && (
+                          <p className="text-xs sm:text-sm text-navy-700/80 mt-1.5 leading-relaxed font-normal">
+                            {item.desc}
+                          </p>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-teal font-display font-800 text-sm">{item.year}</div>
-                  <div className="text-navy font-medium mt-1">{item.event}</div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Awards */}
+      {/* Awards & Affiliations */}
       <section className="py-20 bg-white" ref={awardsRef}>
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+            {/* Column 1: Awards & Honours */}
             <div>
               <div className="section-label reveal">Recognition</div>
-              <h2 className="font-display font-800 text-4xl text-navy mt-2 mb-8 reveal reveal-delay-1">
+              <h2 className="font-display font-800 text-2xl sm:text-3xl text-navy mt-1.5 mb-6 reveal reveal-delay-1">
                 Awards & Honours
               </h2>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {awards.map((award, i) => (
-                  <div key={award} className={`reveal reveal-delay-${i + 2} flex items-start gap-4 bg-soft-gray rounded-xl p-5`}>
-                    <div className="w-9 h-9 rounded-xl bg-teal/10 flex items-center justify-center flex-shrink-0">
+                  <div
+                    key={award}
+                    className={`reveal reveal-delay-${(i % 5) + 1} flex items-center gap-3.5 bg-soft-gray/80 hover:bg-white rounded-xl p-4 border border-border/60 hover:border-teal/30 hover:shadow-xs transition-all duration-200 min-h-[72px]`}
+                  >
+                    <div className="w-9 h-9 rounded-lg bg-teal/10 flex items-center justify-center flex-shrink-0 text-teal">
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0284C7" strokeWidth="2">
                         <circle cx="12" cy="8" r="6" />
                         <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
                       </svg>
                     </div>
-                    <p className="text-navy-700 text-sm leading-relaxed">{award}</p>
+                    <p className="text-navy font-medium text-xs sm:text-sm leading-snug">{award}</p>
                   </div>
                 ))}
               </div>
             </div>
 
+            {/* Column 2: Professional Affiliations */}
             <div>
               <div className="section-label reveal">Professional Affiliations</div>
-              <h2 className="font-display font-800 text-4xl text-navy mt-2 mb-8 reveal reveal-delay-1">
+              <h2 className="font-display font-800 text-2xl sm:text-3xl text-navy mt-1.5 mb-6 reveal reveal-delay-1">
                 Memberships
               </h2>
-              <div className="space-y-3 mb-10">
+              <div className="space-y-3">
                 {memberships.map((m, i) => (
-                  <div key={m} className={`reveal reveal-delay-${i + 2} flex items-center gap-3 bg-soft-gray rounded-xl px-5 py-4`}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0284C7" strokeWidth="2.5">
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                    <span className="text-navy-700 text-sm">{m}</span>
+                  <div
+                    key={m}
+                    className={`reveal reveal-delay-${(i % 5) + 1} flex items-center gap-3.5 bg-soft-gray/80 hover:bg-white rounded-xl p-4 border border-border/60 hover:border-teal/30 hover:shadow-xs transition-all duration-200 min-h-[72px]`}
+                  >
+                    <div className="w-9 h-9 rounded-lg bg-teal/10 flex items-center justify-center flex-shrink-0 text-teal">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0284C7" strokeWidth="2.5">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <span className="text-navy font-medium text-xs sm:text-sm leading-snug">{m}</span>
                   </div>
                 ))}
               </div>
+            </div>
 
-              <div className="reveal">
-                <div className="section-label mb-4">Hospital Affiliations</div>
-                <div className="space-y-3">
-                  {hospitals.map((h, i) => (
-                    <div key={h.name} className={`reveal reveal-delay-${i + 1} flex items-center justify-between bg-soft-gray rounded-xl px-5 py-4`}>
-                      <div>
-                        <div className="font-display font-700 text-navy text-sm">{h.name}</div>
-                        <div className="text-xs text-navy-700 mt-0.5">{h.location}</div>
+            {/* Column 3: Hospital Affiliations */}
+            <div>
+              <div className="section-label reveal">Practice Network</div>
+              <h2 className="font-display font-800 text-2xl sm:text-3xl text-navy mt-1.5 mb-6 reveal reveal-delay-1">
+                Hospital Affiliations
+              </h2>
+              <div className="space-y-3">
+                {hospitals.map((h, i) => (
+                  <div
+                    key={h.name}
+                    className={`reveal reveal-delay-${(i % 5) + 1} flex items-center justify-between gap-3 bg-soft-gray/80 hover:bg-white rounded-xl p-4 border border-border/60 hover:border-teal/30 hover:shadow-xs transition-all duration-200 min-h-[72px]`}
+                  >
+                    <div className="flex items-center gap-3.5 min-w-0">
+                      <div className="w-9 h-9 rounded-lg bg-teal/10 flex items-center justify-center flex-shrink-0 text-teal">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0284C7" strokeWidth="2">
+                          <path d="M3 21h18M5 21V5a2 2 0 012-2h10a2 2 0 012 2v16M9 9h6M9 13h6M9 17h6" />
+                        </svg>
                       </div>
-                      <span className="text-xs text-teal font-semibold bg-teal/10 px-3 py-1 rounded-full">{h.role}</span>
+                      <div className="min-w-0">
+                        <div className="font-display font-700 text-navy text-xs sm:text-sm truncate">{h.name}</div>
+                        <div className="text-[11px] sm:text-xs text-navy-700/70 truncate">{h.location}</div>
+                      </div>
                     </div>
-                  ))}
-                </div>
+                    <span className="text-[10px] sm:text-[11px] text-teal font-semibold bg-teal/10 px-2.5 py-1 rounded-full whitespace-nowrap shrink-0 border border-teal/20">
+                      {h.role}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

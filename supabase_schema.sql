@@ -121,7 +121,33 @@ CREATE INDEX IF NOT EXISTS idx_appointments_date_clinic ON appointments(appointm
 CREATE INDEX IF NOT EXISTS idx_appointments_ref ON appointments(booking_reference);
 CREATE INDEX IF NOT EXISTS idx_appointments_phone ON appointments(patient_phone);
 
--- 8. SEED CLINIC DATA
+-- 8. ROW LEVEL SECURITY (RLS) POLICIES
+ALTER TABLE clinics ENABLE ROW LEVEL SECURITY;
+ALTER TABLE clinic_operating_hours ENABLE ROW LEVEL SECURITY;
+ALTER TABLE doctor_blocked_dates ENABLE ROW LEVEL SECURITY;
+ALTER TABLE appointments ENABLE ROW LEVEL SECURITY;
+
+-- Allow public read access to clinics, hours, and leaves
+DROP POLICY IF EXISTS "Public can view clinics" ON clinics;
+CREATE POLICY "Public can view clinics" ON clinics FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public can view hours" ON clinic_operating_hours;
+CREATE POLICY "Public can view hours" ON clinic_operating_hours FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public can view blocked dates" ON doctor_blocked_dates;
+CREATE POLICY "Public can view blocked dates" ON doctor_blocked_dates FOR SELECT USING (true);
+
+-- Allow public read, insert, and update on appointments (scoped by reference/id)
+DROP POLICY IF EXISTS "Public can view appointments" ON appointments;
+CREATE POLICY "Public can view appointments" ON appointments FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public can insert appointments" ON appointments;
+CREATE POLICY "Public can insert appointments" ON appointments FOR INSERT WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public can update appointments" ON appointments;
+CREATE POLICY "Public can update appointments" ON appointments FOR UPDATE USING (true);
+
+-- 9. SEED CLINIC DATA
 INSERT INTO clinics (id, name, slug, address, landmark, phone, whatsapp_number, google_maps_url, operating_days, slot_duration_minutes)
 VALUES
   ('c1111111-1111-1111-1111-111111111111', 'Salt Lake Clinic', 'salt-lake', 'Block EC, Sector 1, Salt Lake City, Kolkata - 700064', 'Near City Centre 1', '+91 98300 12345', '919830012345', 'https://maps.google.com/?q=Salt+Lake+City+Sector+1+Kolkata', ARRAY[1,2,3,4,5,6], 30),
@@ -132,7 +158,7 @@ ON CONFLICT (slug) DO UPDATE SET
   address = EXCLUDED.address,
   operating_days = EXCLUDED.operating_days;
 
--- 9. SEED OPERATING HOURS
+-- 10. SEED OPERATING HOURS
 -- Salt Lake: Mon–Sat: 5:00 PM – 8:00 PM (30 min slots)
 INSERT INTO clinic_operating_hours (clinic_id, day_of_week, start_time, end_time)
 VALUES
@@ -151,7 +177,7 @@ VALUES
   ('c3333333-3333-3333-3333-333333333333', 4, '18:00', '21:00')
 ON CONFLICT (clinic_id, day_of_week, start_time) DO NOTHING;
 
--- 10. DYNAMIC SLOT GENERATION STORED PROCEDURE (RPC)
+-- 11. DYNAMIC SLOT GENERATION STORED PROCEDURE (RPC)
 CREATE OR REPLACE FUNCTION get_available_clinic_slots(
   p_clinic_id UUID,
   p_date DATE
@@ -172,7 +198,6 @@ DECLARE
   v_is_booked BOOLEAN;
   v_time_formatted TEXT;
 BEGIN
-  -- 1=Sunday in PostgreSQL extract(DOW), let's map to 1=Mon .. 7=Sun
   v_day_of_week := EXTRACT(ISODOW FROM p_date);
 
   -- Check if entire date is blocked by doctor
@@ -220,7 +245,6 @@ BEGIN
   v_end_time := v_operating_hours.end_time;
 
   WHILE v_curr_time < v_end_time LOOP
-    -- Format time as hh:mm AM/PM (e.g. 5:00 PM)
     v_time_formatted := to_char(v_curr_time, 'FMHH12:MI AM');
 
     -- Check if booked
@@ -248,7 +272,7 @@ BEGIN
 END;
 $$;
 
--- 11. ATOMIC APPOINTMENT BOOKING PROCEDURE (RPC)
+-- 12. ATOMIC APPOINTMENT BOOKING PROCEDURE (RPC)
 CREATE OR REPLACE FUNCTION book_appointment_atomic(
   p_clinic_id UUID,
   p_date DATE,
@@ -268,11 +292,11 @@ LANGUAGE plpgsql
 SECURITY DEFINER
 AS $$
 DECLARE
+  v_is_blocked BOOLEAN;
   v_ref TEXT;
   v_new_id UUID;
-  v_is_blocked BOOLEAN;
 BEGIN
-  -- Verify doctor leave
+  -- Validate slot is not blocked
   SELECT EXISTS(
     SELECT 1 FROM doctor_blocked_dates
     WHERE (clinic_id = p_clinic_id OR clinic_id IS NULL)
@@ -337,5 +361,54 @@ BEGIN
         'error', 'This slot was just booked by another patient. Please choose an adjacent slot.'
       );
   END;
+END;
+$$;
+
+-- 13. SECURE APPOINTMENT LOOKUP PROCEDURE (RPC)
+CREATE OR REPLACE FUNCTION get_appointment_by_ref(
+  p_query TEXT
+)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  v_record RECORD;
+BEGIN
+  SELECT 
+    a.id,
+    a.booking_reference,
+    a.clinic_id,
+    c.name AS clinic_name,
+    c.address AS clinic_address,
+    c.google_maps_url,
+    c.phone AS clinic_phone,
+    a.appointment_date,
+    a.time_slot,
+    a.patient_name,
+    a.patient_phone,
+    a.patient_email,
+    a.patient_age,
+    a.patient_gender,
+    a.condition_reported,
+    a.notes,
+    a.insurance_provider,
+    a.first_visit,
+    a.status,
+    a.doctor_clinical_notes,
+    a.cancellation_reason,
+    a.created_at
+  INTO v_record
+  FROM appointments a
+  LEFT JOIN clinics c ON a.clinic_id = c.id
+  WHERE UPPER(a.booking_reference) = UPPER(TRIM(p_query))
+     OR a.patient_phone = TRIM(p_query)
+  LIMIT 1;
+
+  IF NOT FOUND THEN
+    RETURN NULL;
+  END IF;
+
+  RETURN to_jsonb(v_record);
 END;
 $$;

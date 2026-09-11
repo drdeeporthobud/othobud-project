@@ -404,11 +404,42 @@ export const appointmentService = {
 
     if (isSupabaseConfigured() && supabase) {
       try {
+        // Try RPC first (SECURITY DEFINER)
+        const { data: rpcData, error: rpcError } = await supabase.rpc('get_appointment_by_ref', {
+          p_query: cleanRef,
+        })
+
+        if (!rpcError && rpcData) {
+          return {
+            id: rpcData.id,
+            bookingReference: rpcData.booking_reference,
+            clinicId: rpcData.clinic_id,
+            clinicName: rpcData.clinic_name || 'Orthopedic Clinic',
+            date: rpcData.appointment_date,
+            timeSlot: rpcData.time_slot,
+            patientName: rpcData.patient_name,
+            patientPhone: rpcData.patient_phone,
+            patientEmail: rpcData.patient_email || undefined,
+            patientAge: rpcData.patient_age,
+            patientGender: rpcData.patient_gender || 'Other',
+            condition: rpcData.condition_reported,
+            notes: rpcData.notes || undefined,
+            insurance: rpcData.insurance_provider || undefined,
+            firstVisit: rpcData.first_visit,
+            status: rpcData.status,
+            doctorClinicalNotes: rpcData.doctor_clinical_notes || undefined,
+            cancellationReason: rpcData.cancellation_reason || undefined,
+            createdAt: rpcData.created_at,
+          }
+        }
+
+        // Direct Table Query Fallback
         const { data, error } = await supabase
           .from('appointments')
           .select('*, clinics(name, address, google_maps_url, phone)')
           .or(`booking_reference.eq.${cleanRef},patient_phone.eq.${cleanRef}`)
-          .single()
+          .limit(1)
+          .maybeSingle()
 
         if (!error && data) {
           return {

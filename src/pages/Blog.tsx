@@ -4,7 +4,18 @@ import { useReveal } from '../hooks/useReveal'
 
 const categories = ['All', "Doctor's Insights", 'Patient Education', 'Sports Medicine', 'Recovery', 'Research']
 
-const posts = [
+export interface BlogPost {
+  category: string
+  title: string
+  excerpt: string
+  date: string
+  readTime: string
+  featured?: boolean
+  img: string
+  tags: string[]
+}
+
+export const posts: BlogPost[] = [
   {
     category: "Doctor's Insights",
     title: 'Robotic Surgery vs Conventional Joint Replacement — What the Data Says',
@@ -12,7 +23,7 @@ const posts = [
     date: 'July 18, 2025',
     readTime: '8 min read',
     featured: true,
-    img: 'https://images.unsplash.com/photo-1551076805-e1869033e561?w=800&h=450&fit=crop&auto=format',
+    img: '/icons/png/Home/Folder_2/robotic-joint-replacement.png',
     tags: ['Robotic Surgery', 'Joint Replacement'],
   },
   {
@@ -21,7 +32,7 @@ const posts = [
     excerpt: 'A detailed guide on grading arthritis severity, conservative management approaches, and the thresholds at which surgery becomes the best option.',
     date: 'July 5, 2025',
     readTime: '6 min read',
-    img: 'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=500&h=300&fit=crop&auto=format',
+    img: '/icons/png/Blog/Folder_1/osteoarthritis.png',
     tags: ['Knee', 'Osteoarthritis'],
   },
   {
@@ -30,7 +41,7 @@ const posts = [
     excerpt: 'Screening strategies, surgical decision-making and rehabilitation timelines for active patients from school sports to professional competition.',
     date: 'June 22, 2025',
     readTime: '7 min read',
-    img: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=500&h=300&fit=crop&auto=format',
+    img: '/icons/png/Blog/Folder_1/acl-injury.png',
     tags: ['ACL', 'Sports Injury'],
   },
   {
@@ -39,7 +50,7 @@ const posts = [
     excerpt: 'What to expect at each stage of recovery — from day-one mobilization to returning to normal daily activities at week six.',
     date: 'June 10, 2025',
     readTime: '5 min read',
-    img: 'https://images.unsplash.com/photo-1581056771107-24ca5f033842?w=500&h=300&fit=crop&auto=format',
+    img: '/icons/png/Blog/Folder_1/knee-replacement.png',
     tags: ['Recovery', 'Knee Replacement'],
   },
   {
@@ -48,7 +59,7 @@ const posts = [
     excerpt: 'The three stages of adhesive capsulitis, why many patients are undertreated, and the most effective treatment combinations.',
     date: 'May 28, 2025',
     readTime: '6 min read',
-    img: 'https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=500&h=300&fit=crop&auto=format',
+    img: '/icons/png/Blog/Folder_1/frozen-shoulder.png',
     tags: ['Shoulder', 'Frozen Shoulder'],
   },
   {
@@ -57,7 +68,7 @@ const posts = [
     excerpt: 'A review of our 10-year data on minimally invasive posterior hip replacement — implant survival rates, complications and patient satisfaction.',
     date: 'May 14, 2025',
     readTime: '9 min read',
-    img: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=500&h=300&fit=crop&auto=format',
+    img: '/icons/png/Blog/Folder_1/hip-replacement.png',
     tags: ['Hip Replacement', 'Research'],
   },
 ]

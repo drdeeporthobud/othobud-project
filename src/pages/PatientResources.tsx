@@ -30,37 +30,37 @@ const faqs = [
 
 const guides = [
   {
-    icon: '🦵',
+    icon: '/icons/png/PatientResources/Folder_1/pre-checklist.png',
     title: 'Pre-Operative Checklist',
     desc: 'Everything you need to do and bring before your surgery date.',
     tag: 'Surgery Prep',
   },
   {
-    icon: '🏃',
+    icon: '/icons/png/PatientResources/Folder_1/post-knee.png',
     title: 'Post-Knee Replacement Exercises',
     desc: 'A gentle illustrated guide to exercises from Day 1 through Week 12.',
     tag: 'Rehabilitation',
   },
   {
-    icon: '🍎',
+    icon: '/icons/png/PatientResources/Folder_1/nutrition-bone.png',
     title: 'Nutrition for Bone Health',
     desc: 'Diet recommendations before and after orthopedic surgery.',
     tag: 'Recovery',
   },
   {
-    icon: '🛏️',
+    icon: '/icons/png/PatientResources/Folder_1/sleep.png',
     title: 'Sleep & Rest After Surgery',
     desc: 'Positioning, sleeping aids, and what to expect during the first 2 weeks.',
     tag: 'Recovery',
   },
   {
-    icon: '💊',
+    icon: '/icons/png/PatientResources/Folder_1/post-surgical.png',
     title: 'Managing Post-Surgical Pain',
     desc: 'Medication guidance, when to call the clinic, and natural pain relief.',
     tag: 'Pain Management',
   },
   {
-    icon: '📋',
+    icon: '/icons/png/PatientResources/Folder_1/patient-discharge.png',
     title: 'Patient Discharge Instructions',
     desc: 'Step-by-step home care guide for the first 30 days post-discharge.',
     tag: 'Discharge',
@@ -182,7 +182,9 @@ export default function PatientResources() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {guides.map((g, i) => (
                 <div key={g.title} className={`reveal reveal-delay-${(i % 6) + 1} bg-white rounded-2xl p-6 border border-border/50 card-hover`}>
-                  <div className="text-3xl mb-4">{g.icon}</div>
+                  <div className="w-14 h-14 mb-4 flex items-center justify-center">
+                    <img src={g.icon} alt={g.title} className="w-full h-full object-contain" />
+                  </div>
                   <span className="text-xs text-teal font-700 bg-teal/10 px-3 py-1 rounded-full">{g.tag}</span>
                   <h3 className="font-display font-700 text-navy text-lg mt-3">{g.title}</h3>
                   <p className="text-sm text-navy-700 mt-2 leading-relaxed">{g.desc}</p>

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useReveal, useCountUp } from '../hooks/useReveal'
 import drDeepHero from '../imports/Dr_Deep.png'
 import drDeep1 from '../imports/Dr-Deep-1.png'
+import { posts as allBlogPosts, BlogPost } from './Blog'
 
 function StatCard({
   value,
@@ -30,59 +31,91 @@ function StatCard({
 }
 
 const conditions = [
-  { icon: '🦵', label: 'Knee Pain', desc: 'Osteoarthritis, ligament tears, meniscus injuries' },
-  { icon: '🦴', label: 'Hip Pain', desc: 'Labral tears, hip arthritis, bursitis' },
-  { icon: '💪', label: 'Shoulder Pain', desc: 'Rotator cuff, frozen shoulder, dislocations' },
-  { icon: '⚽', label: 'Sports Injuries', desc: 'ACL tears, cartilage damage, stress fractures' },
-  { icon: '🩹', label: 'Fractures', desc: 'Complex fractures, non-unions, deformities' },
-  { icon: '🧠', label: 'Back Pain', desc: 'Disc herniation, sciatica, spinal stenosis' },
+  {
+    image: '/icons/png/Home/Folder_1/kneepain.png',
+    label: 'Knee Pain',
+    desc: 'Osteoarthritis, ligament tears, meniscus injuries',
+    bgGradient: 'from-[#e0f2fe]/70 via-[#ebf5fe]/85 to-[#f0f8ff]',
+    borderColor: 'border-sky-100/90',
+  },
+  {
+    image: '/icons/png/Home/Folder_1/hippain.png',
+    label: 'Hip Pain',
+    desc: 'Labral tears, hip arthritis, bursitis',
+    bgGradient: 'from-[#ffedd5]/60 via-[#fff3e8]/85 to-[#fff7ed]',
+    borderColor: 'border-amber-100/90',
+  },
+  {
+    image: '/icons/png/Home/Folder_1/shoulderpain.png',
+    label: 'Shoulder Pain',
+    desc: 'Rotator cuff, frozen shoulder, dislocations',
+    bgGradient: 'from-[#dcfce7]/60 via-[#ecfdf3]/85 to-[#f0fdf4]',
+    borderColor: 'border-emerald-100/90',
+  },
+  {
+    image: '/icons/png/Home/Folder_1/sports.png',
+    label: 'Sports Injuries',
+    desc: 'ACL tears, cartilage damage, stress fractures',
+    bgGradient: 'from-[#fef3c7]/60 via-[#fff8ed]/85 to-[#fffbeb]',
+    borderColor: 'border-amber-100/90',
+  },
+  {
+    image: '/icons/png/Home/Folder_1/fracture.png',
+    label: 'Fractures',
+    desc: 'Complex fractures, non-unions, deformities',
+    bgGradient: 'from-[#ede9fe]/60 via-[#f4f2ff]/85 to-[#f8f7ff]',
+    borderColor: 'border-indigo-100/90',
+  },
+  {
+    image: '/icons/png/Home/Folder_1/backpain.png',
+    label: 'Back Pain',
+    desc: 'Disc herniation, sciatica, spinal stenosis',
+    bgGradient: 'from-[#e0f2fe]/70 via-[#ebf6ff]/85 to-[#f0f9ff]',
+    borderColor: 'border-sky-100/90',
+  },
 ]
 
 const treatments = [
   {
     title: 'Robotic Joint Replacement',
     desc: 'Precision-guided robotic surgery for knee and hip replacement with faster recovery.',
-    color: 'bg-teal',
-    icon: '🤖',
+    image: '/icons/png/Home/Folder_2/robotic-joint-replacement.png',
   },
   {
     title: 'Arthroscopy',
     desc: 'Minimally invasive joint surgery with tiny incisions and rapid recovery.',
-    color: 'bg-navy-800',
-    icon: '🔬',
+    image: '/icons/png/Home/Folder_2/arthroscopy.png',
   },
   {
     title: 'Sports Medicine',
     desc: 'Advanced care for athletes — from diagnosis to return-to-play rehabilitation.',
-    color: 'bg-teal',
-    icon: '🏃',
+    image: '/icons/png/Home/Folder_2/sports-medicine.png',
   },
   {
     title: 'Trauma Surgery',
     desc: 'Expert management of complex fractures and polytrauma cases.',
-    color: 'bg-navy-800',
-    icon: '🩺',
+    image: '/icons/png/Home/Folder_2/trauma-surgery.png',
   },
   {
     title: 'Revision Surgery',
     desc: 'Corrective procedures for failed joint replacements and implant complications.',
-    color: 'bg-teal',
-    icon: '🔧',
+    image: '/icons/png/Home/Folder_2/revision-surgery.png',
   },
   {
     title: 'Pediatric Orthopedics',
     desc: "Specialized care for children's bone and joint conditions.",
-    color: 'bg-navy-800',
-    icon: '👶',
+    image: '/icons/png/Home/Folder_2/pediatric-orthopedics.png',
   },
 ]
 
 const whyItems = [
   {
     icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0284C7" strokeWidth="2">
-        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
-        <circle cx="12" cy="7" r="4" />
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0284C7" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M15 19a5 5 0 0 0-5-5H5a5 5 0 0 0-5 5v1" />
+        <circle cx="7.5" cy="7" r="3.5" />
+        <line x1="18" y1="16" x2="18" y2="22" />
+        <line x1="15" y1="19" x2="21" y2="19" />
       </svg>
     ),
     title: 'Personalized Treatment',
@@ -90,8 +123,14 @@ const whyItems = [
   },
   {
     icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0284C7" strokeWidth="2">
-        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0284C7" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h6" />
+        <path d="M13 2l5 5v5" />
+        <path d="M13 2v5h5" />
+        <line x1="8" y1="9" x2="11" y2="9" />
+        <line x1="8" y1="13" x2="13" y2="13" />
+        <circle cx="17.5" cy="17.5" r="4.2" />
+        <path d="M15.8 17.5l1.2 1.2 2.3-2.4" />
       </svg>
     ),
     title: 'Evidence-Based Care',
@@ -99,10 +138,8 @@ const whyItems = [
   },
   {
     icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0284C7" strokeWidth="2">
-        <circle cx="12" cy="12" r="10" />
-        <line x1="12" y1="8" x2="12" y2="12" />
-        <line x1="12" y1="16" x2="12.01" y2="16" />
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0284C7" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 11.5c0 4.418-4.03 8-9 8a9.86 9.86 0 0 1-4.255-.949L3 20l1.395-3.72C3.512 14.7 3 13.2 3 11.5 3 7.082 7.03 3.5 12 3.5s9 3.582 9 8z" />
       </svg>
     ),
     title: 'Transparent Communication',
@@ -110,12 +147,9 @@ const whyItems = [
   },
   {
     icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0284C7" strokeWidth="2">
-        <path d="M18 8h1a4 4 0 010 8h-1" />
-        <path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z" />
-        <line x1="6" y1="1" x2="6" y2="4" />
-        <line x1="10" y1="1" x2="10" y2="4" />
-        <line x1="14" y1="1" x2="14" y2="4" />
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0284C7" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M9 2v6c0 1.5-1.8 2.5-1.8 4 0 1 1.2 1.5 2.8 1.5s2-.7 2-1.5c0 .8.8 1.5 2 1.5s2.8-.5 2.8-1.5c0-1.5-1.8-2.5-1.8-4V2" />
+        <path d="M7.2 15.5c0-1 1.2-1.5 2.8-1.5s2 .7 2 1.5c0-.8.8-1.5 2-1.5s2.8.5 2.8 1.5c0 1.5-1.8 2.5-1.8 4V22h-6v-2.5c0-1.5-1.8-2.5-1.8-4z" />
       </svg>
     ),
     title: 'Advanced Surgical Expertise',
@@ -123,9 +157,12 @@ const whyItems = [
   },
   {
     icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0284C7" strokeWidth="2">
-        <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
-        <polyline points="22 4 12 14.01 9 11.01" />
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0284C7" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="4.5" r="2" />
+        <path d="M9.5 9l2.5-2 3 1.5 2 3" />
+        <path d="M12 7v5l-3 4-2-1" />
+        <path d="M12 12l3 3.5 1.5 4" />
+        <path d="M4.5 17c3.5 3.5 11 3.5 15-.5" />
       </svg>
     ),
     title: 'Complete Rehabilitation',
@@ -133,8 +170,10 @@ const whyItems = [
   },
   {
     icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0284C7" strokeWidth="2">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0284C7" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        <line x1="12" y1="8" x2="12" y2="14" />
+        <line x1="9" y1="11" x2="15" y2="11" />
       </svg>
     ),
     title: 'Hospital-Grade Safety',
@@ -194,31 +233,10 @@ const faqs = [
   },
 ]
 
-const blogPosts = [
-  {
-    category: 'Patient Education',
-    title: 'Understanding Knee Osteoarthritis: When Is Surgery the Right Choice?',
-    excerpt: 'A detailed guide on grading arthritis severity, conservative management and surgical thresholds.',
-    date: 'July 2025',
-    img: 'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=400&h=240&fit=crop&auto=format',
-    readTime: '6 min read',
-  },
-  {
-    category: "Doctor's Insight",
-    title: 'Robotic Surgery vs Conventional Joint Replacement — What the Data Says',
-    excerpt: 'Breaking down accuracy margins, recovery times and patient outcomes from 500 robotic procedures.',
-    date: 'June 2025',
-    img: 'https://images.unsplash.com/photo-1551076805-e1869033e561?w=400&h=240&fit=crop&auto=format',
-    readTime: '8 min read',
-  },
-  {
-    category: 'Sports Medicine',
-    title: 'ACL Injury in Young Athletes — Prevention, Diagnosis & Return to Sport',
-    excerpt: 'Screening strategies, surgical decision-making and rehabilitation timelines for active patients.',
-    date: 'May 2025',
-    img: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=240&fit=crop&auto=format',
-    readTime: '7 min read',
-  },
+const blogPosts: BlogPost[] = [
+  allBlogPosts.find((p) => p.title.toLowerCase().includes('osteoarthritis')) ?? allBlogPosts[1],
+  allBlogPosts.find((p) => p.title.toLowerCase().includes('robotic surgery')) ?? allBlogPosts[0],
+  allBlogPosts.find((p) => p.title.toLowerCase().includes('acl injury')) ?? allBlogPosts[2],
 ]
 
 const galleryImages = [
@@ -491,10 +509,19 @@ export default function Home() {
                 />
               </div>
               {/* Floating quote */}
-              <div className="absolute -bottom-6 -right-4 bg-teal text-white rounded-2xl p-5 shadow-xl max-w-[200px]">
-                <div className="text-2xl mb-1">"</div>
-                <p className="text-xs leading-relaxed font-medium">My purpose is to restore what pain has taken away.</p>
-                <div className="text-white/60 text-xs mt-2 font-display">— Dr. Deep</div>
+              <div className="absolute -bottom-6 -right-3 sm:-right-6 bg-gradient-to-br from-teal via-teal to-teal-dark text-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl shadow-teal/35 border border-white/25 backdrop-blur-md max-w-[260px] sm:max-w-[300px]">
+                <svg className="w-7 h-7 text-white/40 mb-2 fill-current" viewBox="0 0 24 24">
+                  <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                </svg>
+                <p className="font-display font-700 italic text-sm sm:text-base leading-snug text-white tracking-tight">
+                  “My purpose is to restore what pain has taken away.”
+                </p>
+                <div className="flex items-center gap-2 mt-3 pt-3 border-t border-white/20">
+                  <div className="w-1.5 h-1.5 rounded-full bg-teal-light animate-pulse" />
+                  <span className="text-white/90 text-xs font-display font-bold tracking-wide uppercase">
+                    Dr. Deep Chakraborty
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -541,44 +568,106 @@ export default function Home() {
       </section>
 
       {/* ── Conditions ── */}
-      <section className="py-20 bg-soft-gray" ref={conditionsRef}>
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+      <section className="relative py-20 bg-gradient-to-b from-[#F8FAFC] via-white to-[#F8FAFC] overflow-hidden" ref={conditionsRef}>
+        {/* Background decorative runner on left */}
+        <div className="absolute top-2 left-0 sm:left-4 w-48 sm:w-64 h-40 sm:h-52 opacity-15 pointer-events-none select-none mix-blend-multiply overflow-hidden">
+          <img
+            src="/icons/png/Home/Folder_1/sports.png"
+            alt=""
+            className="w-full h-full object-cover object-left filter contrast-125 brightness-110 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_75%)]"
+          />
+        </div>
+
+        {/* Script text on left: "Stronger Everyday" */}
+        <div className="hidden lg:block absolute top-10 left-8 xl:left-14 rotate-[-12deg] select-none pointer-events-none">
+          <div className="font-script text-3xl xl:text-4xl text-teal font-bold leading-tight drop-shadow-sm tracking-wide">
+            Stronger<br />Everyday
+          </div>
+        </div>
+
+        {/* Script text on right: "Move Better Live Brighter" with curved underline */}
+        <div className="hidden lg:block absolute top-8 right-8 xl:right-14 rotate-[-8deg] select-none pointer-events-none text-right">
+          <div className="font-script text-3xl xl:text-4xl text-teal font-bold leading-tight drop-shadow-sm tracking-wide">
+            Move Better<br />Live Brighter
+          </div>
+          <svg className="w-28 sm:w-36 h-4 text-teal/70 mt-1 ml-auto" viewBox="0 0 120 18" fill="none">
+            <path d="M4 14C40 4 85 5 116 11" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+          </svg>
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
+          {/* Section Heading */}
           <div className="text-center mb-12">
-            <div className="section-label reveal">Conditions We Treat</div>
-            <h2 className="font-display font-800 text-4xl text-navy mt-2 reveal reveal-delay-1">
-              From Pain to Recovery
+            <div className="inline-flex items-center justify-center gap-3 mb-3 reveal">
+              <span className="w-8 h-[2px] bg-teal rounded-full" />
+              <span className="text-xs font-bold tracking-[0.2em] text-teal uppercase">
+                Conditions We Treat
+              </span>
+              <span className="w-8 h-[2px] bg-teal rounded-full" />
+            </div>
+
+            <h2 className="font-display font-800 text-4xl sm:text-5xl text-navy mt-1 reveal reveal-delay-1 tracking-tight">
+              From Pain to <span className="text-teal">Recovery</span>
             </h2>
-            <p className="text-navy-700 mt-3 max-w-lg mx-auto reveal reveal-delay-2">
-              Comprehensive orthopedic care for a wide range of bone, joint and soft tissue conditions.
+
+            <p className="text-navy-700 mt-3.5 max-w-xl mx-auto text-sm sm:text-base leading-relaxed reveal reveal-delay-2 font-normal">
+              Comprehensive orthopedic care for a wide range of bone, joint and soft tissue conditions. Get the right diagnosis and the right treatment.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {conditions.map((c, i) => (
               <Link
                 to="/treatments"
                 key={c.label}
-                className={`reveal reveal-delay-${(i % 6) + 1} group bg-white rounded-2xl p-6 border border-border/50 card-hover cursor-pointer block`}
+                className={`reveal reveal-delay-${(i % 6) + 1} group relative flex items-stretch h-[175px] sm:h-[185px] rounded-[24px] overflow-hidden border ${c.borderColor} bg-gradient-to-r ${c.bgGradient} shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_12px_28px_-6px_rgba(2,132,199,0.18)] hover:-translate-y-1 transition-all duration-300 block`}
               >
-                <div className="flex items-start gap-4">
-                  <div className="text-3xl w-12 h-12 flex items-center justify-center bg-teal/8 rounded-xl group-hover:bg-teal/15 transition-colors">
-                    {c.icon}
-                  </div>
-                  <div>
-                    <h3 className="font-display font-700 text-navy text-lg group-hover:text-teal transition-colors">
-                      {c.label}
-                    </h3>
-                    <p className="text-sm text-navy-700 mt-1">{c.desc}</p>
+                {/* Image on left */}
+                <div className="w-[43%] relative flex-shrink-0 h-full overflow-hidden">
+                  <img
+                    src={c.image}
+                    alt={c.label}
+                    className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-500"
+                    style={{
+                      maskImage: 'linear-gradient(to right, rgba(0,0,0,1) 58%, rgba(0,0,0,0) 100%)',
+                      WebkitMaskImage: 'linear-gradient(to right, rgba(0,0,0,1) 58%, rgba(0,0,0,0) 100%)',
+                    }}
+                  />
+                </div>
+
+                {/* Content on right */}
+                <div className="flex-1 flex flex-col justify-center py-4 pr-5 pl-2 z-10">
+                  <h3 className="font-display font-800 text-navy text-xl tracking-tight group-hover:text-teal transition-colors">
+                    {c.label}
+                  </h3>
+                  <p className="text-navy-700/80 text-xs sm:text-[13px] leading-relaxed mt-1 line-clamp-2">
+                    {c.desc}
+                  </p>
+                  <div className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-teal mt-3 group-hover:text-teal-dark group-hover:gap-2.5 transition-all">
+                    <span>Learn More</span>
+                    <span className="text-base leading-none">→</span>
                   </div>
                 </div>
               </Link>
             ))}
           </div>
 
-          <div className="text-center mt-10 reveal">
-            <Link to="/treatments" className="btn-primary">
-              Explore All Conditions →
+          {/* Explore Button */}
+          <div className="text-center mt-12 reveal">
+            <Link
+              to="/treatments"
+              className="inline-flex items-center gap-2 px-8 py-3.5 bg-teal hover:bg-teal-dark text-white text-sm sm:text-base font-display font-700 rounded-xl shadow-lg shadow-teal/25 hover:shadow-teal/40 transition-all duration-200 hover:-translate-y-0.5"
+            >
+              <span>Explore All Conditions</span>
+              <span>→</span>
             </Link>
+          </div>
+
+          {/* Bottom decorative tagline */}
+          <div className="flex items-center justify-center gap-3 sm:gap-4 text-[11px] sm:text-xs font-semibold tracking-[0.18em] text-navy-700/60 uppercase mt-10 reveal">
+            <span className="w-8 sm:w-12 h-px bg-border" />
+            <span>PERSONALISED CARE &nbsp;|&nbsp; BETTER MOVEMENT &nbsp;|&nbsp; BRIGHTER TOMORROWS</span>
+            <span className="w-8 sm:w-12 h-px bg-border" />
           </div>
         </div>
       </section>
@@ -593,34 +682,50 @@ export default function Home() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {treatments.map((t, i) => (
               <Link
                 to="/treatments"
                 key={t.title}
-                className={`reveal reveal-delay-${(i % 6) + 1} group relative rounded-2xl p-6 border border-white/10 card-hover overflow-hidden block`}
-                style={{ background: 'rgba(255,255,255,0.04)' }}
+                className={`reveal reveal-delay-${(i % 6) + 1} group relative flex items-stretch h-[175px] sm:h-[185px] rounded-[22px] overflow-hidden border border-[#1e2e4a] bg-[#101d36] shadow-[0_8px_24px_-6px_rgba(0,0,0,0.3)] hover:border-sky-500/40 hover:shadow-[0_12px_28px_-6px_rgba(14,165,233,0.2)] hover:-translate-y-1 transition-all duration-300 block`}
               >
-                <div className="absolute top-0 right-0 w-24 h-24 rounded-full opacity-10 bg-teal blur-2xl group-hover:opacity-20 transition-opacity" />
-                <div className="text-3xl mb-4">{t.icon}</div>
-                <h3 className="font-display font-700 text-white text-lg group-hover:text-teal-light transition-colors">
-                  {t.title}
-                </h3>
-                <p className="text-white/60 text-sm mt-2 leading-relaxed">{t.desc}</p>
-                <div className="flex items-center gap-1 mt-5 text-teal-light text-sm font-semibold">
-                  Learn More
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="group-hover:translate-x-1 transition-transform">
-                    <line x1="5" y1="12" x2="19" y2="12" />
-                    <polyline points="12 5 19 12 12 19" />
-                  </svg>
+                {/* Image on left with fade mask */}
+                <div className="w-[43%] relative flex-shrink-0 h-full overflow-hidden">
+                  <img
+                    src={t.image}
+                    alt={t.title}
+                    className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-500"
+                    style={{
+                      maskImage: 'linear-gradient(to right, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%)',
+                      WebkitMaskImage: 'linear-gradient(to right, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%)',
+                    }}
+                  />
+                </div>
+
+                {/* Content on right */}
+                <div className="flex-1 flex flex-col justify-center py-4 pr-5 pl-2 z-10">
+                  <h3 className="font-display font-700 text-white text-lg sm:text-xl tracking-tight leading-snug group-hover:text-teal-light transition-colors">
+                    {t.title}
+                  </h3>
+                  <p className="text-slate-300/80 text-xs sm:text-[13px] leading-relaxed mt-1.5 line-clamp-2 sm:line-clamp-3">
+                    {t.desc}
+                  </p>
+                  <div className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-teal-light mt-3 group-hover:text-white group-hover:gap-2.5 transition-all">
+                    <span>Learn More</span>
+                    <span className="text-base leading-none">→</span>
+                  </div>
                 </div>
               </Link>
             ))}
           </div>
 
-          <div className="text-center mt-10 reveal">
-            <Link to="/treatments" className="btn-outline">
-              View All Treatments →
+          <div className="text-center mt-12 reveal">
+            <Link
+              to="/treatments"
+              className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#0C1A36] hover:bg-[#11244A] text-white text-sm sm:text-base font-display font-semibold rounded-xl border border-white/20 hover:border-teal-light/50 shadow-lg shadow-navy/60 transition-all duration-200 hover:-translate-y-0.5"
+            >
+              <span>View All Treatments</span>
+              <span>→</span>
             </Link>
           </div>
         </div>
@@ -638,32 +743,32 @@ export default function Home() {
               <p className="text-navy-700 mt-4 leading-relaxed reveal reveal-delay-2">
                 Every aspect of Dr. Deep's practice is designed to make your orthopedic journey as seamless, transparent and effective as possible.
               </p>
-              <div className="mt-8 aspect-[4/3] rounded-2xl overflow-hidden bg-soft-gray reveal reveal-delay-3">
+              <div className="mt-8 aspect-[4/3] rounded-3xl overflow-hidden bg-soft-gray border border-border/40 shadow-lg reveal reveal-delay-3">
                 <img
-                  src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=600&h=450&fit=crop&auto=format"
-                  alt="Orthopedic care"
+                  src="/icons/png/Home/Folder_3/part3-mainpic.png"
+                  alt="Orthopedic care and consultation"
                   className="w-full h-full object-cover"
                 />
               </div>
             </div>
 
-            <div className="space-y-5">
+            <div className="space-y-4">
               {whyItems.map((item, i) => (
                 <div
                   key={item.title}
-                  className={`reveal reveal-delay-${(i % 6) + 1} flex items-start gap-4 bg-soft-gray rounded-2xl p-5 hover:shadow-md transition-shadow`}
+                  className={`reveal reveal-delay-${(i % 6) + 1} flex items-center gap-5 bg-[#F8FAFC] hover:bg-white rounded-2xl p-5 sm:p-6 border border-border/60 hover:border-teal/30 hover:shadow-md transition-all duration-200`}
                 >
-                  <div className="w-11 h-11 rounded-xl bg-teal/10 flex items-center justify-center flex-shrink-0">
+                  <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-[#E0F2FE]/80 flex items-center justify-center flex-shrink-0 text-teal shadow-2xs">
                     {item.icon}
                   </div>
                   <div>
-                    <h3 className="font-display font-700 text-navy">{item.title}</h3>
-                    <p className="text-sm text-navy-700 mt-1 leading-relaxed">{item.desc}</p>
+                    <h3 className="font-display font-700 text-navy text-base sm:text-lg">{item.title}</h3>
+                    <p className="text-sm text-navy-700/80 mt-1 leading-relaxed">{item.desc}</p>
                   </div>
                 </div>
               ))}
-              <div className="reveal">
-                <Link to="/about" className="btn-primary mt-2">
+              <div className="reveal pt-2">
+                <Link to="/about" className="btn-primary">
                   Learn More →
                 </Link>
               </div>
