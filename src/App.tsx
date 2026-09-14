@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, useLocation, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import Navigation from './components/Navigation'
+import BookingNavigation from './components/BookingNavigation'
 import Footer from './components/Footer'
 import Home from './pages/Home'
 import About from './pages/About'
@@ -38,11 +39,16 @@ function GlobalShortcutListener() {
 }
 
 function Layout() {
+  const location = useLocation()
+  const isAdmin = location.pathname === '/admin'
+  const isBookAppointment = location.pathname === '/book-appointment'
+
   return (
     <>
       <ScrollToTop />
       <GlobalShortcutListener />
-      <Navigation />
+      {!isAdmin && !isBookAppointment && <Navigation />}
+      {isBookAppointment && <BookingNavigation />}
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -57,7 +63,7 @@ function Layout() {
           <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
       </main>
-      <Footer />
+      {!isAdmin && <Footer />}
     </>
   )
 }

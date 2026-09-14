@@ -39,6 +39,7 @@ export interface AppointmentPayload {
   notes?: string
   insurance?: string
   firstVisit: boolean
+  allowOverbook?: boolean
 }
 
 export interface AppointmentRecord extends AppointmentPayload {
@@ -336,12 +337,22 @@ export const appointmentService = {
           return { success: false, error: error.message }
         }
         if (data && data.success) {
+          // Explicitly enforce status is 'pending' in Supabase in case database RPC has default 'confirmed'
+          try {
+            await supabase
+              .from('appointments')
+              .update({ status: 'pending' })
+              .eq('id', data.appointment_id)
+          } catch (updateErr) {
+            console.warn('Could not enforce pending status on newly booked appointment:', updateErr)
+          }
+
           // Cache in local storage for instantaneous offline reference lookup
           const newRecord: AppointmentRecord = {
             ...payload,
             id: data.appointment_id,
             bookingReference: data.booking_reference,
-            status: 'confirmed',
+            status: 'pending',
             createdAt: new Date().toISOString(),
           }
           const existing = getLocalAppointments()
@@ -361,18 +372,22 @@ export const appointmentService = {
 
     // Local Fallback Atomic Booking Simulation
     const existing = getLocalAppointments()
-    const isSlotTaken = existing.some(
-      (a) =>
-        a.clinicId === payload.clinicId &&
-        a.date === payload.date &&
-        a.timeSlot === payload.timeSlot &&
-        ['confirmed', 'pending', 'arrived', 'in_consultation'].includes(a.status)
-    )
+    const canOverbook = payload.allowOverbook || payload.timeSlot.includes('Fit-In') || payload.timeSlot.includes('Emergency')
 
-    if (isSlotTaken) {
-      return {
-        success: false,
-        error: 'This slot was just booked by another patient. Please choose an adjacent slot.',
+    if (!canOverbook) {
+      const isSlotTaken = existing.some(
+        (a) =>
+          a.clinicId === payload.clinicId &&
+          a.date === payload.date &&
+          a.timeSlot === payload.timeSlot &&
+          ['confirmed', 'pending', 'arrived', 'in_consultation'].includes(a.status)
+      )
+
+      if (isSlotTaken) {
+        return {
+          success: false,
+          error: 'This slot was just booked by another patient. Please choose an adjacent slot.',
+        }
       }
     }
 
@@ -382,7 +397,7 @@ export const appointmentService = {
       ...payload,
       id: newId,
       bookingReference: randomRef,
-      status: 'confirmed',
+      status: 'pending',
       createdAt: new Date().toISOString(),
     }
 
@@ -517,7 +532,8 @@ export const appointmentService = {
   async updateAppointmentStatus(
     id: string,
     status: AppointmentRecord['status'],
-    clinicalNotes?: string
+    clinicalNotes?: string,
+    cancellationReason?: string
   ): Promise<{ success: boolean; error?: string }> {
     if (isSupabaseConfigured() && supabase) {
       try {
@@ -527,6 +543,9 @@ export const appointmentService = {
         }
         if (clinicalNotes !== undefined) {
           updateData.doctor_clinical_notes = clinicalNotes
+        }
+        if (cancellationReason !== undefined) {
+          updateData.cancellation_reason = cancellationReason
         }
 
         const { error } = await supabase
@@ -548,11 +567,26 @@ export const appointmentService = {
             ...a,
             status,
             doctorClinicalNotes: clinicalNotes !== undefined ? clinicalNotes : a.doctorClinicalNotes,
+            cancellationReason: cancellationReason !== undefined ? cancellationReason : a.cancellationReason,
           }
         : a
     )
     saveLocalAppointments(updated)
     return { success: true }
+  },
+
+  /**
+   * Approve a pending booking (Receptionist action)
+   */
+  async approveAppointment(id: string): Promise<{ success: boolean; error?: string }> {
+    return this.updateAppointmentStatus(id, 'confirmed')
+  },
+
+  /**
+   * Decline a pending booking with reason (Receptionist action)
+   */
+  async declineAppointment(id: string, reason: string): Promise<{ success: boolean; error?: string }> {
+    return this.updateAppointmentStatus(id, 'cancelled', undefined, reason)
   },
 
   /**
@@ -635,6 +669,35 @@ export const appointmentService = {
     let list = getLocalAppointments()
     if (clinicId) list = list.filter((a) => a.clinicId === clinicId)
     if (dateStr) list = list.filter((a) => a.date === dateStr)
+    return list
+  },
+
+  /**
+   * Get all blocked dates (used by Admin / Doctor)
+   */
+  async getBlockedDates(clinicId?: string): Promise<BlockedDate[]> {
+    if (isSupabaseConfigured() && supabase) {
+      try {
+        let query = supabase.from('doctor_blocked_dates').select('*')
+        if (clinicId) query = query.or(`clinic_id.eq.${clinicId},clinic_id.is.null`)
+        const { data, error } = await query
+        if (!error && data) {
+          return data.map((d) => ({
+            id: d.id,
+            clinicId: d.clinic_id,
+            blockedDate: d.blocked_date,
+            reason: d.reason,
+          }))
+        }
+      } catch (err) {
+        console.warn('Supabase getBlockedDates error, using fallback:', err)
+      }
+    }
+
+    let list = getLocalBlockedDates()
+    if (clinicId) {
+      list = list.filter((b) => b.clinicId === clinicId || b.clinicId === null)
+    }
     return list
   },
 }

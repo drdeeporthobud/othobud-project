@@ -15,3 +15,15 @@ export const isSupabaseConfigured = (): boolean => {
 export const supabase = isSupabaseConfigured()
   ? createClient(supabaseUrl, supabaseAnonKey)
   : null
+
+/**
+ * Returns the Supabase client or throws if not configured.
+ * Use this in auth-critical paths to ensure we never silently
+ * fall back to an insecure local mode.
+ */
+export function requireSupabase() {
+  if (!supabase) {
+    throw new Error('Supabase is not configured. Authentication requires a valid Supabase connection.')
+  }
+  return supabase
+}

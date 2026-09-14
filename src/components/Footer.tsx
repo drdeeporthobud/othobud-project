@@ -28,48 +28,49 @@ export default function Footer() {
       {/* Top CTA strip - Hidden on Booking & Admin pages */}
       {!hideCta && (
         <div className="bg-teal">
-          <div className="max-w-7xl mx-auto px-6 lg:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
             <div>
-              <h3 className="font-display font-700 text-xl text-white">Ready to start your recovery journey?</h3>
-              <p className="text-white/80 mt-1 text-sm">
+              <h3 className="font-display font-700 text-lg sm:text-xl text-white">Ready to start your recovery journey?</h3>
+              <p className="text-white/85 mt-1 text-xs sm:text-sm max-w-xl">
                 Book a consultation with Dr. Deep Chakraborty across Salt Lake, Alipore, or Newtown.
               </p>
             </div>
             <Link
               to="/book-appointment"
-              className="bg-white text-teal font-display font-700 px-7 py-3 rounded-xl hover:bg-soft-gray transition-colors text-sm whitespace-nowrap"
+              className="bg-white text-teal font-display font-700 px-7 py-3 rounded-xl hover:bg-soft-gray transition-all text-sm w-full sm:w-auto text-center justify-center inline-flex items-center gap-2 shadow-md hover:shadow-lg active:scale-98"
             >
-              Book Appointment →
+              <span>Book Appointment</span>
+              <span>→</span>
             </Link>
           </div>
         </div>
       )}
 
       {/* Main footer */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12">
           {/* Brand */}
           <div className="lg:col-span-1">
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-9 h-9 rounded-xl bg-teal flex items-center justify-center">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-9 h-9 rounded-xl bg-teal flex items-center justify-center shadow-md flex-shrink-0">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
                   <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
                 </svg>
               </div>
               <div>
                 <div className="font-display font-800 text-lg leading-none">Orthobud</div>
-                <div className="text-white/50 text-xs">Dr. Deep Chakraborty</div>
+                <div className="text-white/60 text-xs mt-0.5">Dr. Deep Chakraborty</div>
               </div>
             </div>
-            <p className="text-white/60 text-sm leading-relaxed mb-6">
+            <p className="text-white/65 text-xs sm:text-sm leading-relaxed mb-6">
               Specialized orthopedic surgery and joint restoration across Kolkata. Advanced minimally invasive & robotic care.
             </p>
-            <div className="flex gap-3">
+            <div className="flex items-center gap-2.5">
               {['facebook', 'instagram', 'youtube', 'linkedin'].map((social) => (
                 <a
                   key={social}
                   href="#"
-                  className="w-9 h-9 rounded-lg bg-white/8 hover:bg-teal flex items-center justify-center transition-colors"
+                  className="w-10 h-10 min-w-[40px] min-h-[40px] rounded-xl bg-white/8 hover:bg-teal flex items-center justify-center transition-all hover:scale-105 active:scale-95"
                   aria-label={social}
                 >
                   <SocialIcon name={social} />
@@ -80,13 +81,13 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-display font-700 text-sm uppercase tracking-widest text-white/40 mb-5">Quick Links</h4>
-            <ul className="space-y-2.5">
+            <h4 className="font-display font-700 text-xs uppercase tracking-widest text-white/50 mb-4 sm:mb-5">Quick Links</h4>
+            <ul className="space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     to={link.href}
-                    className="text-white/70 hover:text-white text-sm transition-colors hover:translate-x-0.5 inline-block"
+                    className="text-white/75 hover:text-white text-sm transition-colors hover:translate-x-0.5 inline-block py-0.5"
                   >
                     {link.label}
                   </Link>
@@ -97,13 +98,13 @@ export default function Footer() {
 
           {/* Treatments */}
           <div>
-            <h4 className="font-display font-700 text-sm uppercase tracking-widest text-white/40 mb-5">Treatments</h4>
-            <ul className="space-y-2.5">
+            <h4 className="font-display font-700 text-xs uppercase tracking-widest text-white/50 mb-4 sm:mb-5">Treatments</h4>
+            <ul className="space-y-2">
               {treatments.map((t) => (
                 <li key={t.label}>
                   <Link
                     to={`/treatments?category=${t.query}`}
-                    className="text-white/70 hover:text-white text-sm transition-colors hover:translate-x-0.5 inline-block"
+                    className="text-white/75 hover:text-white text-sm transition-colors hover:translate-x-0.5 inline-block py-0.5"
                   >
                     {t.label}
                   </Link>
@@ -114,15 +115,15 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="font-display font-700 text-sm uppercase tracking-widest text-white/40 mb-5">Clinics in Kolkata</h4>
+            <h4 className="font-display font-700 text-xs uppercase tracking-widest text-white/50 mb-4 sm:mb-5">Clinics in Kolkata</h4>
             <ul className="space-y-3">
               <li className="flex items-start gap-3">
                 <div className="w-7 h-7 rounded-lg bg-white/8 flex items-center justify-center flex-shrink-0 mt-0.5 text-xs">
                   📍
                 </div>
                 <div>
-                  <div className="text-white/90 text-xs font-semibold">Salt Lake City (Sec 1)</div>
-                  <div className="text-white/50 text-[11px]">Mon–Sat: 5 PM – 8 PM</div>
+                  <div className="text-white/95 text-xs font-semibold">Salt Lake City (Sec 1)</div>
+                  <div className="text-white/55 text-[11px] mt-0.5">Mon–Sat: 5 PM – 8 PM</div>
                 </div>
               </li>
               <li className="flex items-start gap-3">
@@ -130,8 +131,8 @@ export default function Footer() {
                   📍
                 </div>
                 <div>
-                  <div className="text-white/90 text-xs font-semibold">Alipore (Woodlands)</div>
-                  <div className="text-white/50 text-[11px]">Mon, Wed, Fri: 11 AM – 1 PM</div>
+                  <div className="text-white/95 text-xs font-semibold">Alipore (Woodlands)</div>
+                  <div className="text-white/55 text-[11px] mt-0.5">Mon, Wed, Fri: 11 AM – 1 PM</div>
                 </div>
               </li>
               <li className="flex items-start gap-3">
@@ -139,8 +140,8 @@ export default function Footer() {
                   📍
                 </div>
                 <div>
-                  <div className="text-white/90 text-xs font-semibold">Newtown (Axis Mall)</div>
-                  <div className="text-white/50 text-[11px]">Tue, Thu: 6 PM – 9 PM</div>
+                  <div className="text-white/95 text-xs font-semibold">Newtown (Axis Mall)</div>
+                  <div className="text-white/55 text-[11px] mt-0.5">Tue, Thu: 6 PM – 9 PM</div>
                 </div>
               </li>
             </ul>
@@ -148,23 +149,15 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Bottom bar with discreet staff portal link */}
+      {/* Bottom bar */}
       <div className="border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-white/40 text-xs">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-center sm:text-left">
+          <p className="text-white/45 text-xs leading-relaxed">
             © 2025 Orthobud · Dr. Deep Chakraborty (MS Ortho, DNB, Fellow Germany). All rights reserved.
           </p>
-          <div className="flex items-center gap-6 text-xs">
-            <Link to="/my-booking" className="text-white/60 hover:text-white transition-colors">
+          <div className="flex items-center gap-4 sm:gap-6 text-xs flex-wrap justify-center">
+            <Link to="/my-booking" className="text-white/60 hover:text-white transition-colors py-1">
               Track Booking
-            </Link>
-            <span className="text-white/20">·</span>
-            <Link
-              to="/admin"
-              className="text-white/40 hover:text-teal transition-colors flex items-center gap-1"
-              title="Doctor & Clinic Staff Management Portal"
-            >
-              <span>🔒</span> Staff Portal
             </Link>
           </div>
         </div>

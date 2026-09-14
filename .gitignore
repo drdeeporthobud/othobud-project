@@ -12,3 +12,8 @@ logs/
 *.log
 .claude-replay.*
 .tmp-*
+.idea/
+.vscode/
+*.local
+Thumbs.db
+.DS_Store

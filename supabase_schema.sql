@@ -8,25 +8,14 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "btree_gist";
 
--- 2. USER PROFILES TABLE (Linked to Supabase Auth)
+-- 2. ROLE ENUM
 DO $$ BEGIN
   CREATE TYPE user_role_type AS ENUM ('admin', 'doctor', 'receptionist');
 EXCEPTION
   WHEN duplicate_object THEN null;
 END $$;
 
-CREATE TABLE IF NOT EXISTS user_profiles (
-  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-  email TEXT UNIQUE NOT NULL,
-  full_name TEXT NOT NULL,
-  role user_role_type NOT NULL DEFAULT 'receptionist',
-  assigned_clinic_id UUID, -- NULL for Admin & Doctor; UUID for branch Receptionist
-  phone TEXT,
-  is_active BOOLEAN DEFAULT TRUE,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- 3. CLINICS TABLE
+-- 3. CLINICS TABLE (created BEFORE user_profiles so FK reference is valid)
 CREATE TABLE IF NOT EXISTS clinics (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name TEXT NOT NULL,
@@ -43,7 +32,21 @@ CREATE TABLE IF NOT EXISTS clinics (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 4. CLINIC OPERATING HOURS TABLE
+-- 4. USER PROFILES TABLE (Linked to Supabase Auth)
+CREATE TABLE IF NOT EXISTS user_profiles (
+  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  username TEXT UNIQUE NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  full_name TEXT NOT NULL,
+  role user_role_type NOT NULL DEFAULT 'receptionist',
+  assigned_clinic_id UUID REFERENCES clinics(id) ON DELETE SET NULL, -- NULL for Admin & Doctor; UUID for branch Receptionist
+  phone TEXT,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 5. CLINIC OPERATING HOURS TABLE
 CREATE TABLE IF NOT EXISTS clinic_operating_hours (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   clinic_id UUID REFERENCES clinics(id) ON DELETE CASCADE,
@@ -54,7 +57,7 @@ CREATE TABLE IF NOT EXISTS clinic_operating_hours (
   CONSTRAINT unique_clinic_day_slot UNIQUE(clinic_id, day_of_week, start_time)
 );
 
--- 5. DOCTOR LEAVES & BLOCKED DATES
+-- 6. DOCTOR LEAVES & BLOCKED DATES
 CREATE TABLE IF NOT EXISTS doctor_blocked_dates (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   clinic_id UUID REFERENCES clinics(id) ON DELETE CASCADE, -- NULL applies to all clinics
@@ -65,7 +68,7 @@ CREATE TABLE IF NOT EXISTS doctor_blocked_dates (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 6. APPOINTMENTS TABLE
+-- 7. APPOINTMENTS TABLE
 DO $$ BEGIN
   CREATE TYPE appointment_status AS ENUM (
     'pending', 'confirmed', 'arrived', 'in_consultation', 'completed', 'cancelled', 'no_show'
@@ -116,38 +119,144 @@ CREATE TABLE IF NOT EXISTS appointments (
   ) WHERE (status IN ('confirmed', 'pending', 'arrived', 'in_consultation'))
 );
 
--- 7. PERFORMANCE INDEXES
+-- 8. PERFORMANCE INDEXES
 CREATE INDEX IF NOT EXISTS idx_appointments_date_clinic ON appointments(appointment_date, clinic_id, status);
 CREATE INDEX IF NOT EXISTS idx_appointments_ref ON appointments(booking_reference);
 CREATE INDEX IF NOT EXISTS idx_appointments_phone ON appointments(patient_phone);
 
--- 8. ROW LEVEL SECURITY (RLS) POLICIES
+-- 9. ROW LEVEL SECURITY (RLS) POLICIES
 ALTER TABLE clinics ENABLE ROW LEVEL SECURITY;
 ALTER TABLE clinic_operating_hours ENABLE ROW LEVEL SECURITY;
 ALTER TABLE doctor_blocked_dates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE appointments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_profiles ENABLE ROW LEVEL SECURITY;
+
+-- 9.1 Helper Functions for RLS (Bypasses RLS recursion via SECURITY DEFINER)
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS BOOLEAN
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT (
+    (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin'
+    OR
+    EXISTS (
+      SELECT 1 FROM public.user_profiles
+      WHERE id = auth.uid() AND role = 'admin' AND is_active = true
+    )
+  );
+$$;
+
+CREATE OR REPLACE FUNCTION public.is_admin_or_doctor()
+RETURNS BOOLEAN
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT (
+    (auth.jwt() -> 'user_metadata' ->> 'role') IN ('admin', 'doctor')
+    OR
+    EXISTS (
+      SELECT 1 FROM public.user_profiles
+      WHERE id = auth.uid() AND role IN ('admin', 'doctor') AND is_active = true
+    )
+  );
+$$;
+
+CREATE OR REPLACE FUNCTION public.is_receptionist()
+RETURNS BOOLEAN
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT (
+    (auth.jwt() -> 'user_metadata' ->> 'role') = 'receptionist'
+    OR
+    EXISTS (
+      SELECT 1 FROM public.user_profiles
+      WHERE id = auth.uid() AND role = 'receptionist' AND is_active = true
+    )
+  );
+$$;
+
+CREATE OR REPLACE FUNCTION public.get_auth_user_clinic_id()
+RETURNS UUID
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT assigned_clinic_id FROM public.user_profiles
+  WHERE id = auth.uid() AND is_active = true
+  LIMIT 1;
+$$;
 
 -- Allow public read access to clinics, hours, and leaves
 DROP POLICY IF EXISTS "Public can view clinics" ON clinics;
 CREATE POLICY "Public can view clinics" ON clinics FOR SELECT USING (true);
 
 DROP POLICY IF EXISTS "Public can view hours" ON clinic_operating_hours;
-CREATE POLICY "Public can view hours" ON clinic_operating_hours FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Public can view operating hours" ON clinic_operating_hours;
+CREATE POLICY "Public can view operating hours" ON clinic_operating_hours FOR SELECT USING (true);
 
 DROP POLICY IF EXISTS "Public can view blocked dates" ON doctor_blocked_dates;
 CREATE POLICY "Public can view blocked dates" ON doctor_blocked_dates FOR SELECT USING (true);
 
--- Allow public read, insert, and update on appointments (scoped by reference/id)
-DROP POLICY IF EXISTS "Public can view appointments" ON appointments;
-CREATE POLICY "Public can view appointments" ON appointments FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Doctors and admins can insert blocked dates" ON doctor_blocked_dates;
+CREATE POLICY "Doctors and admins can insert blocked dates"
+  ON doctor_blocked_dates FOR INSERT
+  WITH CHECK (auth.uid() IS NULL OR public.is_admin_or_doctor());
 
+DROP POLICY IF EXISTS "Doctors and admins can delete blocked dates" ON doctor_blocked_dates;
+CREATE POLICY "Doctors and admins can delete blocked dates"
+  ON doctor_blocked_dates FOR DELETE
+  USING (auth.uid() IS NULL OR public.is_admin_or_doctor());
+
+-- user_profiles: Authenticated staff can read their own profile
+DROP POLICY IF EXISTS "Staff can view own profile" ON user_profiles;
+CREATE POLICY "Staff can view own profile"
+  ON user_profiles FOR SELECT
+  USING (auth.uid() = id);
+
+-- user_profiles: Admins can read all profiles (uses SECURITY DEFINER helper to prevent recursion)
+DROP POLICY IF EXISTS "Admins can view all profiles" ON user_profiles;
+CREATE POLICY "Admins can view all profiles"
+  ON user_profiles FOR SELECT
+  USING (public.is_admin());
+
+-- Appointments: public can insert (patients booking online)
 DROP POLICY IF EXISTS "Public can insert appointments" ON appointments;
 CREATE POLICY "Public can insert appointments" ON appointments FOR INSERT WITH CHECK (true);
 
-DROP POLICY IF EXISTS "Public can update appointments" ON appointments;
-CREATE POLICY "Public can update appointments" ON appointments FOR UPDATE USING (true);
+-- Appointments: role-aware SELECT (unauthenticated, admin/doctor see all, receptionist sees assigned clinic)
+DROP POLICY IF EXISTS "Public can view appointments" ON appointments;
+DROP POLICY IF EXISTS "Appointment access by role" ON appointments;
+CREATE POLICY "Appointment access by role" ON appointments FOR SELECT
+  USING (
+    auth.uid() IS NULL
+    OR
+    public.is_admin_or_doctor()
+    OR
+    (public.is_receptionist() AND clinic_id = public.get_auth_user_clinic_id())
+  );
 
--- 9. SEED CLINIC DATA
+-- Appointments: role-aware UPDATE (unauthenticated for reference cancel, admin/doctor all, receptionist assigned clinic)
+DROP POLICY IF EXISTS "Public can update appointments" ON appointments;
+DROP POLICY IF EXISTS "Appointment updates by role" ON appointments;
+CREATE POLICY "Appointment updates by role" ON appointments FOR UPDATE
+  USING (
+    auth.uid() IS NULL
+    OR
+    public.is_admin_or_doctor()
+    OR
+    (public.is_receptionist() AND clinic_id = public.get_auth_user_clinic_id())
+  );
+
+-- 10. SEED CLINIC DATA
 INSERT INTO clinics (id, name, slug, address, landmark, phone, whatsapp_number, google_maps_url, operating_days, slot_duration_minutes)
 VALUES
   ('c1111111-1111-1111-1111-111111111111', 'Salt Lake Clinic', 'salt-lake', 'Block EC, Sector 1, Salt Lake City, Kolkata - 700064', 'Near City Centre 1', '+91 98300 12345', '919830012345', 'https://maps.google.com/?q=Salt+Lake+City+Sector+1+Kolkata', ARRAY[1,2,3,4,5,6], 30),
@@ -158,7 +267,7 @@ ON CONFLICT (slug) DO UPDATE SET
   address = EXCLUDED.address,
   operating_days = EXCLUDED.operating_days;
 
--- 10. SEED OPERATING HOURS
+-- 11. SEED OPERATING HOURS
 -- Salt Lake: Mon–Sat: 5:00 PM – 8:00 PM (30 min slots)
 INSERT INTO clinic_operating_hours (clinic_id, day_of_week, start_time, end_time)
 VALUES
@@ -177,7 +286,7 @@ VALUES
   ('c3333333-3333-3333-3333-333333333333', 4, '18:00', '21:00')
 ON CONFLICT (clinic_id, day_of_week, start_time) DO NOTHING;
 
--- 11. DYNAMIC SLOT GENERATION STORED PROCEDURE (RPC)
+-- 12. DYNAMIC SLOT GENERATION STORED PROCEDURE (RPC)
 CREATE OR REPLACE FUNCTION get_available_clinic_slots(
   p_clinic_id UUID,
   p_date DATE
@@ -272,7 +381,7 @@ BEGIN
 END;
 $$;
 
--- 12. ATOMIC APPOINTMENT BOOKING PROCEDURE (RPC)
+-- 13. ATOMIC APPOINTMENT BOOKING PROCEDURE (RPC)
 CREATE OR REPLACE FUNCTION book_appointment_atomic(
   p_clinic_id UUID,
   p_date DATE,
@@ -345,7 +454,7 @@ BEGIN
       p_notes,
       p_insurance,
       p_first_visit,
-      'confirmed'
+      'pending'
     )
     RETURNING id INTO v_new_id;
 
@@ -364,7 +473,7 @@ BEGIN
 END;
 $$;
 
--- 13. SECURE APPOINTMENT LOOKUP PROCEDURE (RPC)
+-- 14. SECURE APPOINTMENT LOOKUP PROCEDURE (RPC)
 CREATE OR REPLACE FUNCTION get_appointment_by_ref(
   p_query TEXT
 )
@@ -412,3 +521,286 @@ BEGIN
   RETURN to_jsonb(v_record);
 END;
 $$;
+
+-- 15. STAFF AUTHENTICATION & MANAGEMENT RPCS
+
+-- 15.1 Username Profile Lookup (Used by login to resolve username -> auth email and check active status)
+-- Returns generic error for both "not found" and "deactivated" to prevent username enumeration
+CREATE OR REPLACE FUNCTION get_staff_profile_by_username(
+  p_username TEXT
+)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  v_user RECORD;
+BEGIN
+  SELECT 
+    up.id,
+    up.username,
+    up.email,
+    up.full_name,
+    up.role,
+    up.assigned_clinic_id,
+    c.name AS assigned_clinic_name,
+    up.phone,
+    up.is_active
+  INTO v_user
+  FROM user_profiles up
+  LEFT JOIN clinics c ON up.assigned_clinic_id = c.id
+  WHERE LOWER(up.username) = LOWER(TRIM(p_username))
+  LIMIT 1;
+
+  -- Generic error for both "not found" and "deactivated" (prevents username enumeration)
+  IF NOT FOUND OR NOT v_user.is_active THEN
+    RETURN jsonb_build_object('success', FALSE, 'error', 'Invalid credentials.');
+  END IF;
+
+  RETURN jsonb_build_object(
+    'success', TRUE,
+    'user', to_jsonb(v_user)
+  );
+END;
+$$;
+
+-- 15.2 Admin User Creation (Creates user in auth.users, auth.identities, and user_profiles)
+CREATE OR REPLACE FUNCTION admin_create_staff_user(
+  p_username TEXT,
+  p_password TEXT,
+  p_full_name TEXT,
+  p_role user_role_type,
+  p_clinic_id UUID DEFAULT NULL,
+  p_phone TEXT DEFAULT NULL,
+  p_email TEXT DEFAULT NULL
+)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  v_new_user_id UUID;
+  v_generated_email TEXT;
+BEGIN
+  -- Verify the caller is an authenticated admin
+  IF NOT public.is_admin() THEN
+    RETURN jsonb_build_object('success', FALSE, 'error', 'Unauthorized: Admin access required.');
+  END IF;
+
+  p_username := LOWER(TRIM(p_username));
+  IF p_email IS NOT NULL AND TRIM(p_email) <> '' THEN
+    v_generated_email := LOWER(TRIM(p_email));
+  ELSE
+    v_generated_email := p_username || '@orthobud.internal';
+  END IF;
+
+  -- Validation
+  IF p_username IS NULL OR LENGTH(p_username) < 3 THEN
+    RETURN jsonb_build_object('success', FALSE, 'error', 'Username must be at least 3 characters.');
+  END IF;
+
+  IF p_password IS NULL OR LENGTH(p_password) < 8 THEN
+    RETURN jsonb_build_object('success', FALSE, 'error', 'Password must be at least 8 characters.');
+  END IF;
+
+  IF EXISTS (SELECT 1 FROM user_profiles WHERE LOWER(username) = p_username) THEN
+    RETURN jsonb_build_object('success', FALSE, 'error', 'Username already exists. Please pick another.');
+  END IF;
+
+  IF EXISTS (SELECT 1 FROM user_profiles WHERE LOWER(email) = v_generated_email) THEN
+    RETURN jsonb_build_object('success', FALSE, 'error', 'Email address is already in use.');
+  END IF;
+
+  v_new_user_id := uuid_generate_v4();
+
+  -- 1. Insert into auth.users with encrypted password
+  INSERT INTO auth.users (
+    instance_id,
+    id,
+    aud,
+    role,
+    email,
+    encrypted_password,
+    email_confirmed_at,
+    raw_app_meta_data,
+    raw_user_meta_data,
+    created_at,
+    updated_at,
+    confirmation_token,
+    recovery_token,
+    email_change_token_new,
+    email_change
+  ) VALUES (
+    '00000000-0000-0000-0000-000000000000',
+    v_new_user_id,
+    'authenticated',
+    'authenticated',
+    v_generated_email,
+    crypt(p_password, gen_salt('bf', 10)),
+    NOW(),
+    jsonb_build_object('provider', 'email', 'providers', ARRAY['email']),
+    jsonb_build_object('full_name', p_full_name, 'username', p_username, 'role', p_role),
+    NOW(),
+    NOW(),
+    '', '', '', ''
+  );
+
+  -- 2. Insert into auth.identities (prevents GoTrue "Database error loading user")
+  INSERT INTO auth.identities (
+    id,
+    user_id,
+    identity_data,
+    provider,
+    provider_id,
+    last_sign_in_at,
+    created_at,
+    updated_at
+  ) VALUES (
+    v_new_user_id,
+    v_new_user_id,
+    format('{"sub":"%s","email":"%s"}', v_new_user_id::text, v_generated_email)::jsonb,
+    'email',
+    v_new_user_id::text,
+    NOW(),
+    NOW(),
+    NOW()
+  );
+
+  -- 3. Insert into public.user_profiles
+  INSERT INTO public.user_profiles (
+    id,
+    username,
+    email,
+    full_name,
+    role,
+    assigned_clinic_id,
+    phone,
+    is_active
+  ) VALUES (
+    v_new_user_id,
+    p_username,
+    v_generated_email,
+    p_full_name,
+    p_role,
+    p_clinic_id,
+    p_phone,
+    TRUE
+  );
+
+  RETURN jsonb_build_object(
+    'success', TRUE,
+    'user_id', v_new_user_id,
+    'username', p_username,
+    'email', v_generated_email,
+    'role', p_role
+  );
+EXCEPTION
+  WHEN OTHERS THEN
+    RETURN jsonb_build_object('success', FALSE, 'error', SQLERRM);
+END;
+$$;
+
+-- 15.3 Reset Staff Password by Admin
+CREATE OR REPLACE FUNCTION admin_reset_staff_password(
+  p_user_id UUID,
+  p_new_password TEXT
+)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+BEGIN
+  -- Verify the caller is an authenticated admin
+  IF NOT public.is_admin() THEN
+    RETURN jsonb_build_object('success', FALSE, 'error', 'Unauthorized: Admin access required.');
+  END IF;
+
+  IF p_new_password IS NULL OR LENGTH(p_new_password) < 8 THEN
+    RETURN jsonb_build_object('success', FALSE, 'error', 'Password must be at least 8 characters.');
+  END IF;
+
+  UPDATE auth.users
+  SET encrypted_password = crypt(p_new_password, gen_salt('bf', 10)),
+      updated_at = NOW()
+  WHERE id = p_user_id;
+
+  IF NOT FOUND THEN
+    RETURN jsonb_build_object('success', FALSE, 'error', 'User not found in auth system.');
+  END IF;
+
+  UPDATE user_profiles
+  SET updated_at = NOW()
+  WHERE id = p_user_id;
+
+  RETURN jsonb_build_object('success', TRUE);
+END;
+$$;
+
+-- 15.4 Toggle Staff Active Status by Admin
+CREATE OR REPLACE FUNCTION admin_toggle_staff_active(
+  p_user_id UUID,
+  p_is_active BOOLEAN
+)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+BEGIN
+  -- Verify the caller is an authenticated admin
+  IF NOT public.is_admin() THEN
+    RETURN jsonb_build_object('success', FALSE, 'error', 'Unauthorized: Admin access required.');
+  END IF;
+
+  UPDATE user_profiles
+  SET is_active = p_is_active,
+      updated_at = NOW()
+  WHERE id = p_user_id;
+
+  IF NOT FOUND THEN
+    RETURN jsonb_build_object('success', FALSE, 'error', 'Staff user not found.');
+  END IF;
+
+  RETURN jsonb_build_object('success', TRUE, 'is_active', p_is_active);
+END;
+$$;
+
+-- 15.5 Delete Staff User by Admin
+CREATE OR REPLACE FUNCTION admin_delete_staff_user(
+  p_user_id UUID
+)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+BEGIN
+  -- Verify the caller is an authenticated admin
+  IF NOT public.is_admin() THEN
+    RETURN jsonb_build_object('success', FALSE, 'error', 'Unauthorized: Admin access required.');
+  END IF;
+
+  -- Prevent admin from deleting themselves
+  IF p_user_id = auth.uid() THEN
+    RETURN jsonb_build_object('success', FALSE, 'error', 'Cannot delete your own admin account.');
+  END IF;
+
+  -- Delete from auth.identities first
+  DELETE FROM auth.identities WHERE user_id = p_user_id;
+
+  -- Delete from public.user_profiles
+  DELETE FROM public.user_profiles WHERE id = p_user_id;
+
+  -- Delete from auth.users
+  DELETE FROM auth.users WHERE id = p_user_id;
+
+  RETURN jsonb_build_object('success', TRUE);
+EXCEPTION
+  WHEN OTHERS THEN
+    RETURN jsonb_build_object('success', FALSE, 'error', SQLERRM);
+END;
+$$;
+
+-- NOTE: No seed bootstrap block. Admin account must be created via the
+-- one-time bootstrap SQL in the Supabase SQL Editor. Doctor and receptionist
+-- accounts are then created through the Staff Management UI.
+
+

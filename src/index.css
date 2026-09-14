@@ -124,7 +124,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Custom button styles */
-.btn-primary {
+@utility btn-primary {
   background: #0284C7;
   color: white;
   padding: 12px 28px;
@@ -139,15 +139,15 @@ h1, h2, h3, h4, h5, h6 {
   cursor: pointer;
   border: none;
   text-decoration: none;
+
+  &:hover {
+    background: #0369A1;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(2, 132, 199, 0.3);
+  }
 }
 
-.btn-primary:hover {
-  background: #0369A1;
-  transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.3);
-}
-
-.btn-outline {
+@utility btn-outline {
   background: transparent;
   color: white;
   padding: 12px 28px;
@@ -162,11 +162,11 @@ h1, h2, h3, h4, h5, h6 {
   cursor: pointer;
   border: 2px solid rgba(255, 255, 255, 0.6);
   text-decoration: none;
-}
 
-.btn-outline:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: white;
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: white;
+  }
 }
 
 .card-hover {

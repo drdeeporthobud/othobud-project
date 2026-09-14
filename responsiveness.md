@@ -80,65 +80,80 @@ We will execute the responsiveness systematically, one page at a time:
 
 ## 4. Detailed Component & Page Checklists
 
-### Step 0: Global Navigation & Footer
+### Step 0: Global Navigation & Footer [COMPLETED]
 
 #### `src/components/Navigation.tsx`
-- [ ] **Mobile Drawer:** Smooth slide-down / fade transition with backdrop blur, full touch height, scroll locking when opened.
-- [ ] **Brand Logo:** Responsive text sizing (`text-base sm:text-lg`) preventing logo clipping on 320px screens.
-- [ ] **Mobile CTA:** "Book Appointment" button prominently placed inside mobile drawer as full-width tap target.
-- [ ] **Sticky Navbar:** Smooth blur & background transition without layout jitter on mobile scroll.
-- [ ] **Close Drawer triggers:** Closes automatically on route change, click outside, or escape key.
+- [x] **Mobile Drawer:** Smooth slide-down / fade transition with backdrop blur, full touch height, scroll locking when opened.
+- [x] **Brand Logo:** Responsive text sizing (`text-base sm:text-lg`) preventing logo clipping on 320px screens.
+- [x] **Top Navbar Mobile:**
+  - Removed "Book Appointment" CTA on mobile viewports (< 1024px) for a clean, minimal header.
+  - Reduced hamburger menu button and container size to `w-8 h-8 sm:w-9 sm:h-9` to balance symmetrically with the logo.
+  - Integrated animated `{ Squash as Hamburger } from 'hamburger-react'` with crisp scaling (`scale-[0.68] sm:scale-[0.72]`).
+- [x] **Mobile Drawer:**
+  - Quick action buttons using official `/icons/svg/call-icon.svg` and `/icons/svg/whatsapp-icon.svg`.
+  - Staggered navigation links with active state indicator.
 
 #### `src/components/Footer.tsx`
-- [ ] **Top CTA Banner:** Flex column on mobile (`flex-col md:flex-row`), text centered on small screens, full-width CTA button on mobile.
-- [ ] **4-Column Grid:** Collapses smoothly from 4 columns (`lg:grid-cols-4`) to 2 columns (`sm:grid-cols-2`) to 1 column on mobile.
-- [ ] **Social Icons & Quick Links:** Adequate spacing, min 44px touch targets.
-- [ ] **Bottom Copyright Row:** Clean wrap on narrow screens without awkward breaks.
+- [x] **Top CTA Banner:** Flex column on mobile (`flex-col md:flex-row`), text centered on small screens, full-width CTA button on mobile.
+- [x] **4-Column Grid:** Collapses smoothly from 4 columns (`lg:grid-cols-4`) to 2 columns (`sm:grid-cols-2`) to 1 column on mobile.
+- [x] **Social Icons & Quick Links:** Adequate spacing, min 40px–44px touch targets.
+- [x] **Bottom Copyright Row:** Clean wrap on narrow screens without awkward breaks.
 
 ---
 
-### Step 1: Home (`src/pages/Home.tsx`)
+### Step 1: Home (`src/pages/Home.tsx`) [COMPLETED]
 
-- [ ] **Hero Section:**
-  - Currently the doctor image and floating badge are `hidden lg:block`. On mobile/tablet, show a dedicated, beautifully styled doctor card or compact portrait frame so mobile users see Dr. Deep immediately.
-  - CTAs: Stacking `flex-col sm:flex-row` with full-width buttons on mobile.
-  - Floating "Quick Appointment" widget: Seamlessly dock beneath hero text or doctor image on mobile rather than being hidden.
-- [ ] **Key Statistics Strip:**
-  - 4 cards: `grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6`.
-  - Prevent large numbers (e.g. "5,000+") from overflowing card borders on 320px screens.
-- [ ] **Conditions Treated Grid:**
+- [x] **Hero Section (Mobile & Tablet):**
+  - Converted to pure single-column normal document flow: `Header → Specialist Badge → Heading → Description → Doctor Image → Doctor Credentials & Stats Card → Book Appointment CTAs`.
+  - Doctor image (`Dr_Deep_rbg.png`) is visually aligned to the right (`flex justify-end`) in its own layout space, with a bottom fade-out gradient mask, physically eliminating overlaps with description or credentials.
+  - Zero absolute positioning, zero fixed heights, zero negative margins, and zero content transforms. Page height grows naturally with smooth vertical scrolling on all screen sizes (320px–430px+).
+  - Responsive typography using `clamp()` and fluid spacing with `max-w-full`.
+  - Desktop view (>= 1024px) preserves the two-column desktop presentation with framed photo, floating badges, and interactive appointment widget.
+- [x] **Key Statistics Strip:**
+  - Responsive grid: `grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-4`.
+  - StatCard numbers and labels scaled to prevent clipping on compact phones.
+- [x] **Conditions Treated Grid:**
   - Responsive grid: `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6`.
-  - Card padding and icon sizing adapted for compact touch screens.
-- [ ] **Treatments Showcase:**
-  - Image thumbnail sizing and text hierarchy scaling.
-- [ ] **Why Choose Dr. Deep:**
-  - 2-column split collapses to single-column on mobile with preserved visual hierarchy.
-- [ ] **Patient Recovery Journey (Stepper):**
-  - Timeline transforms to a clean vertical stepper on mobile with uninterrupted connecting lines.
-- [ ] **Testimonials Carousel/Grid:**
-  - Responsive cards with touch-friendly navigation arrows and mobile swipe capability.
-- [ ] **Latest Articles & FAQ Accordion:**
+  - Adaptive min-height (`min-h-[150px] sm:min-h-[175px] h-auto`), comfortable padding, and full-width explore CTA on mobile.
+  - Decorative tagline (`PERSONALISED CARE | BETTER MOVEMENT | BRIGHTER TOMORROWS`): Responsive typography `text-[9px] xs:text-[10px] sm:text-xs` with fluid tracking (`tracking-[0.08em] xs:tracking-[0.12em] sm:tracking-[0.18em]`) and inline-flex wrapping to prevent text overflow on narrow devices.
+- [x] **Treatments Showcase:**
+  - Responsive card heights, gradient mask containment, and flexible button layout.
+- [x] **Why Choose Dr. Deep:**
+  - 2-column split collapses to single column on mobile with preserved visual hierarchy and touch-padded items.
+- [x] **Patient Recovery Journey (Stepper):**
+  - Dedicated mobile vertical stepper for `< 640px` with left step number circle and right title/description card.
+  - 4-column cards for tablet, 7-step horizontal chain for desktop.
+- [x] **Testimonials Cards:**
+  - `grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6`, touch-friendly padding, responsive quote sizing.
+- [x] **Latest Articles & FAQ Accordion:**
   - Expandable FAQ buttons with comfortable touch targets and clear chevron indicators.
-- [ ] **Consultation Strip / Booking CTA:**
-  - Full-width mobile container with direct call and book links.
+- [x] **Consultation Strip & Contact Preview:**
+  - Full-width stacked buttons on mobile (`Call Clinic`, `WhatsApp`, `View Locations`) with min-44px touch targets.
 
 ---
 
-### Step 2: About Dr. Deep (`src/pages/About.tsx`)
+### Step 2: About Dr. Deep (`src/pages/About.tsx`) [COMPLETED]
 
-- [ ] **Hero Section:**
-  - Doctor portrait + MCI certification badge: Reposition badge on mobile so it doesn't overlap screen edges or text.
-  - Quick Info Badges (MCI Registration, Experience, Surgeries, Languages): Ensure 2x2 grid padding fits cleanly on 320px screens.
-- [ ] **Biography & Quote Box:**
-  - Responsive blockquote with custom left border and font sizing (`text-base sm:text-xl`).
-- [ ] **Interactive Career Timeline:**
-  - Verify line positioning (`left-6 sm:left-8`), node alignment, and text content offset (`pl-14 sm:pl-20`).
-  - Ensure zero horizontal text overflow on narrow viewports.
-- [ ] **Hospital Affiliations & Memberships:**
-  - Grid: `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`.
-  - Badges and cards adapt cleanly without awkward wrapping.
-- [ ] **Awards & Recognitions:**
-  - Responsive card grid or vertical list with trophy icons.
+- [x] **Hero Section:**
+  - Scaled heading `Dr. Deep Chakraborty` with fluid typography (`text-3xl xs:text-4xl sm:text-5xl lg:text-6xl`), eliminating text overflow on 320px–390px screens.
+  - Subtitle (`MS (Ortho) · DNB · Fellowship in Joint Arthroplasty, Germany`) scaled to `text-xs xs:text-sm sm:text-base lg:text-lg`.
+  - Description paragraph scaled to `text-xs xs:text-sm sm:text-base lg:text-lg text-white/75`.
+- [x] **4 Metric Cards (MCI, Experience, Surgeries, Languages):**
+  - Responsive 2-column grid (`gap-2.5 xs:gap-3 sm:gap-4`) with compact padding (`p-3 xs:p-3.5 sm:p-4`).
+  - Label scaled to `text-[10px] xs:text-[11px] sm:text-xs text-white/50 uppercase tracking-wider`.
+  - Values formatted with `break-words` and `text-xs xs:text-sm sm:text-base`, preventing `MCR/40521/2008` and `Bengali · Hindi · English` from overflowing cards on narrow phones.
+- [x] **Action Buttons & Doctor Portrait:**
+  - Full-width stacked buttons on mobile (`Book Consultation` and `Call Clinic`) with 44px min-touch height.
+  - Doctor portrait sized to `max-w-[270px] xs:max-w-[300px] sm:max-w-sm` with responsive "Verified by MCI" badge anchored inside on mobile to eliminate horizontal page overflow.
+- [x] **Biography & Quote Box:**
+  - Rescaled quote box padding (`p-4.5 xs:p-6 sm:p-8 rounded-xl sm:rounded-2xl`) and typography (`text-sm xs:text-base sm:text-xl italic leading-relaxed`).
+  - Adjusted author line spacing (`mt-3 sm:mt-4 text-xs sm:text-sm`).
+- [x] **Career Timeline, Awards & Network:**
+  - Container padding adjusted to `px-4 sm:px-6 lg:px-8` and `py-12 sm:py-16 lg:py-20`.
+  - Milestone cards scaled with responsive text and touch padding.
+  - Recognition, Memberships, and Practice Network cards responsive for 320px–430px+ viewports.
+- [x] **Awards & Recognitions:**
+  - Responsive card grid with trophy icons.
 
 ---
 
