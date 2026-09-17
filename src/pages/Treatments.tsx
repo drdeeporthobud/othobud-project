@@ -8,7 +8,7 @@ const treatments = [
   {
     category: 'Joint Replacement',
     title: 'Robotic Knee Replacement',
-    img: '/icons/png/Treatments/robotic-knee-replacement.png',
+    img: '/icons/png/treatments/robotic-knee-replacement.webp',
     symptoms: ['Severe knee pain not relieved by medication', 'Inability to walk without aid', 'Night pain affecting sleep', 'Significant joint deformity'],
     recovery: '6 weeks to full mobility',
     description: 'State-of-the-art robotic-assisted total knee replacement with sub-millimeter implant placement accuracy, resulting in faster recovery and longer implant life.',
@@ -16,7 +16,7 @@ const treatments = [
   {
     category: 'Joint Replacement',
     title: 'Total Hip Replacement',
-    img: '/icons/png/Treatments/hip-replacement.png',
+    img: '/icons/png/treatments/hip-replacement.webp',
     symptoms: ['Groin or hip pain affecting daily activity', 'Limping and leg shortening', 'Stiffness limiting range of motion', 'Failed conservative management'],
     recovery: '8–12 weeks',
     description: 'Minimally invasive total hip replacement using modern ceramic, metal and polyethylene implants with customized sizing for optimal function.',
@@ -24,7 +24,7 @@ const treatments = [
   {
     category: 'Joint Replacement',
     title: 'Unicompartmental Knee Replacement',
-    img: '/icons/png/Treatments/knee-replacement.png',
+    img: '/icons/png/treatments/knee-replacement.webp',
     symptoms: ['Localized knee arthritis (medial or lateral)', 'Bone-on-bone contact in one compartment', 'Good ligament integrity', 'Active patients under 70'],
     recovery: '4–6 weeks',
     description: 'A conservative surgical option for patients with arthritis affecting only one compartment, preserving healthy bone and faster rehabilitation.',
@@ -32,7 +32,7 @@ const treatments = [
   {
     category: 'Arthroscopy',
     title: 'Knee Arthroscopy',
-    img: '/icons/png/Treatments/knee-arthroscopy.png',
+    img: '/icons/png/treatments/knee-arthroscopy.webp',
     symptoms: ['Knee locking or giving way', 'Persistent swelling and pain', 'Torn meniscus or ligament', 'Cartilage damage'],
     recovery: '2–6 weeks',
     description: 'Key-hole surgery for diagnosis and treatment of knee joint pathologies including meniscal tears, cartilage damage, ligament reconstruction and loose body removal.',
@@ -40,7 +40,7 @@ const treatments = [
   {
     category: 'Sports Medicine',
     title: 'ACL Reconstruction',
-    img: '/icons/png/Treatments/acl-reconstruction.png',
+    img: '/icons/png/treatments/acl-reconstruction.webp',
     symptoms: ['Knee instability during pivoting', 'Immediate swelling after injury', 'Pop sensation at time of injury', 'Inability to continue sporting activity'],
     recovery: '9–12 months to return to sport',
     description: 'Anatomic ACL reconstruction using hamstring or patellar tendon graft with accelerated rehabilitation protocols designed for athletes.',
@@ -48,7 +48,7 @@ const treatments = [
   {
     category: 'Sports Medicine',
     title: 'Shoulder Arthroscopy',
-    img: '/icons/png/Treatments/shoulder-arthroscopy.png',
+    img: '/icons/png/treatments/shoulder-arthroscopy.webp',
     symptoms: ['Rotator cuff tear', 'Recurrent shoulder dislocation', 'SLAP lesion', 'Frozen shoulder unresponsive to physio'],
     recovery: '3–6 months',
     description: 'Minimally invasive shoulder surgery for rotator cuff repairs, bankart repairs, SLAP repairs and subacromial decompression.',
@@ -56,7 +56,7 @@ const treatments = [
   {
     category: 'Trauma',
     title: 'Fracture Fixation',
-    img: '/icons/png/Treatments/fracture-fixation.png',
+    img: '/icons/png/treatments/fracture-fixation.webp',
     symptoms: ['Complex periarticular fractures', 'Intra-articular fractures', 'Non-union and malunion', 'Pathological fractures'],
     recovery: 'Varies by fracture type',
     description: 'Surgical fixation of complex fractures using modern plates, intramedullary nails and fixators with early mobilization protocols.',
@@ -64,7 +64,7 @@ const treatments = [
   {
     category: 'Pediatric',
     title: 'Pediatric Orthopedics',
-    img: '/icons/png/Treatments/pediatric-orthopedics.png',
+    img: '/icons/png/treatments/pediatric-orthopedics.webp',
     symptoms: ["Congenital hip dysplasia", "Clubfoot deformity", "Scoliosis in children", "Limb length discrepancy"],
     recovery: 'Individualized',
     description: "Specialized orthopedic care for growing children — from congenital deformities and developmental issues to sports injuries and fractures.",

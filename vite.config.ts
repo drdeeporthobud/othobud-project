@@ -2,6 +2,7 @@ import { defineConfig, type HtmlTagDescriptor, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import path from 'node:path'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 import siteConfiguration from './.figma/make/site.json' with { type: 'json' }
 
@@ -15,10 +16,33 @@ export default defineConfig(({ mode }) => {
     build: {
       sourcemap: emitSourcemaps ? 'inline' : false,
       minify: !emitSourcemaps,
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (
+              id.includes('node_modules/react/') ||
+              id.includes('node_modules/react-dom/') ||
+              id.includes('node_modules/react-router') ||
+              id.includes('node_modules/scheduler/')
+            ) {
+              return 'vendor-react'
+            }
+            if (id.includes('node_modules/@supabase/')) {
+              return 'vendor-supabase'
+            }
+          },
+        },
+      },
     },
     plugins: [
       react(),
       tailwindcss(),
+      visualizer({
+        filename: 'stats.html',
+        open: false,
+        gzipSize: true,
+        brotliSize: true,
+      }) as any,
       figmaSiteConfiguration(siteConfiguration),
       figmaErrorOverlayReplay(),
       figmaReactRefreshBoundaryFallback(),

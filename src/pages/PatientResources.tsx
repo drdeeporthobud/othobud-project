@@ -30,37 +30,37 @@ const faqs = [
 
 const guides = [
   {
-    icon: '/icons/png/PatientResources/Folder_1/pre-checklist.png',
+    icon: '/icons/png/patient-guides/pre-checklist.webp',
     title: 'Pre-Operative Checklist',
     desc: 'Everything you need to do and bring before your surgery date.',
     tag: 'Surgery Prep',
   },
   {
-    icon: '/icons/png/PatientResources/Folder_1/post-knee.png',
+    icon: '/icons/png/patient-guides/post-knee.webp',
     title: 'Post-Knee Replacement Exercises',
     desc: 'A gentle illustrated guide to exercises from Day 1 through Week 12.',
     tag: 'Rehabilitation',
   },
   {
-    icon: '/icons/png/PatientResources/Folder_1/nutrition-bone.png',
+    icon: '/icons/png/patient-guides/nutrition-bone.webp',
     title: 'Nutrition for Bone Health',
     desc: 'Diet recommendations before and after orthopedic surgery.',
     tag: 'Recovery',
   },
   {
-    icon: '/icons/png/PatientResources/Folder_1/sleep.png',
+    icon: '/icons/png/patient-guides/sleep.webp',
     title: 'Sleep & Rest After Surgery',
     desc: 'Positioning, sleeping aids, and what to expect during the first 2 weeks.',
     tag: 'Recovery',
   },
   {
-    icon: '/icons/png/PatientResources/Folder_1/post-surgical.png',
+    icon: '/icons/png/patient-guides/post-surgical.webp',
     title: 'Managing Post-Surgical Pain',
     desc: 'Medication guidance, when to call the clinic, and natural pain relief.',
     tag: 'Pain Management',
   },
   {
-    icon: '/icons/png/PatientResources/Folder_1/patient-discharge.png',
+    icon: '/icons/png/patient-guides/patient-discharge.webp',
     title: 'Patient Discharge Instructions',
     desc: 'Step-by-step home care guide for the first 30 days post-discharge.',
     tag: 'Discharge',

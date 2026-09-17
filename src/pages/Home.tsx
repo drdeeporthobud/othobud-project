@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useReveal, useCountUp } from '../hooks/useReveal'
-import drDeepHero from '../imports/Dr_Deep.png'
-import drDeepRbg from '../imports/Dr_Deep_rbg.png'
-import drDeep1 from '../imports/Dr-Deep-1.png'
-import { posts as allBlogPosts, BlogPost } from './Blog'
+import { posts as allBlogPosts, type BlogPost } from '../data/blogData'
+
+const drDeepHero = '/images/doctor/dr-deep-hero.webp'
+const drDeepRbg = '/images/doctor/dr-deep-portrait-cutout.webp'
+const drDeep1 = '/images/doctor/dr-deep-full.webp'
 
 function StatCard({
   value,
@@ -33,42 +34,42 @@ function StatCard({
 
 const conditions = [
   {
-    image: '/icons/png/Home/Folder_1/kneepain.png',
+    image: '/icons/png/symptoms/kneepain.webp',
     label: 'Knee Pain',
     desc: 'Osteoarthritis, ligament tears, meniscus injuries',
     bgGradient: 'from-[#e0f2fe]/70 via-[#ebf5fe]/85 to-[#f0f8ff]',
     borderColor: 'border-sky-100/90',
   },
   {
-    image: '/icons/png/Home/Folder_1/hippain.png',
+    image: '/icons/png/symptoms/hippain.webp',
     label: 'Hip Pain',
     desc: 'Labral tears, hip arthritis, bursitis',
     bgGradient: 'from-[#ffedd5]/60 via-[#fff3e8]/85 to-[#fff7ed]',
     borderColor: 'border-amber-100/90',
   },
   {
-    image: '/icons/png/Home/Folder_1/shoulderpain.png',
+    image: '/icons/png/symptoms/shoulderpain.webp',
     label: 'Shoulder Pain',
     desc: 'Rotator cuff, frozen shoulder, dislocations',
     bgGradient: 'from-[#dcfce7]/60 via-[#ecfdf3]/85 to-[#f0fdf4]',
     borderColor: 'border-emerald-100/90',
   },
   {
-    image: '/icons/png/Home/Folder_1/sports.png',
+    image: '/icons/png/symptoms/sports.webp',
     label: 'Sports Injuries',
     desc: 'ACL tears, cartilage damage, stress fractures',
     bgGradient: 'from-[#fef3c7]/60 via-[#fff8ed]/85 to-[#fffbeb]',
     borderColor: 'border-amber-100/90',
   },
   {
-    image: '/icons/png/Home/Folder_1/fracture.png',
+    image: '/icons/png/symptoms/fracture.webp',
     label: 'Fractures',
     desc: 'Complex fractures, non-unions, deformities',
     bgGradient: 'from-[#ede9fe]/60 via-[#f4f2ff]/85 to-[#f8f7ff]',
     borderColor: 'border-indigo-100/90',
   },
   {
-    image: '/icons/png/Home/Folder_1/backpain.png',
+    image: '/icons/png/symptoms/backpain.webp',
     label: 'Back Pain',
     desc: 'Disc herniation, sciatica, spinal stenosis',
     bgGradient: 'from-[#e0f2fe]/70 via-[#ebf6ff]/85 to-[#f0f9ff]',
@@ -80,32 +81,32 @@ const treatments = [
   {
     title: 'Robotic Joint Replacement',
     desc: 'Precision-guided robotic surgery for knee and hip replacement with faster recovery.',
-    image: '/icons/png/Home/Folder_2/robotic-joint-replacement.png',
+    image: '/icons/png/specialties/robotic-joint-replacement.webp',
   },
   {
     title: 'Arthroscopy',
     desc: 'Minimally invasive joint surgery with tiny incisions and rapid recovery.',
-    image: '/icons/png/Home/Folder_2/arthroscopy.png',
+    image: '/icons/png/specialties/arthroscopy.webp',
   },
   {
     title: 'Sports Medicine',
     desc: 'Advanced care for athletes — from diagnosis to return-to-play rehabilitation.',
-    image: '/icons/png/Home/Folder_2/sports-medicine.png',
+    image: '/icons/png/specialties/sports-medicine.webp',
   },
   {
     title: 'Trauma Surgery',
     desc: 'Expert management of complex fractures and polytrauma cases.',
-    image: '/icons/png/Home/Folder_2/trauma-surgery.png',
+    image: '/icons/png/specialties/trauma-surgery.webp',
   },
   {
     title: 'Revision Surgery',
     desc: 'Corrective procedures for failed joint replacements and implant complications.',
-    image: '/icons/png/Home/Folder_2/revision-surgery.png',
+    image: '/icons/png/specialties/revision-surgery.webp',
   },
   {
     title: 'Pediatric Orthopedics',
     desc: "Specialized care for children's bone and joint conditions.",
-    image: '/icons/png/Home/Folder_2/pediatric-orthopedics.png',
+    image: '/icons/png/specialties/pediatric-orthopedics.webp',
   },
 ]
 
@@ -672,7 +673,7 @@ export default function Home() {
         {/* Background decorative runner on left */}
         <div className="absolute top-2 left-0 sm:left-4 w-40 sm:w-64 h-36 sm:h-52 opacity-15 pointer-events-none select-none mix-blend-multiply overflow-hidden">
           <img
-            src="/icons/png/Home/Folder_1/sports.png"
+            src="/icons/png/symptoms/sports.webp"
             alt=""
             className="w-full h-full object-cover object-left filter contrast-125 brightness-110 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_75%)]"
           />
@@ -851,7 +852,7 @@ export default function Home() {
               </p>
               <div className="mt-6 sm:mt-8 aspect-[4/3] rounded-2xl sm:rounded-3xl overflow-hidden bg-soft-gray border border-border/40 shadow-lg reveal reveal-delay-3">
                 <img
-                  src="/icons/png/Home/Folder_3/part3-mainpic.png"
+                  src="/images/banners/consultation-highlight.webp"
                   alt="Orthopedic care and consultation"
                   className="w-full h-full object-cover"
                 />

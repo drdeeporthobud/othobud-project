@@ -247,7 +247,7 @@ export default function MyBooking() {
                     rel="noopener noreferrer"
                     className="min-h-[44px] py-2.5 px-3.5 rounded-xl border border-border/80 bg-white hover:bg-soft-gray active:bg-gray-100 text-navy hover:text-teal font-display font-600 text-xs sm:text-sm flex items-center justify-center gap-2.5 transition-all shadow-xs w-full"
                   >
-                    <img src="/icons/svg/google-calender-icon.svg" alt="Google Calendar" className="w-4 h-4 shrink-0" />
+                    <img src="/icons/svg/google-calendar.svg" alt="Google Calendar" className="w-4 h-4 shrink-0" />
                     <span>Google Calendar</span>
                   </a>
                 </div>

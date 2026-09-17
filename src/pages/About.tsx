@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useReveal } from '../hooks/useReveal'
-import drDeepImg from '../imports/Dr_Deep.png'
+
+const drDeepImg = '/images/doctor/dr-deep-hero.webp'
 
 const timeline = [
   {
