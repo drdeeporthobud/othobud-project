@@ -928,7 +928,7 @@ export default function StaffManagement({
                 </label>
                 <input
                   type="tel"
-                  placeholder="+91 98300 00000"
+                  placeholder="+91 79801 44046"
                   value={addForm.phone}
                   onChange={(e) => setAddForm((prev) => ({ ...prev, phone: e.target.value }))}
                   className="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-border rounded-xl text-navy placeholder:text-navy-700/40 focus:outline-none focus:ring-2 focus:ring-teal/30 focus:border-teal transition-all"

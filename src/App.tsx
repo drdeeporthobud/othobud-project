@@ -34,7 +34,7 @@ const PAGE_TITLES: Record<string, string> = {
   '/patient-resources': 'Patient Resources & Recovery Guides | Orthobud',
   '/blog': 'Orthopedic Health Blog & Articles | Dr. Deep Chakraborty',
   '/gallery': 'Clinic & Surgical Gallery | Patient Care in Kolkata',
-  '/contact': 'Contact & Clinic Locations | Salt Lake, Alipore & New Town',
+  '/contact': 'Contact & Clinic Locations | Newtown, Salt Lake, Barasat & Anandapur',
   '/book-appointment': 'Book an Appointment | Dr. Deep Chakraborty',
   '/my-booking': 'Track Your Booking | Appointment Status',
   '/admin': 'Staff Gateway & Admin Portal | Orthobud Practice',

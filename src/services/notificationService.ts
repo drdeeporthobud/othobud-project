@@ -12,10 +12,10 @@ export interface WhatsAppNotificationPayload {
  * Generate a pre-filled WhatsApp click-to-chat URL for patients
  */
 export function getWhatsAppConfirmationUrl(payload: WhatsAppNotificationPayload): string {
-  const number = payload.whatsappNumber || '919830012345'
+  const number = payload.whatsappNumber || '917980144046'
   const message = [
     `*Orthopedic Consultation Confirmed*`,
-    `👨‍⚕️ *Doctor:* Dr. Deep Chakraborty (MS Ortho, DNB, Fellow Germany)`,
+    `👨‍⚕️ *Doctor:* Dr. Deep Chakraborty (MS Ortho, Fellowships USA, Dubai, Kolkata)`,
     `📌 *Reference:* ${payload.bookingReference}`,
     `👤 *Patient:* ${payload.patientName}`,
     `🏥 *Clinic:* ${payload.clinicName}`,

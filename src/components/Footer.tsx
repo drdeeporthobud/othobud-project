@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
+import { MapPin } from 'lucide-react'
 
 const quickLinks = [
   { label: 'About Dr. Deep', href: '/about' },
@@ -19,6 +20,33 @@ const treatments = [
   { label: 'Spine Care', query: 'spine' },
 ]
 
+const footerClinics = [
+  {
+    name: 'Alexa Newtown',
+    timing: 'Mon–Sat: 6 PM – 8 PM',
+  },
+  {
+    name: 'Manipal Broadway (Salt Lake)',
+    timing: 'Mon & Fri: 4 PM – 5 PM',
+  },
+  {
+    name: 'Narayana Barasat',
+    timing: 'Wed & Sat: 12 PM – 2 PM',
+  },
+  {
+    name: 'Fortis (EM Bypass)',
+    timing: 'Sat: 3 PM – 5 PM',
+  },
+  {
+    name: 'Daffodil Laketown',
+    timing: 'Wed: 7:30–9 PM · Sat: 10:30–11:30 AM',
+  },
+  {
+    name: 'Apollo Clinic Newtown',
+    timing: 'Tue, Thu, Fri, Sun: 4:30 PM – 6 PM',
+  },
+]
+
 export default function Footer() {
   const location = useLocation()
   const hideCta = location.pathname === '/book-appointment' || location.pathname === '/admin'
@@ -32,7 +60,7 @@ export default function Footer() {
             <div>
               <h3 className="font-display font-700 text-lg sm:text-xl text-white">Ready to start your recovery journey?</h3>
               <p className="text-white/85 mt-1 text-xs sm:text-sm max-w-xl">
-                Book a consultation with Dr. Deep Chakraborty across Salt Lake, Alipore, or Newtown.
+                Book a consultation with Dr. Deep Chakraborty across Newtown, Salt Lake, Barasat, Lake Town, or Anandapur.
               </p>
             </div>
             <Link
@@ -116,34 +144,18 @@ export default function Footer() {
           {/* Contact */}
           <div>
             <h4 className="font-display font-700 text-xs uppercase tracking-widest text-white/50 mb-4 sm:mb-5">Clinics in Kolkata</h4>
-            <ul className="space-y-3">
-              <li className="flex items-start gap-3">
-                <div className="w-7 h-7 rounded-lg bg-white/8 flex items-center justify-center flex-shrink-0 mt-0.5 text-xs">
-                  📍
-                </div>
-                <div>
-                  <div className="text-white/95 text-xs font-semibold">Salt Lake City (Sec 1)</div>
-                  <div className="text-white/55 text-[11px] mt-0.5">Mon–Sat: 5 PM – 8 PM</div>
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <div className="w-7 h-7 rounded-lg bg-white/8 flex items-center justify-center flex-shrink-0 mt-0.5 text-xs">
-                  📍
-                </div>
-                <div>
-                  <div className="text-white/95 text-xs font-semibold">Alipore (Woodlands)</div>
-                  <div className="text-white/55 text-[11px] mt-0.5">Mon, Wed, Fri: 11 AM – 1 PM</div>
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <div className="w-7 h-7 rounded-lg bg-white/8 flex items-center justify-center flex-shrink-0 mt-0.5 text-xs">
-                  📍
-                </div>
-                <div>
-                  <div className="text-white/95 text-xs font-semibold">Newtown (Axis Mall)</div>
-                  <div className="text-white/55 text-[11px] mt-0.5">Tue, Thu: 6 PM – 9 PM</div>
-                </div>
-              </li>
+            <ul className="space-y-2">
+              {footerClinics.map((clinic) => (
+                <li key={clinic.name} className="flex items-start gap-2.5">
+                  <div className="w-5 h-5 rounded-md bg-white/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <MapPin className="w-3 h-3 text-sky-400" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-white/95 text-xs font-semibold leading-snug">{clinic.name}</div>
+                    <div className="text-white/55 text-[11px] mt-0.5 leading-snug">{clinic.timing}</div>
+                  </div>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
@@ -153,7 +165,7 @@ export default function Footer() {
       <div className="border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-center sm:text-left">
           <p className="text-white/45 text-xs leading-relaxed">
-            © 2025 Orthobud · Dr. Deep Chakraborty (MS Ortho, DNB, Fellow Germany). All rights reserved.
+            © 2026 Orthobud · Dr. Deep Chakraborty (MS Ortho · Fellowships USA, Dubai & Kolkata). All rights reserved.
           </p>
           <div className="flex items-center gap-4 sm:gap-6 text-xs flex-wrap justify-center">
             <Link to="/my-booking" className="text-white/60 hover:text-white transition-colors py-1">

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import {
   appointmentService,
@@ -20,6 +20,9 @@ import {
   FileText,
   ArrowRight,
   AlertTriangle,
+  ChevronDown,
+  Check,
+  ExternalLink,
 } from 'lucide-react'
 
 type Step = 1 | 2 | 3
@@ -44,6 +47,28 @@ function getTomorrowDate(): string {
   return d.toISOString().split('T')[0]
 }
 
+// Get next valid operating date for a clinic starting from today or a given date
+function getNextOperatingDate(operatingDays: number[], fromDate?: string): string {
+  const start = fromDate ? new Date(fromDate + 'T00:00:00') : new Date()
+  // Start from tomorrow (never today)
+  const d = new Date(start)
+  d.setDate(d.getDate() + 1)
+  // Search up to 14 days ahead
+  for (let i = 0; i < 14; i++) {
+    const jsDay = d.getDay() // 0=Sun
+    const isoDay = jsDay === 0 ? 7 : jsDay // 1=Mon..7=Sun
+    if (operatingDays.includes(isoDay)) {
+      return d.toISOString().split('T')[0]
+    }
+    d.setDate(d.getDate() + 1)
+  }
+  // Fallback to tomorrow if nothing found (shouldn't happen)
+  return getTomorrowDate()
+}
+
+// Day name helper
+const DAY_NAMES = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+
 export default function BookAppointment() {
   const [searchParams] = useSearchParams()
   const [step, setStep] = useState<Step>(1)
@@ -58,7 +83,7 @@ export default function BookAppointment() {
   const [form, setForm] = useState({
     clinicId: DEFAULT_CLINICS[0].id,
     clinicName: DEFAULT_CLINICS[0].name,
-    date: getTomorrowDate(),
+    date: getNextOperatingDate(DEFAULT_CLINICS[0].operatingDays),
     timeSlot: '',
     name: '',
     age: '',
@@ -85,6 +110,21 @@ export default function BookAppointment() {
   const [submitting, setSubmitting] = useState<boolean>(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [bookingRef, setBookingRef] = useState<string>('')
+  const [clinicDropdownOpen, setClinicDropdownOpen] = useState<boolean>(false)
+  const clinicDropdownRef = useRef<HTMLDivElement>(null)
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (clinicDropdownRef.current && !clinicDropdownRef.current.contains(event.target as Node)) {
+        setClinicDropdownOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   // Load clinics on mount
   useEffect(() => {
@@ -104,6 +144,9 @@ export default function BookAppointment() {
           ...prev,
           clinicId: initialClinic.id,
           clinicName: initialClinic.name,
+          // Auto-advance date to next operating day for this clinic
+          date: getNextOperatingDate(initialClinic.operatingDays),
+          timeSlot: '',
         }))
       }
     }
@@ -164,6 +207,8 @@ export default function BookAppointment() {
       ...prev,
       clinicId: clinic.id,
       clinicName: clinic.name,
+      // Auto-advance to next valid day for the newly selected clinic
+      date: getNextOperatingDate(clinic.operatingDays),
       timeSlot: '',
     }))
   }
@@ -446,42 +491,142 @@ export default function BookAppointment() {
                   </span>
                 </div>
 
-                {/* Clinic Selection Cards */}
-                <div>
-                  <label className="text-xs font-display font-700 text-navy uppercase tracking-wide block mb-2">
-                    Select Clinic *
-                  </label>
-                  <div className="grid grid-cols-1 gap-3">
-                    {clinics.map((c) => {
-                      const isSelected = form.clinicId === c.id
-                      return (
-                        <button
-                          key={c.id}
-                          type="button"
-                          onClick={() => handleClinicChange(c)}
-                          className={`text-left px-5 py-4 rounded-xl border-2 transition-all ${
-                            isSelected
-                              ? 'border-teal bg-teal/5 ring-2 ring-teal/20'
-                              : 'border-border/60 hover:border-border'
-                          }`}
-                        >
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <div className="font-display font-600 text-navy text-sm">{c.name}</div>
-                              <div className="text-xs text-navy-700 mt-0.5">{c.hoursDescription}</div>
-                              <div className="text-[11px] text-navy-700/60 mt-0.5">{c.landmark}</div>
+                {/* Professional Clinic Selector Dropdown */}
+                <div className="relative" ref={clinicDropdownRef}>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="text-xs font-display font-700 text-navy uppercase tracking-wide">
+                      Select Clinic Location *
+                    </label>
+                    <span className="text-[11px] text-teal font-semibold">
+                      {clinics.length} Centers Available
+                    </span>
+                  </div>
+
+                  {/* Dropdown Trigger Button */}
+                  <button
+                    type="button"
+                    onClick={() => setClinicDropdownOpen((prev) => !prev)}
+                    className={`w-full text-left bg-white border-2 rounded-2xl p-3.5 sm:p-4 transition-all flex items-center justify-between shadow-xs hover:border-teal cursor-pointer ${
+                      clinicDropdownOpen ? 'border-teal ring-2 ring-teal/20' : 'border-border/80'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3.5 min-w-0 pr-2">
+                      <div className="w-10 h-10 rounded-xl bg-teal/10 text-teal flex items-center justify-center shrink-0">
+                        <Building2 className="w-5 h-5" />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-display font-700 text-navy text-sm sm:text-base truncate">
+                            {selectedClinic.name}
+                          </span>
+                          <span className="text-[11px] font-display font-600 px-2.5 py-0.5 rounded-full bg-teal/10 text-teal border border-teal/20">
+                            {selectedClinic.hoursDescription.split('|')[0].trim()}
+                          </span>
+                        </div>
+                        <div className="text-xs text-navy-700/70 mt-0.5 truncate flex items-center gap-1">
+                          <MapPin className="w-3 h-3 text-navy-700/40 shrink-0" />
+                          <span className="truncate">{selectedClinic.address}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="w-8 h-8 rounded-lg bg-soft-gray flex items-center justify-center shrink-0 text-navy-700">
+                      <ChevronDown
+                        className={`w-4 h-4 transition-transform duration-200 ${
+                          clinicDropdownOpen ? 'rotate-180 text-teal' : ''
+                        }`}
+                      />
+                    </div>
+                  </button>
+
+                  {/* Dropdown Menu Overlay */}
+                  {clinicDropdownOpen && (
+                    <div className="absolute top-full left-0 right-0 z-40 mt-2 bg-white rounded-2xl border border-border/80 shadow-2xl overflow-hidden max-h-[360px] overflow-y-auto animate-fade-in divide-y divide-border/40">
+                      {clinics.map((c) => {
+                        const isSelected = form.clinicId === c.id
+                        return (
+                          <button
+                            key={c.id}
+                            type="button"
+                            onClick={() => {
+                              handleClinicChange(c)
+                              setClinicDropdownOpen(false)
+                            }}
+                            className={`w-full text-left p-3.5 sm:p-4 transition-colors flex items-center justify-between gap-3 group cursor-pointer ${
+                              isSelected
+                                ? 'bg-teal/5 text-navy font-semibold'
+                                : 'hover:bg-soft-gray text-navy'
+                            }`}
+                          >
+                            <div className="flex items-start gap-3 min-w-0">
+                              <div
+                                className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5 transition-colors ${
+                                  isSelected
+                                    ? 'bg-teal text-white shadow-xs'
+                                    : 'bg-soft-gray text-navy-700 group-hover:bg-white'
+                                }`}
+                              >
+                                <Building2 className="w-4 h-4" />
+                              </div>
+                              <div className="min-w-0">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <span className="font-display font-700 text-sm text-navy">
+                                    {c.name}
+                                  </span>
+                                  <span className="text-[10px] font-display font-600 px-2 py-0.5 rounded-md bg-navy/5 text-navy-700 border border-border/60">
+                                    {c.hoursDescription}
+                                  </span>
+                                </div>
+                                <div className="text-xs text-navy-700/70 mt-1 line-clamp-1 flex items-center gap-1">
+                                  <MapPin className="w-3 h-3 text-navy-700/40 shrink-0" />
+                                  <span>{c.address}</span>
+                                </div>
+                              </div>
                             </div>
-                            <div
-                              className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
-                                isSelected ? 'border-teal' : 'border-border/60'
-                              }`}
-                            >
-                              {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-teal" />}
+                            <div className="shrink-0 pl-2">
+                              {isSelected ? (
+                                <div className="w-6 h-6 rounded-full bg-teal text-white flex items-center justify-center shadow-xs">
+                                  <Check className="w-3.5 h-3.5 stroke-[3]" />
+                                </div>
+                              ) : (
+                                <div className="w-6 h-6 rounded-full border border-border/80 group-hover:border-teal/50" />
+                              )}
                             </div>
-                          </div>
-                        </button>
-                      )
-                    })}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  )}
+
+                  {/* Selected Clinic Preview Information Box */}
+                  <div className="mt-3.5 bg-soft-gray/70 rounded-2xl p-4 border border-border/70 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+                    <div className="space-y-1">
+                      <div className="font-display font-700 text-navy flex items-center gap-1.5">
+                        <MapPin className="w-3.5 h-3.5 text-teal shrink-0" />
+                        <span>{selectedClinic.name}</span>
+                        <span className="text-[10px] font-normal text-navy-700/60">
+                          ({selectedClinic.landmark})
+                        </span>
+                      </div>
+                      <div className="text-navy-700/80 leading-relaxed pl-5">
+                        {selectedClinic.address}
+                      </div>
+                      <div className="text-teal font-semibold pl-5 flex items-center gap-1">
+                        <Clock className="w-3 h-3 text-teal" />
+                        <span>{selectedClinic.hoursDescription}</span>
+                      </div>
+                    </div>
+                    {selectedClinic.googleMapsUrl && (
+                      <a
+                        href={selectedClinic.googleMapsUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-teal hover:text-white text-navy font-display font-600 border border-border/80 transition-all shrink-0 shadow-2xs group"
+                      >
+                        <MapPin className="w-3 h-3 text-teal group-hover:text-white transition-colors" />
+                        <span>Map Location</span>
+                        <ExternalLink className="w-3 h-3 opacity-60" />
+                      </a>
+                    )}
                   </div>
                 </div>
 
@@ -491,8 +636,9 @@ export default function BookAppointment() {
                     <label className="text-xs font-display font-700 text-navy uppercase tracking-wide">
                       Preferred Date *
                     </label>
-                    <span className="text-xs text-teal font-medium">
-                      Operating: {selectedClinic.hoursDescription.split(':')[0]}
+                    <span className="text-xs text-teal font-medium flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      Open: {selectedClinic.operatingDays.map((d) => DAY_NAMES[d - 1]).join(', ')}
                     </span>
                   </div>
                   <input
@@ -502,6 +648,41 @@ export default function BookAppointment() {
                     onChange={(e) => update('date', e.target.value)}
                     className="w-full border-2 border-border/60 rounded-xl px-4 py-3 text-navy text-sm focus:outline-none focus:border-teal bg-white"
                   />
+                  {/* Quick jump to next valid date buttons */}
+                  <div className="flex flex-wrap gap-1.5 mt-2">
+                    {(() => {
+                      const nextDates: { label: string; date: string }[] = []
+                      const today = new Date()
+                      let d = new Date(today)
+                      d.setDate(d.getDate() + 1)
+                      for (let i = 0; nextDates.length < 4 && i < 30; i++) {
+                        const jsDay = d.getDay()
+                        const isoDay = jsDay === 0 ? 7 : jsDay
+                        if (selectedClinic.operatingDays.includes(isoDay)) {
+                          const dateStr = d.toISOString().split('T')[0]
+                          const diff = Math.round((d.getTime() - today.getTime()) / 86400000)
+                          const label = diff === 1 ? 'Tomorrow' : diff <= 7 ? DAY_NAMES[isoDay - 1] + ' ' + d.getDate() : dateStr
+                          nextDates.push({ label, date: dateStr })
+                        }
+                        d = new Date(d)
+                        d.setDate(d.getDate() + 1)
+                      }
+                      return nextDates.map(({ label, date }) => (
+                        <button
+                          key={date}
+                          type="button"
+                          onClick={() => update('date', date)}
+                          className={`px-2.5 py-1 rounded-lg text-[11px] font-display font-600 border transition-all ${
+                            form.date === date
+                              ? 'bg-teal text-white border-teal shadow-xs'
+                              : 'bg-white text-navy-700 border-border/60 hover:border-teal hover:text-teal'
+                          }`}
+                        >
+                          {label}
+                        </button>
+                      ))
+                    })()}
+                  </div>
                 </div>
 
                 {/* Dynamic Slot List or Closed / Leave Alert */}
@@ -688,7 +869,7 @@ export default function BookAppointment() {
                       value={form.phone}
                       onChange={(e) => update('phone', e.target.value)}
                       className="w-full border-2 border-border/60 rounded-xl px-4 py-3 text-navy text-sm focus:outline-none focus:border-teal"
-                      placeholder="+91 98300 XXXXX"
+                      placeholder="+91 79801 44046"
                     />
                   </div>
 

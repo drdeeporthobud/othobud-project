@@ -1,5 +1,12 @@
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
 
+export interface ClinicSchedule {
+  startHour: number
+  startMin: number
+  endHour: number
+  endMin: number
+}
+
 export interface Clinic {
   id: string
   name: string
@@ -12,6 +19,7 @@ export interface Clinic {
   operatingDays: number[] // 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat, 7=Sun
   slotDurationMinutes: number
   hoursDescription: string
+  daySchedules?: Record<number, ClinicSchedule>
 }
 
 export interface SlotInfo {
@@ -64,42 +72,110 @@ export interface BlockedDate {
 export const DEFAULT_CLINICS: Clinic[] = [
   {
     id: 'c1111111-1111-1111-1111-111111111111',
-    name: 'Salt Lake Clinic',
-    slug: 'salt-lake',
-    address: 'Block EC, Sector 1, Salt Lake City, Kolkata - 700064',
-    landmark: 'Near City Centre 1',
-    phone: '+91 98300 12345',
-    whatsappNumber: '919830012345',
-    googleMapsUrl: 'https://maps.google.com/?q=Salt+Lake+City+Sector+1+Kolkata',
+    name: 'Alexa Newtown',
+    slug: 'alexa-newtown',
+    address: 'Snehodiya, Street No 165, BC Block, Action Area I, Newtown, Kolkata 700163',
+    landmark: 'Near Snehodiya Senior Living, Action Area I',
+    phone: '+91 79801 44046',
+    whatsappNumber: '917980144046',
+    googleMapsUrl: 'https://maps.google.com/?q=Snehodiya+Street+165+BC+Block+Action+Area+I+Newtown+Kolkata+700163',
     operatingDays: [1, 2, 3, 4, 5, 6], // Mon-Sat
     slotDurationMinutes: 30,
-    hoursDescription: 'Mon–Sat: 5:00 PM – 8:00 PM',
+    hoursDescription: 'Mon–Sat: 6:00 PM – 8:00 PM',
+    daySchedules: {
+      1: { startHour: 18, startMin: 0, endHour: 20, endMin: 0 },
+      2: { startHour: 18, startMin: 0, endHour: 20, endMin: 0 },
+      3: { startHour: 18, startMin: 0, endHour: 20, endMin: 0 },
+      4: { startHour: 18, startMin: 0, endHour: 20, endMin: 0 },
+      5: { startHour: 18, startMin: 0, endHour: 20, endMin: 0 },
+      6: { startHour: 18, startMin: 0, endHour: 20, endMin: 0 },
+    },
   },
   {
     id: 'c2222222-2222-2222-2222-222222222222',
-    name: 'Alipore Clinic',
-    slug: 'alipore',
-    address: '24B, Alipore Road, Woodlands Hospital Complex, Kolkata - 700027',
-    landmark: 'Near National Library',
-    phone: '+91 98300 23456',
-    whatsappNumber: '919830023456',
-    googleMapsUrl: 'https://maps.google.com/?q=Woodlands+Hospital+Alipore+Kolkata',
-    operatingDays: [1, 3, 5], // Mon, Wed, Fri
+    name: 'Manipal Hospital Broadway',
+    slug: 'manipal-broadway',
+    address: 'JC-16 & 17, No. 3A, Broadway Road, Sector 3, Bidhannagar, Salt Lake, Kolkata 700106',
+    landmark: 'Broadway Road, Sector 3, Salt Lake',
+    phone: '+91 79801 44046',
+    whatsappNumber: '917980144046',
+    googleMapsUrl: 'https://maps.google.com/?q=Manipal+Hospital+Broadway+Salt+Lake+Kolkata+700106',
+    operatingDays: [1, 5], // Mon, Fri
     slotDurationMinutes: 30,
-    hoursDescription: 'Mon, Wed, Fri: 11:00 AM – 1:00 PM',
+    hoursDescription: 'Mon & Fri: 4:00 PM – 5:00 PM',
+    daySchedules: {
+      1: { startHour: 16, startMin: 0, endHour: 17, endMin: 0 },
+      5: { startHour: 16, startMin: 0, endHour: 17, endMin: 0 },
+    },
   },
   {
     id: 'c3333333-3333-3333-3333-333333333333',
-    name: 'Newtown Clinic',
-    slug: 'newtown',
-    address: 'Action Area 1, Major Arterial Road, Newtown, Kolkata - 700156',
-    landmark: 'Near Axis Mall',
-    phone: '+91 98300 34567',
-    whatsappNumber: '919830034567',
-    googleMapsUrl: 'https://maps.google.com/?q=Axis+Mall+Newtown+Kolkata',
-    operatingDays: [2, 4], // Tue, Thu
+    name: 'Narayana Barasat',
+    slug: 'narayana-barasat',
+    address: '78, Jessore Road (South), Barasat, North 24 Parganas, Kolkata 700127',
+    landmark: 'Jessore Road South, Barasat',
+    phone: '+91 79801 44046',
+    whatsappNumber: '917980144046',
+    googleMapsUrl: 'https://maps.google.com/?q=Narayana+Multispeciality+Hospital+Barasat+Jessore+Road+Kolkata+700127',
+    operatingDays: [3, 6], // Wed, Sat
     slotDurationMinutes: 30,
-    hoursDescription: 'Tue, Thu: 6:00 PM – 9:00 PM',
+    hoursDescription: 'Wed & Sat: 12:00 PM – 2:00 PM',
+    daySchedules: {
+      3: { startHour: 12, startMin: 0, endHour: 14, endMin: 0 },
+      6: { startHour: 12, startMin: 0, endHour: 14, endMin: 0 },
+    },
+  },
+  {
+    id: 'c4444444-4444-4444-4444-444444444444',
+    name: 'Fortis',
+    slug: 'fortis',
+    address: '730, Eastern Metropolitan Bypass, Anandapur, East Kolkata Township, Kolkata 700107',
+    landmark: 'EM Bypass, Anandapur',
+    phone: '+91 79801 44046',
+    whatsappNumber: '917980144046',
+    googleMapsUrl: 'https://maps.google.com/?q=Fortis+Hospital+EM+Bypass+Anandapur+Kolkata+700107',
+    operatingDays: [6], // Sat
+    slotDurationMinutes: 30,
+    hoursDescription: 'Sat: 3:00 PM – 5:00 PM',
+    daySchedules: {
+      6: { startHour: 15, startMin: 0, endHour: 17, endMin: 0 },
+    },
+  },
+  {
+    id: 'c5555555-5555-5555-5555-555555555555',
+    name: 'Daffodil Laketown',
+    slug: 'daffodil-laketown',
+    address: '276, Canal Street, Sreebhumi, Lake Town, South Dumdum, Kolkata 700048',
+    landmark: 'Canal Street, Sreebhumi',
+    phone: '+91 79801 44046',
+    whatsappNumber: '917980144046',
+    googleMapsUrl: 'https://maps.google.com/?q=Daffodil+Hospital+Lake+Town+Canal+Street+Kolkata+700048',
+    operatingDays: [3, 6], // Wed, Sat
+    slotDurationMinutes: 30,
+    hoursDescription: 'Wed: 7:30 PM – 9:00 PM | Sat: 10:30 AM – 11:30 AM',
+    daySchedules: {
+      3: { startHour: 19, startMin: 30, endHour: 21, endMin: 0 },
+      6: { startHour: 10, startMin: 30, endHour: 11, endMin: 30 },
+    },
+  },
+  {
+    id: 'c6666666-6666-6666-6666-666666666666',
+    name: 'Apollo Clinic Newtown',
+    slug: 'apollo-newtown',
+    address: 'The Galleria, 1B, Street Number 124, BG Block, Action Area I, Newtown, Kolkata 700163',
+    landmark: 'The Galleria, Action Area I',
+    phone: '+91 79801 44046',
+    whatsappNumber: '917980144046',
+    googleMapsUrl: 'https://maps.google.com/?q=Apollo+Clinic+The+Galleria+Street+124+BG+Block+Newtown+Kolkata+700163',
+    operatingDays: [2, 4, 5, 7], // Tue, Thu, Fri, Sun
+    slotDurationMinutes: 30,
+    hoursDescription: 'Tue, Thu, Fri, Sun: 4:30 PM – 6:00 PM',
+    daySchedules: {
+      2: { startHour: 16, startMin: 30, endHour: 18, endMin: 0 },
+      4: { startHour: 16, startMin: 30, endHour: 18, endMin: 0 },
+      5: { startHour: 16, startMin: 30, endHour: 18, endMin: 0 },
+      7: { startHour: 16, startMin: 30, endHour: 18, endMin: 0 },
+    },
   },
 ]
 
@@ -182,21 +258,54 @@ function generateLocalSlots(clinic: Clinic, dateStr: string): SlotResponse {
     }
   }
 
-  // 3. Generate time slot intervals based on clinic
-  let startHour = 17
+  // 3. Generate time slot intervals based on clinic schedule
+  let startHour = 18
   let startMin = 0
   let endHour = 20
   let endMin = 0
 
-  if (clinic.slug === 'alipore') {
-    startHour = 11
-    startMin = 0
-    endHour = 13
-    endMin = 0
-  } else if (clinic.slug === 'newtown') {
+  if (clinic.daySchedules && clinic.daySchedules[isoDay]) {
+    const sched = clinic.daySchedules[isoDay]
+    startHour = sched.startHour
+    startMin = sched.startMin
+    endHour = sched.endHour
+    endMin = sched.endMin
+  } else if (clinic.slug === 'alexa-newtown') {
     startHour = 18
     startMin = 0
-    endHour = 21
+    endHour = 20
+    endMin = 0
+  } else if (clinic.slug === 'manipal-broadway') {
+    startHour = 16
+    startMin = 0
+    endHour = 17
+    endMin = 0
+  } else if (clinic.slug === 'narayana-barasat') {
+    startHour = 12
+    startMin = 0
+    endHour = 14
+    endMin = 0
+  } else if (clinic.slug === 'fortis') {
+    startHour = 15
+    startMin = 0
+    endHour = 17
+    endMin = 0
+  } else if (clinic.slug === 'daffodil-laketown') {
+    if (isoDay === 6) {
+      startHour = 10
+      startMin = 30
+      endHour = 11
+      endMin = 30
+    } else {
+      startHour = 19
+      startMin = 30
+      endHour = 21
+      endMin = 0
+    }
+  } else if (clinic.slug === 'apollo-newtown') {
+    startHour = 16
+    startMin = 30
+    endHour = 18
     endMin = 0
   }
 
@@ -253,24 +362,47 @@ export const appointmentService = {
           .select('*')
           .eq('is_active', true)
         if (!error && data && data.length > 0) {
-          return data.map((d) => ({
-            id: d.id,
-            name: d.name,
-            slug: d.slug,
-            address: d.address,
-            landmark: d.landmark || '',
-            phone: d.phone,
-            whatsappNumber: d.whatsapp_number || '',
-            googleMapsUrl: d.google_maps_url || '',
-            operatingDays: d.operating_days || [1, 2, 3, 4, 5, 6],
-            slotDurationMinutes: d.slot_duration_minutes || 30,
-            hoursDescription:
-              d.slug === 'alipore'
-                ? 'Mon, Wed, Fri: 11:00 AM – 1:00 PM'
-                : d.slug === 'newtown'
-                ? 'Tue, Thu: 6:00 PM – 9:00 PM'
-                : 'Mon–Sat: 5:00 PM – 8:00 PM',
-          }))
+          const hasNewClinics = data.some(
+            (d) =>
+              d.slug === 'alexa-newtown' ||
+              d.slug === 'manipal-broadway' ||
+              d.slug === 'narayana-barasat' ||
+              d.slug === 'daffodil-laketown' ||
+              d.slug === 'apollo-newtown'
+          )
+          if (hasNewClinics) {
+            return data.map((d) => {
+              const fallbackClinic = DEFAULT_CLINICS.find((c) => c.slug === d.slug || c.id === d.id)
+              return {
+                id: d.id,
+                name: d.name,
+                slug: d.slug,
+                address: d.address,
+                landmark: d.landmark || fallbackClinic?.landmark || '',
+                phone: d.phone,
+                whatsappNumber: d.whatsapp_number || fallbackClinic?.whatsappNumber || '',
+                googleMapsUrl: d.google_maps_url || fallbackClinic?.googleMapsUrl || '',
+                operatingDays: d.operating_days || fallbackClinic?.operatingDays || [1, 2, 3, 4, 5, 6],
+                slotDurationMinutes: d.slot_duration_minutes || fallbackClinic?.slotDurationMinutes || 30,
+                hoursDescription:
+                  fallbackClinic?.hoursDescription ||
+                  (d.slug === 'alexa-newtown'
+                    ? 'Mon–Sat: 6:00 PM – 8:00 PM'
+                    : d.slug === 'manipal-broadway'
+                    ? 'Mon & Fri: 4:00 PM – 5:00 PM'
+                    : d.slug === 'narayana-barasat'
+                    ? 'Wed & Sat: 12:00 PM – 2:00 PM'
+                    : d.slug === 'fortis'
+                    ? 'Sat: 3:00 PM – 5:00 PM'
+                    : d.slug === 'daffodil-laketown'
+                    ? 'Wed: 7:30 PM – 9:00 PM | Sat: 10:30 AM – 11:30 AM'
+                    : d.slug === 'apollo-newtown'
+                    ? 'Tue, Thu, Fri, Sun: 4:30 PM – 6:00 PM'
+                    : 'Mon–Sat: 6:00 PM – 8:00 PM'),
+                daySchedules: fallbackClinic?.daySchedules,
+              }
+            })
+          }
         }
       } catch (err) {
         console.warn('Supabase getClinics error, using fallback:', err)
@@ -280,34 +412,73 @@ export const appointmentService = {
   },
 
   /**
-   * Get dynamic slots for a clinic on a specific date
+   * Get dynamic slots for a clinic on a specific date.
+   *
+   * The local DEFAULT_CLINICS schedule is ALWAYS the source of truth for which
+   * days a clinic is open and what time slots are generated. Supabase is only
+   * used as an overlay to check for existing bookings (mark slots as taken)
+   * and doctor blocked dates.  This ensures the booking system works correctly
+   * even when the Supabase database has not been migrated to the latest schema.
    */
   async getAvailableSlots(clinicId: string, dateStr: string): Promise<SlotResponse> {
     if (!clinicId || !dateStr) {
       return { isOpen: false, reason: 'Select clinic and date', slots: [] }
     }
 
+    // 1. Always generate slots from the authoritative local schedule
+    const clinic =
+      DEFAULT_CLINICS.find((c) => c.id === clinicId || c.name === clinicId) ||
+      DEFAULT_CLINICS[0]
+    const result = generateLocalSlots(clinic, dateStr)
+
+    // If clinic is closed on this day, return immediately (no DB check needed)
+    if (!result.isOpen) {
+      return result
+    }
+
+    // 2. When Supabase is configured, overlay booking & block data from the DB
     if (isSupabaseConfigured() && supabase) {
       try {
-        const { data, error } = await supabase.rpc('get_available_clinic_slots', {
-          p_clinic_id: clinicId,
-          p_date: dateStr,
-        })
-        if (!error && data) {
+        // Check doctor blocked dates in Supabase
+        const { data: blockedData } = await supabase
+          .from('doctor_blocked_dates')
+          .select('reason')
+          .or(`clinic_id.eq.${clinicId},clinic_id.is.null`)
+          .eq('blocked_date', dateStr)
+          .limit(1)
+          .maybeSingle()
+
+        if (blockedData) {
           return {
-            isOpen: data.is_open,
-            reason: data.reason,
-            slots: data.slots || [],
+            isOpen: false,
+            reason: `Doctor is unavailable on this date (${blockedData.reason || 'Emergency surgery/leave'}).`,
+            slots: [],
           }
         }
+
+        // Check existing appointments in Supabase to mark slots as booked
+        const { data: appointments } = await supabase
+          .from('appointments')
+          .select('time_slot')
+          .eq('clinic_id', clinicId)
+          .eq('appointment_date', dateStr)
+          .in('status', ['confirmed', 'pending', 'arrived', 'in_consultation'])
+
+        if (appointments && appointments.length > 0) {
+          const bookedTimes = new Set(
+            appointments.map((a: { time_slot: string }) => a.time_slot)
+          )
+          result.slots = result.slots.map((slot) => ({
+            ...slot,
+            available: slot.available && !bookedTimes.has(slot.time),
+          }))
+        }
       } catch (err) {
-        console.warn('Supabase get_available_clinic_slots RPC failed, using fallback:', err)
+        console.warn('Supabase slot overlay check failed, using local schedule only:', err)
       }
     }
 
-    // Local Fallback Calculation
-    const clinic = DEFAULT_CLINICS.find((c) => c.id === clinicId || c.name === clinicId) || DEFAULT_CLINICS[0]
-    return generateLocalSlots(clinic, dateStr)
+    return result
   },
 
   /**

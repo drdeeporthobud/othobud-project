@@ -195,7 +195,7 @@ export default function Navigation() {
 
             <div className="grid grid-cols-2 gap-2 pt-1">
               <a
-                href="tel:+919830000000"
+                href="tel:+917980144046"
                 className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-white/8 hover:bg-white/12 text-white text-xs font-medium border border-white/10 min-h-[44px] transition-colors group"
               >
                 <img
@@ -206,7 +206,7 @@ export default function Navigation() {
                 <span>Call Clinic</span>
               </a>
               <a
-                href="https://wa.me/919830000000"
+                href="https://wa.me/917980144046"
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 text-xs font-medium border border-emerald-500/30 min-h-[44px] transition-colors group"

@@ -241,25 +241,38 @@ export default function AdminDashboard() {
 
   const currentClinicObj = clinics.find((c) => c.id === selectedClinicId) || clinics[0]
 
-  // Standard Clinic Slots for Capacity Matrix
-  const getStandardSlots = (clinicSlug: string): string[] => {
-    if (clinicSlug === 'alipore') {
-      return ['11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM']
-    }
-    if (clinicSlug === 'newtown') {
-      return ['6:00 PM', '6:30 PM', '7:00 PM', '7:30 PM', '8:00 PM', '8:30 PM']
-    }
-    return ['5:00 PM', '5:30 PM', '6:00 PM', '6:30 PM', '7:00 PM', '7:30 PM']
-  }
-
-  const standardSlots = getStandardSlots(currentClinicObj.slug)
-
   // Operating Day & Blocked Date Calculations
   const dateParts = filterDate.split('-').map(Number)
   const filterDateObj = new Date(dateParts[0], dateParts[1] - 1, dateParts[2])
   const jsDay = filterDateObj.getDay() // 0=Sun, 1=Mon ... 6=Sat
   const isoDay = jsDay === 0 ? 7 : jsDay
   const isOperatingDay = currentClinicObj.operatingDays.includes(isoDay)
+
+  // Standard Clinic Slots for Capacity Matrix
+  const getStandardSlots = (clinicSlug: string, currentIsoDay: number): string[] => {
+    if (clinicSlug === 'manipal-broadway') {
+      return ['4:00 PM', '4:30 PM']
+    }
+    if (clinicSlug === 'narayana-barasat') {
+      return ['12:00 PM', '12:30 PM', '1:00 PM', '1:30 PM']
+    }
+    if (clinicSlug === 'fortis') {
+      return ['3:00 PM', '3:30 PM', '4:00 PM', '4:30 PM']
+    }
+    if (clinicSlug === 'daffodil-laketown') {
+      if (currentIsoDay === 6) {
+        return ['10:30 AM', '11:00 AM']
+      }
+      return ['7:30 PM', '8:00 PM', '8:30 PM']
+    }
+    if (clinicSlug === 'apollo-newtown') {
+      return ['4:30 PM', '5:00 PM', '5:30 PM']
+    }
+    // Alexa Newtown (6:00 PM – 8:00 PM)
+    return ['6:00 PM', '6:30 PM', '7:00 PM', '7:30 PM']
+  }
+
+  const standardSlots = getStandardSlots(currentClinicObj.slug, isoDay)
 
   const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
   const selectedDayName = dayNames[jsDay]
@@ -1893,7 +1906,7 @@ export default function AdminDashboard() {
                     required
                     value={walkinForm.phone}
                     onChange={(e) => setWalkinForm({ ...walkinForm, phone: e.target.value })}
-                    placeholder="+91 98300 XXXXX"
+                    placeholder="+91 79801 44046"
                     className="w-full border border-border/80 rounded-xl p-2.5 text-xs text-navy focus:outline-none focus:border-teal"
                   />
                 </div>

@@ -1,49 +1,139 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useReveal } from '../hooks/useReveal'
+import {
+  GraduationCap,
+  Award,
+  Activity,
+  Cpu,
+  Globe2,
+  ShieldCheck,
+  Trophy,
+  MapPin,
+  Calendar,
+  Sparkles,
+  CheckCircle2,
+  ArrowRight,
+} from 'lucide-react'
 
 const drDeepImg = '/images/doctor/dr-deep-hero.webp'
 
-const timeline = [
+interface TimelineMilestone {
+  year: string
+  periodTag?: string
+  title: string
+  institution: string
+  location: string
+  category: string
+  desc: string
+  type: 'degree' | 'fellowship' | 'milestone'
+  badgeColor?: string
+  icon: React.ComponentType<{ className?: string }>
+  metrics?: { label: string; value: string; detail?: string }[]
+  tags?: string[]
+}
+
+const timeline: TimelineMilestone[] = [
   {
-    year: '2003',
-    event: 'MBBS from Medical College, Kolkata',
-    desc: 'Graduated with academic honours from one of India’s most historic and premier medical institutions.',
+    year: '2005 – 2010',
+    periodTag: '5-Year Medical Program',
+    title: 'MBBS (Bachelor of Medicine & Bachelor of Surgery)',
+    institution: 'Dr. B.R. Ambedkar Medical College',
+    location: 'Bangalore, Karnataka',
+    category: 'Medical Degree',
+    desc: 'Graduated from Dr. B.R. Ambedkar Medical College followed by rigorous rotatory clinical internship, establishing core surgical competence, emergency care skills, and medical excellence.',
+    type: 'degree',
+    icon: GraduationCap,
+    tags: ['Medical Graduation', 'Clinical Internship', 'Bengaluru'],
   },
   {
-    year: '2007',
-    event: 'MS (Orthopedics) from IPGMER & SSKM Hospital, Kolkata',
-    desc: 'Specialized in complex trauma, reconstructive orthopedics, and joint preservation surgery.',
-  },
-  {
-    year: '2009',
-    event: 'DNB Orthopedics — National Board of Examinations',
-    desc: 'Awarded national board diplomate certification for the highest standard of orthopedic surgical competence.',
-  },
-  {
-    year: '2010',
-    event: 'Fellowship in Joint Arthroplasty — Endo-Klinik, Hamburg, Germany',
-    desc: 'Advanced fellowship training in high-volume primary and complex revision joint replacements.',
-  },
-  {
-    year: '2011',
-    event: 'Commenced independent practice in Kolkata',
-    desc: 'Established dedicated consultation clinics and surgical services prioritizing personalized patient care.',
-  },
-  {
-    year: '2015',
-    event: 'Introduced Robotic-Assisted Joint Replacement in Eastern India',
-    desc: 'Pioneered sub-millimeter precision robotic surgery in the region, dramatically reducing recovery times.',
+    year: '2013 – 2016',
+    periodTag: '3-Year Master Residency',
+    title: 'MS (Orthopedics) — Master of Surgery',
+    institution: 'JJM Medical College',
+    location: 'Davanagere, Karnataka',
+    category: 'Postgraduate Residency',
+    desc: 'Completed three years of intensive postgraduate surgical residency at JJM Medical College, mastering complex polytrauma surgery, musculoskeletal reconstructive orthopedics, and joint preservation.',
+    type: 'degree',
+    icon: Award,
+    tags: ['Master of Surgery', 'Musculoskeletal Trauma', 'Surgical Residency'],
   },
   {
     year: '2018',
-    event: 'Best Orthopedic Surgeon Award — Calcutta Medical Association',
-    desc: 'Recognized for distinguished clinical excellence, outstanding patient outcomes, and surgical innovation.',
+    periodTag: 'Sub-Specialty Fellowship',
+    title: 'Fellowship in Sports & Arthroscopic Surgery',
+    institution: 'Sports & Keyhole Arthroscopy Institute',
+    location: 'Kolkata, West Bengal',
+    category: 'Sports & Arthroscopy Fellowship',
+    desc: 'Advanced super-specialization in keyhole arthroscopy, minimally invasive ligament reconstructions (ACL / PCL), meniscus repairs, cartilage restorations, and high-performance athletic sports injury rehabilitation.',
+    type: 'fellowship',
+    icon: Activity,
+    tags: ['Sports Medicine', 'Keyhole Arthroscopy', 'Ligament Reconstruction'],
+  },
+  {
+    year: '2022',
+    periodTag: 'Robotic Arthroplasty',
+    title: 'Fellowship in Joint Arthroplasty & Robotic Joint Replacement',
+    institution: 'Belle Vue Hospital',
+    location: 'Kolkata, West Bengal',
+    category: 'Robotic Arthroplasty Fellowship',
+    desc: 'Comprehensive clinical fellowship at Belle Vue Hospital specializing in sub-millimeter precision computer-navigated and robotic-assisted total knee and hip replacement surgeries with rapid recovery pathways.',
+    type: 'fellowship',
+    icon: Cpu,
+    tags: ['Belle Vue Hospital', 'Robotic Surgery', 'Joint Arthroplasty'],
   },
   {
     year: '2023',
-    event: 'Completed 5,000th successful joint replacement surgery',
-    desc: 'Crossed a landmark milestone in restorative joint procedures with over 98% patient satisfaction.',
+    periodTag: 'International Fellowship',
+    title: 'Fellowship in Advanced Arthroscopy Surgeries',
+    institution: 'Advanced Orthopedic & Arthroscopy Center',
+    location: 'Dubai, UAE',
+    category: 'International Fellowship',
+    desc: 'Prestigious international surgical fellowship in Dubai mastering world-class techniques for complex shoulder rotator cuff repairs, labral reconstruction, multi-ligament knee surgeries, and ankle arthroscopy.',
+    type: 'fellowship',
+    icon: Globe2,
+    tags: ['Dubai, UAE', 'International Faculty', 'Shoulder & Knee Arthroscopy'],
+  },
+  {
+    year: '2025',
+    periodTag: 'USA Super-Specialty',
+    title: 'Fellowship in Advanced Joint Replacement & Preservation',
+    institution: 'Center for Orthopedic Excellence',
+    location: 'USA',
+    category: 'Global Joint Preservation Fellowship',
+    desc: 'Super-specialty fellowship in the United States covering biological joint preservation, partial knee resurfacing, complex revision arthroplasty, and state-of-the-art Next-Gen robotic orthopedic innovations.',
+    type: 'fellowship',
+    icon: ShieldCheck,
+    tags: ['USA Fellowship', 'Joint Preservation', 'Next-Gen Robotics'],
+  },
+  {
+    year: '2026',
+    periodTag: 'Major Surgical Landmark',
+    title: 'Completed 2,000 Joint Replacements & 1,000+ Arthroscopic Surgeries',
+    institution: 'High-Volume Restorative Practice',
+    location: 'Eastern India & Global Patients',
+    category: 'Historic Clinical Milestone',
+    desc: 'Crossed the extraordinary landmark of 2,000 conventional and robotic joint replacements alongside 1,000+ advanced arthroscopic keyhole surgeries across shoulder, knee, elbow, and ankle joints with outstanding clinical outcomes.',
+    type: 'milestone',
+    icon: Trophy,
+    metrics: [
+      {
+        label: 'Conventional & Robotic Replacements',
+        value: '2,000+',
+        detail: 'Total Knee & Hip Joint Arthroplasties',
+      },
+      {
+        label: 'Advanced Arthroscopic Surgeries',
+        value: '1,000+',
+        detail: 'Shoulder · Knee · Elbow · Ankle',
+      },
+      {
+        label: 'Years of Dedicated Practice',
+        value: '15+',
+        detail: 'Surgical & Clinical Excellence',
+      },
+    ],
+    tags: ['2,000 Joint Replacements', '1,000+ Arthroscopies', 'Shoulder · Knee · Elbow · Ankle'],
   },
 ]
 
@@ -56,11 +146,12 @@ const awards = [
 ]
 
 const hospitals = [
+  { name: 'Belle Vue Clinic', location: 'Dr. U.N. Brahmachari Street, Kolkata', role: 'Fellowship Center' },
   { name: 'AMRI Hospitals', location: 'Dhakuria, Kolkata', role: 'Visiting Consultant' },
   { name: 'Peerless Hospital', location: 'Pancha Sayar, Kolkata', role: 'Senior Consultant' },
   { name: 'CMRI Hospital', location: 'Kasba, Kolkata', role: 'Honorary Consultant' },
   { name: 'Fortis Hospital', location: 'Anandapur, Kolkata', role: 'Visiting Consultant' },
-  { name: 'Ruby General Hospital', location: 'Kasba, Kolkata', role: 'Consultant' },
+  { name: 'Apollo Clinic', location: 'Newtown, Kolkata', role: 'Visiting Consultant' },
 ]
 
 const memberships = [
@@ -90,8 +181,8 @@ export default function About() {
       if (!container) return
 
       const rect = container.getBoundingClientRect()
-      // Trigger line at 55% of the viewport height
-      const triggerY = window.innerHeight * 0.55
+      // Trigger line at 50% of the viewport height
+      const triggerY = window.innerHeight * 0.5
       const relativeY = triggerY - rect.top
       const progress = Math.max(0, Math.min(relativeY, rect.height))
       setFillHeight(progress)
@@ -100,7 +191,7 @@ export default function About() {
       itemRefs.current.forEach((el, idx) => {
         if (!el) return
         const itemRect = el.getBoundingClientRect()
-        if (itemRect.top + itemRect.height * 0.25 <= triggerY) {
+        if (itemRect.top + itemRect.height * 0.3 <= triggerY) {
           current = idx
         }
       })
@@ -117,6 +208,14 @@ export default function About() {
     }
   }, [])
 
+  const scrollToMilestone = (index: number) => {
+    const el = itemRefs.current[index]
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      setActiveStep(index)
+    }
+  }
+
   return (
     <div className="min-h-screen pt-20">
       {/* Hero */}
@@ -129,18 +228,18 @@ export default function About() {
                 Dr. Deep<br />Chakraborty
               </h1>
               <p className="text-teal-light text-xs xs:text-sm sm:text-base lg:text-lg font-medium mt-2.5 sm:mt-3 reveal reveal-delay-2">
-                MS (Ortho) · DNB · Fellowship in Joint Arthroplasty, Germany
+                MS (Orthopedics) · Fellowships in Kolkata, USA & Dubai · Robotic & Advanced Arthroscopy Specialist
               </p>
               <p className="text-white/75 mt-4 sm:mt-6 leading-relaxed text-xs xs:text-sm sm:text-base lg:text-lg reveal reveal-delay-3 max-w-xl">
-                A fellowship-trained orthopedic surgeon with 15+ years of experience restoring mobility and quality of life for patients across Eastern India and beyond.
+                A fellowship-trained orthopedic surgeon with 15+ years of clinical excellence, having performed over 2,000 joint replacements and 1,000+ advanced arthroscopic surgeries across India and abroad.
               </p>
 
               {/* 4 Metric Cards */}
               <div className="grid grid-cols-2 gap-2.5 xs:gap-3 sm:gap-4 mt-6 sm:mt-8">
                 {[
-                  { label: 'MCI Registration', value: 'MCR/40521/2008' },
+                  { label: 'WBMC Registration', value: 'WBMC-76107' },
                   { label: 'Experience', value: '15+ Years' },
-                  { label: 'Surgeries', value: '5,000+' },
+                  { label: 'Surgeries Done', value: '3,000+' },
                   { label: 'Languages', value: 'Bengali · Hindi · English' },
                 ].map((item, i) => (
                   <div
@@ -166,7 +265,7 @@ export default function About() {
                   Book Consultation
                 </Link>
                 <a
-                  href="tel:+919830000000"
+                  href="tel:+917980144046"
                   className="btn-outline w-full sm:w-auto justify-center py-3 sm:py-3.5 px-6 min-h-[44px]"
                 >
                   Call Clinic
@@ -203,16 +302,16 @@ export default function About() {
           </h2>
           <div className="prose max-w-none text-navy-700 leading-relaxed space-y-4 sm:space-y-5 text-sm sm:text-base">
             <p>
-              Dr. Deep Chakraborty grew up in Kolkata with an early passion for medicine, shaped by watching family members suffer from musculoskeletal conditions. This personal connection drove him toward orthopedics — a field where surgical precision and patient empathy intersect.
+              Dr. Deep Chakraborty is a fellowship-trained orthopedic surgeon in Kolkata with over 15 years of surgical experience. He completed his MBBS from Dr. B.R. Ambedkar Medical College, Bangalore, followed by an MS in Orthopedics from JJM Medical College, Davanagere, Karnataka. He provides specialized orthopedic care for patients across Kolkata, New Town, Anandapur, and surrounding areas.
             </p>
             <p>
-              After securing his MBBS and MS in Orthopedics from the prestigious IPGMER & SSKM Hospital, Dr. Deep pursued advanced training in Joint Arthroplasty at the Endo-Klinik in Hamburg, Germany — one of Europe's leading centers for joint replacement surgery. This international fellowship gave him exposure to robotic surgical systems, complex revision procedures, and the highest standards of peri-operative care.
+              His areas of expertise include robotic knee replacement, joint replacement surgery, advanced shoulder and knee arthroscopy, sports medicine, and joint preservation. His advanced fellowship training in Sports and Arthroscopic Surgery, Joint Arthroplasty and Robotic Joint Replacement, Advanced Arthroscopy, and Joint Replacement and Preservation has included training in Kolkata, Dubai, and the USA.
             </p>
             <p>
-              Returning to Kolkata, Dr. Deep established a practice grounded in the philosophy that every patient deserves time, honesty and individualized care. He was among the first surgeons in Eastern India to introduce robotic-assisted joint replacement, bringing a level of surgical accuracy previously unavailable in the region.
+              Dr. Deep Chakraborty has performed more than 2,000 joint replacement surgeries, including conventional and robotic-assisted joint replacements, along with 1,000+ arthroscopic procedures involving the knee, shoulder, elbow, and ankle. His surgical experience includes the management of joint pain, arthritis, sports injuries, ligament and cartilage problems, and conditions requiring arthroscopic or joint replacement procedures.
             </p>
             <p>
-              Beyond the operating theatre, Dr. Deep is deeply committed to patient education and community outreach — conducting awareness camps, publishing accessible health articles, and training the next generation of orthopedic surgeons.
+              Based in Kolkata, Dr. Deep Chakraborty combines advanced orthopedic surgical expertise with a patient-focused approach. He takes time to understand each patient's symptoms, lifestyle, and treatment goals, explains the diagnosis and available treatment options clearly, and develops individualized treatment plans for patients seeking advanced joint replacement, robotic surgery, arthroscopy, and sports injury treatment in Kolkata.
             </p>
           </div>
 
@@ -229,113 +328,270 @@ export default function About() {
       </section>
 
       {/* Timeline */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-soft-gray" ref={timelineRef}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-12 sm:py-16 lg:py-24 bg-soft-gray relative overflow-hidden" ref={timelineRef}>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="section-label reveal mb-2">Career Timeline</div>
-          <h2 className="font-display font-800 text-2xl xs:text-3xl sm:text-4xl text-navy mb-4 reveal reveal-delay-1">
+          <h2 className="font-display font-800 text-2xl xs:text-3xl sm:text-4xl text-navy mb-3 reveal reveal-delay-1">
             Education & Milestones
           </h2>
-          <p className="text-navy-700/80 text-xs xs:text-sm sm:text-base max-w-xl mb-8 sm:mb-12 reveal reveal-delay-2">
+          <p className="text-navy-700/80 text-xs xs:text-sm sm:text-base max-w-2xl mb-8 sm:mb-10 reveal reveal-delay-2">
             A continuous journey of specialized surgical training, academic honours, and pioneering advancements in orthopedic surgery.
           </p>
 
+          {/* Quick Jump Timeline Navigation Pills */}
+          <div className="mb-10 sm:mb-12 reveal reveal-delay-2 overflow-x-auto pb-2 scrollbar-none">
+            <div className="flex items-center gap-2 min-w-max">
+              <span className="text-xs font-display font-700 text-navy-700 uppercase tracking-wide mr-1 flex items-center gap-1.5">
+                <Calendar className="w-3.5 h-3.5 text-teal" />
+                Jump To:
+              </span>
+              {timeline.map((item, idx) => {
+                const isActive = activeStep === idx
+                return (
+                  <button
+                    key={item.year}
+                    type="button"
+                    onClick={() => scrollToMilestone(idx)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-display font-700 transition-all duration-200 cursor-pointer flex items-center gap-1.5 ${
+                      isActive
+                        ? 'bg-teal text-white shadow-sm ring-2 ring-teal/30 scale-105'
+                        : item.type === 'milestone'
+                        ? 'bg-amber-100 text-amber-900 border border-amber-300 hover:bg-amber-200'
+                        : 'bg-white text-navy-700 border border-border/70 hover:border-teal hover:text-teal'
+                    }`}
+                  >
+                    {item.type === 'milestone' && <Sparkles className="w-3 h-3 text-amber-600" />}
+                    <span>{item.year.split('–')[0].trim()}</span>
+                    <span className="hidden md:inline text-[11px] font-medium opacity-80">
+                      {item.type === 'milestone' ? 'Milestone' : item.category.split(' ')[0]}
+                    </span>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
           <div className="relative" ref={timelineContainerRef}>
-            {/* Base Background Track Line (precisely centered on left-6 sm:left-8) */}
-            <div className="absolute left-6 sm:left-8 top-8 bottom-8 w-[3px] -translate-x-1/2 bg-slate-200 rounded-full" />
+            {/* Base Background Track Line */}
+            <div className="absolute left-6 sm:left-10 top-10 bottom-10 w-[3px] -translate-x-1/2 bg-slate-200 rounded-full" />
 
             {/* Dynamic Animated Line connecting point-to-point */}
             <div
-              className="absolute left-6 sm:left-8 top-8 w-[3px] -translate-x-1/2 bg-gradient-to-b from-teal via-teal-light to-teal rounded-full transition-[height] duration-150 ease-out"
-              style={{ height: `${fillHeight}px`, maxHeight: 'calc(100% - 64px)' }}
+              className="absolute left-6 sm:left-10 top-10 w-[3px] -translate-x-1/2 bg-gradient-to-b from-teal via-teal-light to-teal rounded-full transition-[height] duration-150 ease-out shadow-[0_0_12px_rgba(14,165,233,0.4)]"
+              style={{ height: `${fillHeight}px`, maxHeight: 'calc(100% - 80px)' }}
             >
               {/* Glowing leading indicator head dot */}
-              <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-teal-light shadow-[0_0_12px_#0ea5e9] animate-pulse" />
+              <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-teal-light shadow-[0_0_14px_#0ea5e9] animate-pulse ring-2 ring-white" />
             </div>
 
             {/* Timeline Items */}
-            <div className="space-y-6 sm:space-y-8">
+            <div className="space-y-8 sm:space-y-12">
               {timeline.map((item, i) => {
                 const isPassed = i <= activeStep
                 const isCurrent = i === activeStep
+                const IconComponent = item.icon
+                const isMilestone = item.type === 'milestone'
 
                 return (
                   <div
                     key={item.year}
                     ref={(el) => { itemRefs.current[i] = el }}
-                    className="relative pl-12 xs:pl-14 sm:pl-20"
+                    className="relative pl-14 xs:pl-16 sm:pl-24 group"
                   >
-                    {/* Node / Point */}
+                    {/* Node / Point Badge */}
                     <div
-                      className={`absolute left-6 sm:left-8 top-8 -translate-x-1/2 -translate-y-1/2 w-7 h-7 sm:w-10 sm:h-10 rounded-full flex items-center justify-center origin-center transition-all duration-300 ease-out pointer-events-none ${
-                        isCurrent
-                          ? 'bg-white border-2 border-teal shadow-lg shadow-teal/30 scale-110 sm:scale-120 z-20'
+                      onClick={() => scrollToMilestone(i)}
+                      className={`absolute left-6 sm:left-10 top-8 -translate-x-1/2 -translate-y-1/2 w-10 h-10 sm:w-13 sm:h-13 rounded-2xl flex items-center justify-center origin-center transition-all duration-300 ease-out cursor-pointer z-10 ${
+                        isMilestone && isCurrent
+                          ? 'bg-gradient-to-br from-amber-500 to-amber-600 text-white shadow-xl shadow-amber-500/30 scale-110 sm:scale-120 ring-4 ring-amber-400/30'
+                          : isMilestone
+                          ? 'bg-amber-500 text-white border-2 border-amber-300 shadow-md scale-100 sm:scale-105'
+                          : isCurrent
+                          ? 'bg-white border-2 border-teal text-teal shadow-xl shadow-teal/30 scale-110 sm:scale-120 ring-4 ring-teal/20'
                           : isPassed
-                          ? 'bg-white border-2 border-teal shadow-sm scale-100 sm:scale-105 z-10'
-                          : 'bg-white border-2 border-slate-300 scale-90 z-0'
+                          ? 'bg-teal text-white border-2 border-teal shadow-sm scale-100 sm:scale-105'
+                          : 'bg-white border-2 border-slate-300 text-slate-400 scale-95 hover:border-teal/60 hover:text-teal'
                       }`}
                     >
                       {isCurrent && (
-                        <span className="absolute inset-0 rounded-full bg-teal/30 animate-ping opacity-75" />
+                        <span className={`absolute inset-0 rounded-2xl animate-ping opacity-60 ${
+                          isMilestone ? 'bg-amber-400' : 'bg-teal'
+                        }`} />
                       )}
-                      <div
-                        className={`rounded-full transition-all duration-300 origin-center ${
-                          isCurrent
-                            ? 'w-3 h-3 sm:w-4 sm:h-4 bg-teal shadow-xs'
-                            : isPassed
-                            ? 'w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 bg-teal'
-                            : 'w-2 h-2 bg-slate-300'
-                        }`}
-                      />
+                      <IconComponent className={`w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 ${
+                        isCurrent ? 'scale-110' : ''
+                      }`} />
                     </div>
 
-                    {/* Milestone Card with Scaling */}
+                    {/* Milestone Card */}
                     <div
                       className={`transition-all duration-500 ease-out transform origin-left ${
                         isCurrent
-                          ? 'scale-[1.01] sm:scale-[1.03] translate-x-0.5 sm:translate-x-2'
+                          ? 'scale-[1.01] sm:scale-[1.02] translate-x-0.5 sm:translate-x-2'
                           : isPassed
                           ? 'scale-100 translate-x-0 opacity-100'
-                          : 'scale-[0.99] opacity-60'
+                          : 'scale-[0.99] opacity-75 group-hover:opacity-100'
                       }`}
                     >
-                      <div
-                        className={`p-4 xs:p-5 sm:p-6 rounded-xl sm:rounded-2xl border transition-all duration-300 ${
-                          isCurrent
-                            ? 'bg-white border-teal/70 shadow-xl shadow-teal/10 ring-2 ring-teal/20'
-                            : isPassed
-                            ? 'bg-white border-border/70 shadow-sm hover:border-teal/40 hover:shadow-md'
-                            : 'bg-white/60 border-border/40 shadow-none'
-                        }`}
-                      >
-                        <div className="flex items-center gap-2.5 xs:gap-3 mb-1.5 sm:mb-2">
-                          <span
-                            className={`font-display font-800 text-[11px] xs:text-xs sm:text-sm px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full transition-all duration-300 ${
-                              isCurrent
-                                ? 'bg-teal text-white shadow-sm'
-                                : isPassed
-                                ? 'bg-teal/15 text-teal'
-                                : 'bg-slate-200/80 text-slate-500'
-                            }`}
-                          >
-                            {item.year}
-                          </span>
-                          <span className="text-[10px] sm:text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-                            Milestone #{i + 1}
-                          </span>
-                        </div>
-                        <h3
-                          className={`font-display font-700 text-sm xs:text-base sm:text-xl transition-colors duration-300 leading-snug ${
-                            isCurrent ? 'text-teal-dark' : isPassed ? 'text-navy' : 'text-slate-700'
+                      {/* Special Card Layout for 2026 Grand Milestone */}
+                      {isMilestone ? (
+                        <div
+                          className={`p-5 sm:p-8 rounded-2xl sm:rounded-3xl border-2 transition-all duration-300 relative overflow-hidden bg-gradient-to-br from-white via-amber-50/20 to-teal/5 ${
+                            isCurrent
+                              ? 'border-amber-500/80 shadow-2xl shadow-amber-500/10 ring-4 ring-amber-500/15'
+                              : 'border-amber-300/80 shadow-lg hover:border-amber-500/60'
                           }`}
                         >
-                          {item.event}
-                        </h3>
-                        {item.desc && (
-                          <p className="text-xs sm:text-sm text-navy-700/80 mt-1 sm:mt-1.5 leading-relaxed font-normal">
+                          {/* Top Tag & Year */}
+                          <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-display font-800 text-xs sm:text-sm px-3.5 py-1 rounded-full shadow-xs">
+                                <Trophy className="w-3.5 h-3.5 text-white" />
+                                {item.year}
+                              </span>
+                              <span className="text-[11px] sm:text-xs font-display font-700 uppercase tracking-wider text-amber-800 bg-amber-100/90 px-3 py-1 rounded-full border border-amber-200">
+                                {item.category}
+                              </span>
+                            </div>
+                            <span className="text-xs font-display font-700 text-navy-700/60 flex items-center gap-1">
+                              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                              Milestone #7 (Landmark)
+                            </span>
+                          </div>
+
+                          {/* Title */}
+                          <h3 className="font-display font-800 text-lg xs:text-xl sm:text-2xl text-navy leading-snug">
+                            {item.title}
+                          </h3>
+
+                          <div className="flex items-center gap-2 text-xs sm:text-sm text-navy-700/70 mt-2">
+                            <MapPin className="w-4 h-4 text-teal shrink-0" />
+                            <span>{item.institution} · {item.location}</span>
+                          </div>
+
+                          <p className="text-xs sm:text-base text-navy-700 mt-3 leading-relaxed">
                             {item.desc}
                           </p>
-                        )}
-                      </div>
+
+                          {/* 3 Metric Cards for Joint Replacement & Arthroscopy */}
+                          {item.metrics && (
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4 mt-6">
+                              {item.metrics.map((m) => (
+                                <div
+                                  key={m.label}
+                                  className="bg-white rounded-2xl p-4 sm:p-5 border border-amber-200/80 shadow-xs flex flex-col justify-between hover:border-amber-400 transition-colors"
+                                >
+                                  <div>
+                                    <div className="font-display font-800 text-2xl sm:text-3xl text-teal">
+                                      {m.value}
+                                    </div>
+                                    <div className="font-display font-700 text-navy text-xs sm:text-sm mt-1 leading-snug">
+                                      {m.label}
+                                    </div>
+                                  </div>
+                                  {m.detail && (
+                                    <div className="text-[11px] text-navy-700/70 mt-2 pt-2 border-t border-border/50 font-medium">
+                                      {m.detail}
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
+                          {/* Tags & Action Link */}
+                          <div className="flex flex-wrap items-center justify-between gap-4 mt-6 pt-5 border-t border-amber-200/60">
+                            <div className="flex flex-wrap gap-2">
+                              {item.tags?.map((tag) => (
+                                <span
+                                  key={tag}
+                                  className="text-[11px] font-medium bg-white px-2.5 py-1 rounded-lg text-navy-700 border border-border/70"
+                                >
+                                  ✓ {tag}
+                                </span>
+                              ))}
+                            </div>
+                            <Link
+                              to="/book-appointment"
+                              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-display font-700 text-teal hover:text-teal-dark hover:underline"
+                            >
+                              <span>Consult Dr. Deep</span>
+                              <ArrowRight className="w-4 h-4" />
+                            </Link>
+                          </div>
+                        </div>
+                      ) : (
+                        /* Standard Milestone Card */
+                        <div
+                          className={`p-4 xs:p-5 sm:p-7 rounded-2xl border transition-all duration-300 ${
+                            isCurrent
+                              ? 'bg-white border-teal/80 shadow-xl shadow-teal/10 ring-2 ring-teal/20'
+                              : isPassed
+                              ? 'bg-white border-border/80 shadow-xs hover:border-teal/50 hover:shadow-md'
+                              : 'bg-white/80 border-border/50 shadow-none hover:bg-white hover:border-border'
+                          }`}
+                        >
+                          {/* Card Top Metadata */}
+                          <div className="flex flex-wrap items-center justify-between gap-2 mb-2 sm:mb-3">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span
+                                className={`inline-flex items-center gap-1.5 font-display font-800 text-xs sm:text-sm px-3 py-1 rounded-full transition-all duration-300 ${
+                                  isCurrent
+                                    ? 'bg-teal text-white shadow-xs'
+                                    : isPassed
+                                    ? 'bg-teal/15 text-teal'
+                                    : 'bg-slate-200/80 text-slate-600'
+                                }`}
+                              >
+                                <Calendar className="w-3 h-3" />
+                                {item.year}
+                              </span>
+                              <span className="text-[11px] sm:text-xs font-display font-600 px-2.5 py-0.5 rounded-md bg-navy/5 text-navy-700 border border-border/60">
+                                {item.category}
+                              </span>
+                            </div>
+                            <span className="text-[11px] font-semibold text-slate-600 uppercase tracking-wider">
+                              Milestone #{i + 1}
+                            </span>
+                          </div>
+
+                          {/* Title */}
+                          <h3
+                            className={`font-display font-800 text-base xs:text-lg sm:text-xl transition-colors duration-300 leading-snug ${
+                              isCurrent ? 'text-teal-dark' : isPassed ? 'text-navy' : 'text-slate-800'
+                            }`}
+                          >
+                            {item.title}
+                          </h3>
+
+                          {/* Institution & Location */}
+                          <div className="flex items-center gap-1.5 text-xs sm:text-sm text-navy-700/70 mt-1.5 font-medium">
+                            <MapPin className="w-3.5 h-3.5 text-teal shrink-0" />
+                            <span>{item.institution}</span>
+                            <span>·</span>
+                            <span className="text-teal font-semibold">{item.location}</span>
+                          </div>
+
+                          {/* Description */}
+                          <p className="text-xs sm:text-sm text-navy-700/85 mt-2.5 leading-relaxed font-normal">
+                            {item.desc}
+                          </p>
+
+                          {/* Tags */}
+                          {item.tags && item.tags.length > 0 && (
+                            <div className="flex flex-wrap gap-1.5 mt-4 pt-3.5 border-t border-border/40">
+                              {item.tags.map((tag) => (
+                                <span
+                                  key={tag}
+                                  className="text-[10px] sm:text-[11px] font-medium bg-soft-gray px-2 py-0.5 rounded-md text-navy-700"
+                                >
+                                  {tag}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
                 )

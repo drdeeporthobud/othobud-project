@@ -23,7 +23,7 @@ const faqs = [
     category: 'Insurance & Billing',
     items: [
       { q: 'Does Dr. Deep accept cashless insurance?', a: 'Yes. Cashless treatment is available through empanelled hospitals for most major health insurance providers. Please confirm your insurer with our clinic coordinator.' },
-      { q: 'What is the consultation fee?', a: 'Consultation fees vary by clinic. Please contact us at +91 98300 00000 for current fee details.' },
+      { q: 'What is the consultation fee?', a: 'Consultation fees vary by clinic. Please contact us at +91 79801 44046 for current fee details.' },
     ],
   },
 ]
@@ -331,7 +331,7 @@ export default function PatientResources() {
             <Link to="/book-appointment" className="bg-white text-teal font-display font-700 px-7 py-3 rounded-xl hover:bg-soft-gray transition-colors">
               Book Appointment
             </Link>
-            <a href="https://wa.me/919830000000" className="bg-white/20 text-white border border-white/30 font-display font-700 px-7 py-3 rounded-xl hover:bg-white/30 transition-colors">
+            <a href="https://wa.me/917980144046" className="bg-white/20 text-white border border-white/30 font-display font-700 px-7 py-3 rounded-xl hover:bg-white/30 transition-colors">
               WhatsApp Us
             </a>
           </div>

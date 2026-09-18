@@ -368,7 +368,7 @@ export default function Home() {
                 Dr. Deep Chakraborty
               </div>
               <div className="text-sky-300 text-[clamp(0.75rem,3vw,0.875rem)] font-medium mt-1">
-                MS (Ortho) · DNB · Fellowship Germany
+                MS (Ortho) · Fellowships USA, Dubai & Kolkata
               </div>
 
               {/* Divider */}
@@ -378,7 +378,7 @@ export default function Home() {
               <div className="grid grid-cols-2 items-center">
                 <div className="pr-3">
                   <div className="text-[#38BDF8] font-display font-800 text-[clamp(1.25rem,5vw,1.5rem)] leading-none">
-                    5,000+
+                    3,000+
                   </div>
                   <div className="text-slate-300 text-xs mt-1 font-medium">
                     Surgeries
@@ -480,7 +480,7 @@ export default function Home() {
                 className="flex flex-wrap items-center gap-x-5 gap-y-2.5 mt-10 animate-fade-up text-sm text-white/70"
                 style={{ animationDelay: '0.4s' }}
               >
-                {['15+ Years Experience', '5,000+ Surgeries', 'MBBS · MS · DNB'].map((t) => (
+                {['15+ Years Experience', '3,000+ Surgeries', 'MBBS · MS · DNB'].map((t) => (
                   <div key={t} className="flex items-center gap-2">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0EA5E9" strokeWidth="2.5">
                       <polyline points="20 6 9 17 4 12" />
@@ -508,7 +508,7 @@ export default function Home() {
                   {/* Name card overlay */}
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-navy via-navy/80 to-transparent p-6">
                     <div className="text-white font-display font-700 text-xl">Dr. Deep Chakraborty</div>
-                    <div className="text-teal-light text-sm mt-1">MS (Ortho) · DNB · Fellowship in Arthroplasty</div>
+                    <div className="text-teal-light text-sm mt-1">MS (Ortho) · Fellowships USA, Dubai & Kolkata</div>
                   </div>
                 </div>
 
@@ -522,7 +522,7 @@ export default function Home() {
                       </svg>
                     </div>
                     <div>
-                      <div className="text-white font-display font-700 text-lg leading-none">5,000+</div>
+                      <div className="text-white font-display font-700 text-lg leading-none">3,000+</div>
                       <div className="text-white/60 text-xs">Successful Surgeries</div>
                     </div>
                   </div>
@@ -539,9 +539,12 @@ export default function Home() {
                     className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-xs placeholder-white/40 focus:outline-none focus:border-teal"
                   >
                     <option value="" className="text-navy">Select Clinic</option>
-                    <option value="salt-lake" className="text-navy">Salt Lake Clinic</option>
-                    <option value="alipore" className="text-navy">Alipore Clinic</option>
-                    <option value="newtown" className="text-navy">Newtown Clinic</option>
+                    <option value="alexa-newtown" className="text-navy">Alexa Newtown</option>
+                    <option value="manipal-broadway" className="text-navy">Manipal Hospital Broadway</option>
+                    <option value="narayana-barasat" className="text-navy">Narayana Barasat</option>
+                    <option value="fortis" className="text-navy">Fortis</option>
+                    <option value="daffodil-laketown" className="text-navy">Daffodil Laketown</option>
+                    <option value="apollo-newtown" className="text-navy">Apollo Clinic Newtown</option>
                   </select>
                   <input
                     type="date"
@@ -579,7 +582,7 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-4">
             <StatCard value={15} suffix="+" label="Years Experience" delay={1} />
-            <StatCard value={5000} suffix="+" label="Successful Surgeries" delay={2} />
+            <StatCard value={3000} suffix="+" label="Successful Surgeries" delay={2} />
             <StatCard value={8} label="Hospital Affiliations" delay={3} />
             <StatCard value={12} label="Awards & Honours" delay={4} />
             <StatCard value={4800} suffix="+" label="Verified Reviews" delay={5} />
@@ -588,7 +591,7 @@ export default function Home() {
 
           {/* Credential badges */}
           <div className="flex flex-wrap justify-center gap-2 sm:gap-3.5 mt-6 sm:mt-8 reveal">
-            {['MBBS · IPGMER', 'MS (Orthopedics)', 'DNB (Ortho)', 'Fellowship – Arthroplasty (Germany)', 'MCI Registered', 'ISAKOS Member'].map((c) => (
+            {['MBBS', 'MS (Orthopedics)', 'Fellowship in USA', 'Fellowship in Dubai', 'Belle Vue Fellowship', 'Robotic Joint Specialist', 'ISAKOS Member'].map((c) => (
               <div key={c} className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-full border border-border/60 text-xs sm:text-sm text-navy-700 font-medium shadow-2xs">
                 {c}
               </div>
@@ -633,18 +636,18 @@ export default function Home() {
               </h2>
               <div className="w-12 h-1 bg-teal rounded mt-4 reveal reveal-delay-2" />
               <p className="text-navy-700 leading-relaxed mt-5 sm:mt-6 text-sm sm:text-base reveal reveal-delay-2">
-                Dr. Deep Chakraborty is a fellowship-trained orthopedic surgeon based in Kolkata with over 15 years of clinical experience. After completing his post-graduation from IPGMER, he pursued advanced fellowship training in Joint Arthroplasty in Germany, gaining expertise in robotic-assisted surgeries.
+                Dr. Deep Chakraborty is a fellowship-trained orthopedic surgeon in Kolkata with over 15 years of clinical experience in joint replacement, robotic joint replacement, arthroscopic surgery, and sports injury treatment. After completing his MBBS from Dr. B.R. Ambedkar Medical College, Bangalore, and MS in Orthopedics from JJM Medical College, Davanagere, he pursued advanced fellowship training in arthroscopy, joint replacement, robotic surgery, and joint preservation in Kolkata, Dubai, and the USA.
               </p>
               <p className="text-navy-700 leading-relaxed mt-3.5 sm:mt-4 text-sm sm:text-base reveal reveal-delay-3">
-                His practice philosophy centers on listening carefully to each patient, explaining every diagnosis in plain language, and developing treatment plans that respect their individual circumstances and goals.
+                His practice focuses on providing personalized orthopedic care for knee, shoulder, elbow, and ankle conditions, including arthritis, sports injuries, and joint problems. With experience of 2,000+ conventional and robotic joint replacements and 1,000+ arthroscopic surgeries, Dr. Chakraborty believes in understanding each patient's concerns, explaining treatment options clearly, and helping them make informed decisions about their orthopedic health.
               </p>
 
               <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 sm:gap-4 mt-6 sm:mt-8 reveal reveal-delay-3">
                 {[
                   { label: 'Specialization', value: 'Joint Replacement & Arthroscopy' },
-                  { label: 'Training', value: 'IPGMER + Germany Fellowship' },
+                  { label: 'Training', value: 'MS (Orthopedics) + Kolkata, USA, Dubai Fellowship' },
                   { label: 'Languages', value: 'Bengali, Hindi, English' },
-                  { label: 'Practice', value: 'Kolkata, West Bengal' },
+                  { label: 'Practice', value: 'Newtown, Kolkata, West Bengal' },
                 ].map((item) => (
                   <div key={item.label} className="bg-soft-gray rounded-xl p-3.5 sm:p-4">
                     <div className="text-[11px] sm:text-xs text-navy-700 font-medium uppercase tracking-wide">{item.label}</div>
@@ -1111,22 +1114,53 @@ export default function Home() {
                 Consultations are available across multiple clinic locations in Kolkata. Same-week appointments are usually available.
               </p>
 
-              <div className="space-y-3.5 sm:space-y-4 mt-6 sm:mt-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6 sm:mt-8">
                 {[
-                  { clinic: 'Salt Lake Clinic', addr: 'CF-140, Sector 1, Salt Lake, Kolkata 700064', time: 'Mon–Sat: 5:00 PM – 8:00 PM' },
-                  { clinic: 'Alipore Clinic', addr: '22B, Judges Court Road, Alipore, Kolkata 700027', time: 'Mon, Wed, Fri: 11:00 AM – 1:00 PM' },
+                  {
+                    clinic: 'Alexa Newtown',
+                    addr: 'Snehodiya, Street No 165, BC Block, Action Area I, Newtown, Kolkata 700163',
+                    time: 'Mon–Sat: 6:00 PM – 8:00 PM',
+                  },
+                  {
+                    clinic: 'Manipal Hospital Broadway',
+                    addr: 'JC-16 & 17, No. 3A, Broadway Road, Sector 3, Salt Lake, Kolkata 700106',
+                    time: 'Mon & Fri: 4:00 PM – 5:00 PM',
+                  },
+                  {
+                    clinic: 'Narayana Barasat',
+                    addr: '78, Jessore Road (South), Barasat, North 24 Parganas, Kolkata 700127',
+                    time: 'Wed & Sat: 12:00 PM – 2:00 PM',
+                  },
+                  {
+                    clinic: 'Fortis',
+                    addr: '730, Eastern Metropolitan Bypass, Anandapur, Kolkata 700107',
+                    time: 'Sat: 3:00 PM – 5:00 PM',
+                  },
+                  {
+                    clinic: 'Daffodil Laketown',
+                    addr: '276, Canal Street, Sreebhumi, Lake Town, South Dumdum, Kolkata 700048',
+                    time: 'Wed: 7:30 PM – 9:00 PM | Sat: 10:30 AM – 11:30 AM',
+                  },
+                  {
+                    clinic: 'Apollo Clinic Newtown',
+                    addr: 'The Galleria, 1B, Street Number 124, BG Block, Action Area I, Newtown, Kolkata 700163',
+                    time: 'Tue, Thu, Fri, Sun: 4:30 PM – 6:00 PM',
+                  },
                 ].map((loc, i) => (
-                  <div key={loc.clinic} className={`reveal reveal-delay-${i + 3} flex items-start gap-3.5 sm:gap-4 bg-soft-gray rounded-xl p-4 sm:p-5`}>
+                  <div
+                    key={loc.clinic}
+                    className={`reveal reveal-delay-${(i % 3) + 2} flex items-start gap-3.5 sm:gap-4 bg-soft-gray rounded-xl p-3.5 sm:p-4 hover:bg-teal/5 transition-colors border border-border/40`}
+                  >
                     <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-teal/10 flex items-center justify-center flex-shrink-0 mt-0.5">
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0284C7" strokeWidth="2">
                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
                         <circle cx="12" cy="10" r="3" />
                       </svg>
                     </div>
-                    <div>
-                      <div className="font-display font-700 text-navy text-sm sm:text-base">{loc.clinic}</div>
-                      <div className="text-xs sm:text-sm text-navy-700 mt-0.5">{loc.addr}</div>
-                      <div className="text-xs text-teal font-semibold mt-1">{loc.time}</div>
+                    <div className="min-w-0">
+                      <div className="font-display font-700 text-navy text-sm sm:text-base leading-tight">{loc.clinic}</div>
+                      <div className="text-xs sm:text-sm text-navy-700 mt-1 leading-snug line-clamp-2">{loc.addr}</div>
+                      <div className="text-xs text-teal font-semibold mt-1.5 leading-snug">{loc.time}</div>
                     </div>
                   </div>
                 ))}
@@ -1134,7 +1168,7 @@ export default function Home() {
 
               <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 mt-6 sm:mt-8 reveal reveal-delay-4">
                 <a
-                  href="tel:+919830000000"
+                  href="tel:+917980144046"
                   className="flex items-center justify-center gap-2 bg-soft-gray text-navy rounded-xl px-5 py-3 text-sm font-display font-600 hover:bg-border/60 transition-colors min-h-[44px] group"
                 >
                   <img
@@ -1145,7 +1179,7 @@ export default function Home() {
                   <span>Call Clinic</span>
                 </a>
                 <a
-                  href="https://wa.me/919830000000"
+                  href="https://wa.me/917980144046"
                   target="_blank"
                   rel="noreferrer"
                   className="flex items-center justify-center gap-2 bg-green-50 text-green-700 border border-green-200 rounded-xl px-5 py-3 text-sm font-display font-600 hover:bg-green-100 transition-colors min-h-[44px] group"
