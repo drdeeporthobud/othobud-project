@@ -1,15 +1,15 @@
-import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useReveal, useCountUp } from '../hooks/useReveal'
-import { posts as allBlogPosts, type BlogPost } from '../data/blogData'
+import { useEffect, useRef, useState } from "react"
+import { Link } from "react-router-dom"
+import { useReveal, useCountUp } from "../hooks/useReveal"
+import { posts as allBlogPosts, type BlogPost } from "../data/blogData"
 
-const drDeepHero = '/images/doctor/dr-deep-hero.webp'
-const drDeepRbg = '/images/doctor/dr-deep-portrait-cutout.webp'
-const drDeep1 = '/images/doctor/dr-deep-full.webp'
+const drDeepHero = "/images/doctor/dr-deep-hero.webp"
+const drDeepRbg = "/images/doctor/dr-deep-portrait-cutout.webp"
+const drDeep1 = "/images/doctor/dr-deep-full.webp"
 
 function StatCard({
   value,
-  suffix = '',
+  suffix = "",
   label,
   delay = 0,
 }: {
@@ -27,105 +27,125 @@ function StatCard({
         <span ref={numRef}>0</span>
         <span>{suffix}</span>
       </div>
-      <div className="text-xs sm:text-sm text-navy-700 mt-1 font-medium leading-tight line-clamp-2">{label}</div>
+      <div className="text-xs sm:text-sm text-navy-700 mt-1 font-medium leading-tight line-clamp-2">
+        {label}
+      </div>
     </div>
   )
 }
 
 const conditions = [
   {
-    image: '/icons/png/symptoms/kneepain.webp',
-    label: 'Knee Pain',
-    desc: 'Osteoarthritis, ligament tears, meniscus injuries',
-    bgGradient: 'from-[#e0f2fe]/70 via-[#ebf5fe]/85 to-[#f0f8ff]',
-    borderColor: 'border-sky-100/90',
+    image: "/icons/png/symptoms/kneepain.webp",
+    label: "Knee Pain",
+    desc: "Osteoarthritis, ligament tears, meniscus injuries",
+    bgGradient: "from-[#e0f2fe]/70 via-[#ebf5fe]/85 to-[#f0f8ff]",
+    borderColor: "border-sky-100/90",
   },
   {
-    image: '/icons/png/symptoms/hippain.webp',
-    label: 'Hip Pain',
-    desc: 'Labral tears, hip arthritis, bursitis',
-    bgGradient: 'from-[#ffedd5]/60 via-[#fff3e8]/85 to-[#fff7ed]',
-    borderColor: 'border-amber-100/90',
+    image: "/icons/png/symptoms/hippain.webp",
+    label: "Hip Pain",
+    desc: "Labral tears, hip arthritis, bursitis",
+    bgGradient: "from-[#ffedd5]/60 via-[#fff3e8]/85 to-[#fff7ed]",
+    borderColor: "border-amber-100/90",
   },
   {
-    image: '/icons/png/symptoms/shoulderpain.webp',
-    label: 'Shoulder Pain',
-    desc: 'Rotator cuff, frozen shoulder, dislocations',
-    bgGradient: 'from-[#dcfce7]/60 via-[#ecfdf3]/85 to-[#f0fdf4]',
-    borderColor: 'border-emerald-100/90',
+    image: "/icons/png/symptoms/shoulderpain.webp",
+    label: "Shoulder Pain",
+    desc: "Rotator cuff, frozen shoulder, dislocations",
+    bgGradient: "from-[#dcfce7]/60 via-[#ecfdf3]/85 to-[#f0fdf4]",
+    borderColor: "border-emerald-100/90",
   },
   {
-    image: '/icons/png/symptoms/sports.webp',
-    label: 'Sports Injuries',
-    desc: 'ACL tears, cartilage damage, stress fractures',
-    bgGradient: 'from-[#fef3c7]/60 via-[#fff8ed]/85 to-[#fffbeb]',
-    borderColor: 'border-amber-100/90',
+    image: "/icons/png/symptoms/sports.webp",
+    label: "Sports Injuries",
+    desc: "ACL tears, cartilage damage, stress fractures",
+    bgGradient: "from-[#fef3c7]/60 via-[#fff8ed]/85 to-[#fffbeb]",
+    borderColor: "border-amber-100/90",
   },
   {
-    image: '/icons/png/symptoms/fracture.webp',
-    label: 'Fractures',
-    desc: 'Complex fractures, non-unions, deformities',
-    bgGradient: 'from-[#ede9fe]/60 via-[#f4f2ff]/85 to-[#f8f7ff]',
-    borderColor: 'border-indigo-100/90',
+    image: "/icons/png/symptoms/fracture.webp",
+    label: "Fractures",
+    desc: "Complex fractures, non-unions, deformities",
+    bgGradient: "from-[#ede9fe]/60 via-[#f4f2ff]/85 to-[#f8f7ff]",
+    borderColor: "border-indigo-100/90",
   },
   {
-    image: '/icons/png/symptoms/backpain.webp',
-    label: 'Back Pain',
-    desc: 'Disc herniation, sciatica, spinal stenosis',
-    bgGradient: 'from-[#e0f2fe]/70 via-[#ebf6ff]/85 to-[#f0f9ff]',
-    borderColor: 'border-sky-100/90',
+    image: "/icons/png/symptoms/backpain.webp",
+    label: "Back Pain",
+    desc: "Disc herniation, sciatica, spinal stenosis",
+    bgGradient: "from-[#e0f2fe]/70 via-[#ebf6ff]/85 to-[#f0f9ff]",
+    borderColor: "border-sky-100/90",
   },
 ]
 
 const treatments = [
   {
-    title: 'Robotic Joint Replacement',
-    desc: 'Precision-guided robotic surgery for knee and hip replacement with faster recovery.',
-    image: '/icons/png/specialties/robotic-joint-replacement.webp',
+    title: "Robotic Joint Replacement",
+    desc: "Precision-guided robotic surgery for knee and hip replacement with faster recovery.",
+    image: "/icons/png/specialties/robotic-joint-replacement.webp",
   },
   {
-    title: 'Arthroscopy',
-    desc: 'Minimally invasive joint surgery with tiny incisions and rapid recovery.',
-    image: '/icons/png/specialties/arthroscopy.webp',
+    title: "Arthroscopy",
+    desc: "Minimally invasive joint surgery with tiny incisions and rapid recovery.",
+    image: "/icons/png/specialties/arthroscopy.webp",
   },
   {
-    title: 'Sports Medicine',
-    desc: 'Advanced care for athletes — from diagnosis to return-to-play rehabilitation.',
-    image: '/icons/png/specialties/sports-medicine.webp',
+    title: "Sports Medicine",
+    desc: "Advanced care for athletes — from diagnosis to return-to-play rehabilitation.",
+    image: "/icons/png/specialties/sports-medicine.webp",
   },
   {
-    title: 'Trauma Surgery',
-    desc: 'Expert management of complex fractures and polytrauma cases.',
-    image: '/icons/png/specialties/trauma-surgery.webp',
+    title: "Trauma Surgery",
+    desc: "Expert management of complex fractures and polytrauma cases.",
+    image: "/icons/png/specialties/trauma-surgery.webp",
   },
   {
-    title: 'Revision Surgery',
-    desc: 'Corrective procedures for failed joint replacements and implant complications.',
-    image: '/icons/png/specialties/revision-surgery.webp',
+    title: "Revision Surgery",
+    desc: "Corrective procedures for failed joint replacements and implant complications.",
+    image: "/icons/png/specialties/revision-surgery.webp",
   },
   {
-    title: 'Pediatric Orthopedics',
+    title: "Pediatric Orthopedics",
     desc: "Specialized care for children's bone and joint conditions.",
-    image: '/icons/png/specialties/pediatric-orthopedics.webp',
+    image: "/icons/png/specialties/pediatric-orthopedics.webp",
   },
 ]
 
 const whyItems = [
   {
     icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0284C7" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        width="26"
+        height="26"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#0284C7"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <path d="M15 19a5 5 0 0 0-5-5H5a5 5 0 0 0-5 5v1" />
         <circle cx="7.5" cy="7" r="3.5" />
         <line x1="18" y1="16" x2="18" y2="22" />
         <line x1="15" y1="19" x2="21" y2="19" />
       </svg>
     ),
-    title: 'Personalized Treatment',
-    desc: 'Every patient receives a care plan tailored to their unique anatomy, lifestyle and goals.',
+    title: "Personalized Treatment",
+    desc: "Every patient receives a care plan tailored to their unique anatomy, lifestyle and goals.",
   },
   {
     icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0284C7" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        width="26"
+        height="26"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#0284C7"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h6" />
         <path d="M13 2l5 5v5" />
         <path d="M13 2v5h5" />
@@ -135,31 +155,58 @@ const whyItems = [
         <path d="M15.8 17.5l1.2 1.2 2.3-2.4" />
       </svg>
     ),
-    title: 'Evidence-Based Care',
-    desc: 'Treatment decisions grounded in current research and global best practices.',
+    title: "Evidence-Based Care",
+    desc: "Treatment decisions grounded in current research and global best practices.",
   },
   {
     icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0284C7" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        width="26"
+        height="26"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#0284C7"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <path d="M21 11.5c0 4.418-4.03 8-9 8a9.86 9.86 0 0 1-4.255-.949L3 20l1.395-3.72C3.512 14.7 3 13.2 3 11.5 3 7.082 7.03 3.5 12 3.5s9 3.582 9 8z" />
       </svg>
     ),
-    title: 'Transparent Communication',
-    desc: 'Clear explanations at every step — you always know your diagnosis and options.',
+    title: "Transparent Communication",
+    desc: "Clear explanations at every step — you always know your diagnosis and options.",
   },
   {
     icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0284C7" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        width="26"
+        height="26"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#0284C7"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <path d="M9 2v6c0 1.5-1.8 2.5-1.8 4 0 1 1.2 1.5 2.8 1.5s2-.7 2-1.5c0 .8.8 1.5 2 1.5s2.8-.5 2.8-1.5c0-1.5-1.8-2.5-1.8-4V2" />
         <path d="M7.2 15.5c0-1 1.2-1.5 2.8-1.5s2 .7 2 1.5c0-.8.8-1.5 2-1.5s2.8.5 2.8 1.5c0 1.5-1.8 2.5-1.8 4V22h-6v-2.5c0-1.5-1.8-2.5-1.8-4z" />
       </svg>
     ),
-    title: 'Advanced Surgical Expertise',
-    desc: 'Fellowship-trained with proficiency in robotic, arthroscopic and revision procedures.',
+    title: "Advanced Surgical Expertise",
+    desc: "Fellowship-trained with proficiency in robotic, arthroscopic and revision procedures.",
   },
   {
     icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0284C7" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        width="26"
+        height="26"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#0284C7"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <circle cx="12" cy="4.5" r="2" />
         <path d="M9.5 9l2.5-2 3 1.5 2 3" />
         <path d="M12 7v5l-3 4-2-1" />
@@ -167,87 +214,145 @@ const whyItems = [
         <path d="M4.5 17c3.5 3.5 11 3.5 15-.5" />
       </svg>
     ),
-    title: 'Complete Rehabilitation',
-    desc: 'Structured recovery support from post-surgery day one through full return to activity.',
+    title: "Complete Rehabilitation",
+    desc: "Structured recovery support from post-surgery day one through full return to activity.",
   },
   {
     icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0284C7" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        width="26"
+        height="26"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#0284C7"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
         <line x1="12" y1="8" x2="12" y2="14" />
         <line x1="9" y1="11" x2="15" y2="11" />
       </svg>
     ),
-    title: 'Hospital-Grade Safety',
-    desc: 'Procedures performed in accredited hospitals with world-class infection control standards.',
+    title: "Hospital-Grade Safety",
+    desc: "Procedures performed in accredited hospitals with world-class infection control standards.",
   },
 ]
 
 const journeySteps = [
-  { num: '01', label: 'Consultation', desc: 'Detailed history and physical examination' },
-  { num: '02', label: 'Diagnosis', desc: 'X-rays, MRI and advanced imaging review' },
-  { num: '03', label: 'Treatment Plan', desc: 'Personalized surgical or non-surgical pathway' },
-  { num: '04', label: 'Surgery', desc: 'Precision-guided procedure in accredited theatre' },
-  { num: '05', label: 'Recovery', desc: 'Structured post-operative care and monitoring' },
-  { num: '06', label: 'Rehabilitation', desc: 'Physiotherapy and functional restoration' },
-  { num: '07', label: 'Follow-up', desc: 'Long-term wellness and preventive guidance' },
+  {
+    num: "01",
+    label: "Consultation",
+    desc: "Detailed history and physical examination",
+  },
+  {
+    num: "02",
+    label: "Diagnosis",
+    desc: "X-rays, MRI and advanced imaging review",
+  },
+  {
+    num: "03",
+    label: "Treatment Plan",
+    desc: "Personalized surgical or non-surgical pathway",
+  },
+  {
+    num: "04",
+    label: "Surgery",
+    desc: "Precision-guided procedure in accredited theatre",
+  },
+  {
+    num: "05",
+    label: "Recovery",
+    desc: "Structured post-operative care and monitoring",
+  },
+  {
+    num: "06",
+    label: "Rehabilitation",
+    desc: "Physiotherapy and functional restoration",
+  },
+  {
+    num: "07",
+    label: "Follow-up",
+    desc: "Long-term wellness and preventive guidance",
+  },
 ]
 
 const testimonials = [
   {
-    name: 'Sudipta Banerjee',
+    name: "Sudipta Banerjee",
     age: 58,
-    procedure: 'Knee Replacement',
+    procedure: "Knee Replacement",
     text: "I walked without pain for the first time in five years within 6 weeks of surgery. Dr. Deep's calm reassurance before the operation made all the difference.",
     stars: 5,
-    img: 'https://images.unsplash.com/photo-1547212371-eb5e6a4b590c?w=80&h=80&fit=crop&auto=format',
+    img: "https://images.unsplash.com/photo-1547212371-eb5e6a4b590c?w=80&h=80&fit=crop&auto=format",
   },
   {
-    name: 'Rohit Sharma',
+    name: "Rohit Sharma",
     age: 28,
-    procedure: 'ACL Reconstruction',
+    procedure: "ACL Reconstruction",
     text: "As a competitive footballer, returning to the pitch after an ACL tear felt impossible. Thanks to Dr. Deep and his team, I was back on the field in 9 months.",
     stars: 5,
-    img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&auto=format',
+    img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&auto=format",
   },
   {
-    name: 'Pratima Dey',
+    name: "Pratima Dey",
     age: 65,
-    procedure: 'Hip Replacement',
+    procedure: "Hip Replacement",
     text: "The robotic surgery meant I was up and walking the very next day. I wish I had come to Dr. Deep years ago instead of suffering in silence.",
     stars: 5,
-    img: 'https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=80&h=80&fit=crop&auto=format',
+    img: "https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=80&h=80&fit=crop&auto=format",
   },
 ]
 
 const faqs = [
   {
-    q: 'Do I need a referral to see Dr. Deep Chakraborty?',
+    q: "Do I need a referral to see Dr. Deep Chakraborty?",
     a: "No referral is needed. You can book a consultation directly through this website, by calling the clinic, or via WhatsApp.",
   },
   {
-    q: 'How long is the typical wait time for an appointment?',
+    q: "How long is the typical wait time for an appointment?",
     a: "Most patients receive an appointment within 2–3 working days. Urgent cases are accommodated at the earliest available slot.",
   },
   {
-    q: 'What should I bring to my first consultation?',
+    q: "What should I bring to my first consultation?",
     a: "Please bring any prior X-rays, MRI or CT reports, a list of current medications, your ID proof, and previous prescription records if available.",
   },
 ]
 
 const blogPosts: BlogPost[] = [
-  allBlogPosts.find((p) => p.title.toLowerCase().includes('osteoarthritis')) ?? allBlogPosts[1],
-  allBlogPosts.find((p) => p.title.toLowerCase().includes('robotic surgery')) ?? allBlogPosts[0],
-  allBlogPosts.find((p) => p.title.toLowerCase().includes('acl injury')) ?? allBlogPosts[2],
+  allBlogPosts.find((p) => p.title.toLowerCase().includes("osteoarthritis")) ??
+    allBlogPosts[1],
+  allBlogPosts.find((p) => p.title.toLowerCase().includes("robotic surgery")) ??
+    allBlogPosts[0],
+  allBlogPosts.find((p) => p.title.toLowerCase().includes("acl injury")) ??
+    allBlogPosts[2],
 ]
 
 const galleryImages = [
-  { src: 'https://images.unsplash.com/photo-1551076805-e1869033e561?w=600&h=400&fit=crop&auto=format', label: 'Operating Theatre' },
-  { src: 'https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=600&h=400&fit=crop&auto=format', label: 'Consultation' },
-  { src: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&h=400&fit=crop&auto=format', label: 'Medical Conference' },
-  { src: 'https://images.unsplash.com/photo-1581056771107-24ca5f033842?w=600&h=400&fit=crop&auto=format', label: 'Patient Awareness' },
-  { src: 'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=600&h=400&fit=crop&auto=format', label: 'Clinic Facility' },
-  { src: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&h=400&fit=crop&auto=format', label: 'Professional' },
+  {
+    src: "https://images.unsplash.com/photo-1551076805-e1869033e561?w=600&h=400&fit=crop&auto=format",
+    label: "Operating Theatre",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=600&h=400&fit=crop&auto=format",
+    label: "Consultation",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&h=400&fit=crop&auto=format",
+    label: "Medical Conference",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1581056771107-24ca5f033842?w=600&h=400&fit=crop&auto=format",
+    label: "Patient Awareness",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=600&h=400&fit=crop&auto=format",
+    label: "Clinic Facility",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&h=400&fit=crop&auto=format",
+    label: "Professional",
+  },
 ]
 
 function FAQItem({ q, a }: { q: string; a: string }) {
@@ -260,8 +365,15 @@ function FAQItem({ q, a }: { q: string; a: string }) {
       >
         <span className="font-display font-600 text-navy text-sm">{q}</span>
         <svg
-          width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0284C7" strokeWidth="2.5"
-          className={`flex-shrink-0 ml-4 transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#0284C7"
+          strokeWidth="2.5"
+          className={`flex-shrink-0 ml-4 transition-transform duration-300 ${
+            open ? "rotate-180" : ""
+          }`}
         >
           <polyline points="6 9 12 15 18 9" />
         </svg>
@@ -290,8 +402,8 @@ export default function Home() {
   const contactRef = useReveal()
 
   // Appointment widget state
-  const [clinic, setClinic] = useState('')
-  const [date, setDate] = useState('')
+  const [clinic, setClinic] = useState("")
+  const [date, setDate] = useState("")
 
   // Parallax for hero
   useEffect(() => {
@@ -301,8 +413,8 @@ export default function Home() {
       const y = window.scrollY
       el.style.backgroundPositionY = `${y * 0.3}px`
     }
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
   return (
@@ -313,7 +425,7 @@ export default function Home() {
         className="relative min-h-screen bg-navy overflow-hidden flex items-center"
         style={{
           backgroundImage:
-            'radial-gradient(ellipse 80% 60% at 70% 50%, rgba(2,132,199,0.18) 0%, transparent 70%)',
+            "radial-gradient(ellipse 80% 60% at 70% 50%, rgba(2,132,199,0.18) 0%, transparent 70%)",
         }}
       >
         {/* Background image with overlay */}
@@ -321,7 +433,7 @@ export default function Home() {
           className="absolute inset-0 bg-center bg-cover pointer-events-none"
           style={{
             backgroundImage:
-              'url(https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1600&h=900&fit=crop&auto=format)',
+              "url(https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1600&h=900&fit=crop&auto=format)",
             opacity: 0.08,
           }}
         />
@@ -346,8 +458,9 @@ export default function Home() {
 
             {/* 3. Description */}
             <p className="text-white/80 text-[clamp(0.8125rem,3.2vw,0.9375rem)] leading-relaxed max-w-xl">
-              Dr. Deep Chakraborty brings world-class orthopedic expertise to Kolkata — combining
-              fellowship-trained surgical precision with compassionate, patient-first care.
+              Dr. Deep Chakraborty brings world-class orthopedic expertise to
+              Kolkata — combining fellowship-trained surgical precision with
+              compassionate, patient-first care.
             </p>
 
             {/* 4. Doctor Image (in normal flow, visual right alignment, occupying its own layout space, never overlapping) */}
@@ -402,7 +515,14 @@ export default function Home() {
                   to="/book-appointment"
                   className="btn-primary w-full sm:w-auto justify-center py-3.5 px-6 min-h-[44px] text-sm font-semibold shadow-lg shadow-teal/20"
                 >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
                     <rect x="3" y="4" width="18" height="18" rx="2" />
                     <line x1="16" y1="2" x2="16" y2="6" />
                     <line x1="8" y1="2" x2="8" y2="6" />
@@ -415,7 +535,14 @@ export default function Home() {
                   className="btn-outline w-full sm:w-auto justify-center py-3.5 px-6 min-h-[44px] text-sm font-semibold"
                 >
                   Meet Dr. Deep
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
                     <line x1="5" y1="12" x2="19" y2="12" />
                     <polyline points="12 5 19 12 12 19" />
                   </svg>
@@ -437,7 +564,7 @@ export default function Home() {
 
               <h1
                 className="font-display font-800 text-white leading-[1.1] animate-fade-up text-5xl lg:text-6xl tracking-tight"
-                style={{ animationDelay: '0.1s' }}
+                style={{ animationDelay: "0.1s" }}
               >
                 Restoring Movement.
                 <br />
@@ -446,19 +573,30 @@ export default function Home() {
 
               <p
                 className="text-white/75 text-lg leading-relaxed mt-6 max-w-lg animate-fade-up"
-                style={{ animationDelay: '0.2s' }}
+                style={{ animationDelay: "0.2s" }}
               >
-                Dr. Deep Chakraborty brings world-class orthopedic expertise to Kolkata — combining
-                fellowship-trained surgical precision with compassionate, patient-first care.
+                Dr. Deep Chakraborty brings world-class orthopedic expertise to
+                Kolkata — combining fellowship-trained surgical precision with
+                compassionate, patient-first care.
               </p>
 
               {/* CTAs */}
               <div
                 className="flex flex-row gap-4 mt-10 animate-fade-up"
-                style={{ animationDelay: '0.3s' }}
+                style={{ animationDelay: "0.3s" }}
               >
-                <Link to="/book-appointment" className="btn-primary py-3.5 px-6 min-h-[44px]">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <Link
+                  to="/book-appointment"
+                  className="btn-primary py-3.5 px-6 min-h-[44px]"
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
                     <rect x="3" y="4" width="18" height="18" rx="2" />
                     <line x1="16" y1="2" x2="16" y2="6" />
                     <line x1="8" y1="2" x2="8" y2="6" />
@@ -466,9 +604,19 @@ export default function Home() {
                   </svg>
                   Book Appointment
                 </Link>
-                <Link to="/about" className="btn-outline py-3.5 px-6 min-h-[44px]">
+                <Link
+                  to="/about"
+                  className="btn-outline py-3.5 px-6 min-h-[44px]"
+                >
                   Meet Dr. Deep
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
                     <line x1="5" y1="12" x2="19" y2="12" />
                     <polyline points="12 5 19 12 12 19" />
                   </svg>
@@ -478,11 +626,22 @@ export default function Home() {
               {/* Quick trust metrics */}
               <div
                 className="flex flex-wrap items-center gap-x-5 gap-y-2.5 mt-10 animate-fade-up text-sm text-white/70"
-                style={{ animationDelay: '0.4s' }}
+                style={{ animationDelay: "0.4s" }}
               >
-                {['15+ Years Experience', '3,000+ Surgeries', 'MBBS · MS · DNB'].map((t) => (
+                {[
+                  "15+ Years Experience",
+                  "3,000+ Surgeries",
+                  "MBBS · MS · DNB",
+                ].map((t) => (
                   <div key={t} className="flex items-center gap-2">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0EA5E9" strokeWidth="2.5">
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#0EA5E9"
+                      strokeWidth="2.5"
+                    >
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
                     <span>{t}</span>
@@ -497,7 +656,10 @@ export default function Home() {
               <div className="relative w-full aspect-[4/5] max-w-md mx-auto">
                 <div
                   className="absolute -inset-4 rounded-3xl opacity-20"
-                  style={{ background: 'radial-gradient(ellipse, #0EA5E9 0%, transparent 70%)' }}
+                  style={{
+                    background:
+                      "radial-gradient(ellipse, #0EA5E9 0%, transparent 70%)",
+                  }}
                 />
                 <div className="relative w-full h-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-navy-800">
                   <img
@@ -507,8 +669,12 @@ export default function Home() {
                   />
                   {/* Name card overlay */}
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-navy via-navy/80 to-transparent p-6">
-                    <div className="text-white font-display font-700 text-xl">Dr. Deep Chakraborty</div>
-                    <div className="text-teal-light text-sm mt-1">MS (Ortho) · Fellowships USA, Dubai & Kolkata</div>
+                    <div className="text-white font-display font-700 text-xl">
+                      Dr. Deep Chakraborty
+                    </div>
+                    <div className="text-teal-light text-sm mt-1">
+                      MS (Ortho) · Fellowships USA, Dubai & Kolkata
+                    </div>
                   </div>
                 </div>
 
@@ -516,14 +682,25 @@ export default function Home() {
                 <div className="absolute -left-6 top-12 glass-card rounded-2xl p-4 shadow-xl">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-teal/20 flex items-center justify-center">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0EA5E9" strokeWidth="2">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#0EA5E9"
+                        strokeWidth="2"
+                      >
                         <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
                         <polyline points="22 4 12 14.01 9 11.01" />
                       </svg>
                     </div>
                     <div>
-                      <div className="text-white font-display font-700 text-lg leading-none">3,000+</div>
-                      <div className="text-white/60 text-xs">Successful Surgeries</div>
+                      <div className="text-white font-display font-700 text-lg leading-none">
+                        3,000+
+                      </div>
+                      <div className="text-white/60 text-xs">
+                        Successful Surgeries
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -531,20 +708,36 @@ export default function Home() {
 
               {/* Floating appointment widget */}
               <div className="absolute -right-4 bottom-8 glass-card rounded-2xl p-5 shadow-2xl w-56">
-                <div className="text-white font-display font-700 text-sm mb-4">Quick Appointment</div>
+                <div className="text-white font-display font-700 text-sm mb-4">
+                  Quick Appointment
+                </div>
                 <div className="space-y-3">
                   <select
                     value={clinic}
                     onChange={(e) => setClinic(e.target.value)}
                     className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-xs placeholder-white/40 focus:outline-none focus:border-teal"
                   >
-                    <option value="" className="text-navy">Select Clinic</option>
-                    <option value="alexa-newtown" className="text-navy">Alexa Newtown</option>
-                    <option value="manipal-broadway" className="text-navy">Manipal Hospital Broadway</option>
-                    <option value="narayana-barasat" className="text-navy">Narayana Barasat</option>
-                    <option value="fortis" className="text-navy">Fortis</option>
-                    <option value="daffodil-laketown" className="text-navy">Daffodil Laketown</option>
-                    <option value="apollo-newtown" className="text-navy">Apollo Clinic Newtown</option>
+                    <option value="" className="text-navy">
+                      Select Clinic
+                    </option>
+                    <option value="alexa-newtown" className="text-navy">
+                      Alexa Newtown
+                    </option>
+                    <option value="manipal-broadway" className="text-navy">
+                      Manipal Hospital Broadway
+                    </option>
+                    <option value="narayana-barasat" className="text-navy">
+                      Narayana Barasat
+                    </option>
+                    <option value="fortis" className="text-navy">
+                      Fortis
+                    </option>
+                    <option value="daffodil-laketown" className="text-navy">
+                      Daffodil Laketown
+                    </option>
+                    <option value="apollo-newtown" className="text-navy">
+                      Apollo Clinic Newtown
+                    </option>
                   </select>
                   <input
                     type="date"
@@ -553,7 +746,9 @@ export default function Home() {
                     className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-teal"
                   />
                   <Link
-                    to={`/book-appointment${clinic ? `?clinic=${clinic}&date=${date}` : ''}`}
+                    to={`/book-appointment${
+                      clinic ? `?clinic=${clinic}&date=${date}` : ""
+                    }`}
                     className="block w-full text-center bg-teal hover:bg-teal-dark text-white text-xs font-display font-700 py-2.5 rounded-lg transition-colors shadow-md"
                   >
                     Book Now →
@@ -565,8 +760,13 @@ export default function Home() {
         </div>
 
         {/* Scroll indicator (Hidden on tiny phones to maximize viewport space) */}
-        <div className="hidden sm:flex absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 animate-fade-in" style={{ animationDelay: '1s' }}>
-          <span className="text-white/40 text-[10px] sm:text-xs tracking-widest uppercase">Scroll</span>
+        <div
+          className="hidden sm:flex absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 animate-fade-in"
+          style={{ animationDelay: "1s" }}
+        >
+          <span className="text-white/40 text-[10px] sm:text-xs tracking-widest uppercase">
+            Scroll
+          </span>
           <div className="w-px h-6 sm:h-8 bg-gradient-to-b from-white/40 to-transparent animate-pulse" />
         </div>
       </section>
@@ -581,18 +781,49 @@ export default function Home() {
             </h2>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-4">
-            <StatCard value={15} suffix="+" label="Years Experience" delay={1} />
-            <StatCard value={3000} suffix="+" label="Successful Surgeries" delay={2} />
+            <StatCard
+              value={15}
+              suffix="+"
+              label="Years Experience"
+              delay={1}
+            />
+            <StatCard
+              value={3000}
+              suffix="+"
+              label="Successful Surgeries"
+              delay={2}
+            />
             <StatCard value={8} label="Hospital Affiliations" delay={3} />
             <StatCard value={12} label="Awards & Honours" delay={4} />
-            <StatCard value={4800} suffix="+" label="Verified Reviews" delay={5} />
-            <StatCard value={98} suffix="%" label="Patient Satisfaction" delay={6} />
+            <StatCard
+              value={4800}
+              suffix="+"
+              label="Verified Reviews"
+              delay={5}
+            />
+            <StatCard
+              value={98}
+              suffix="%"
+              label="Patient Satisfaction"
+              delay={6}
+            />
           </div>
 
           {/* Credential badges */}
           <div className="flex flex-wrap justify-center gap-2 sm:gap-3.5 mt-6 sm:mt-8 reveal">
-            {['MBBS', 'MS (Orthopedics)', 'Fellowship in USA', 'Fellowship in Dubai', 'Belle Vue Fellowship', 'Robotic Joint Specialist', 'ISAKOS Member'].map((c) => (
-              <div key={c} className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-full border border-border/60 text-xs sm:text-sm text-navy-700 font-medium shadow-2xs">
+            {[
+              "MBBS",
+              "MS (Orthopedics)",
+              "Fellowship in USA",
+              "Fellowship in Dubai",
+              "Belle Vue Fellowship",
+              "Robotic Joint Specialist",
+              "ISAKOS Member",
+            ].map((c) => (
+              <div
+                key={c}
+                className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-full border border-border/60 text-xs sm:text-sm text-navy-700 font-medium shadow-2xs"
+              >
                 {c}
               </div>
             ))}
@@ -614,7 +845,10 @@ export default function Home() {
               </div>
               {/* Floating quote */}
               <div className="absolute -bottom-4 right-2 sm:-bottom-6 sm:-right-6 bg-gradient-to-br from-teal via-teal to-teal-dark text-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl shadow-teal/35 border border-white/25 backdrop-blur-md max-w-[calc(100%-1.5rem)] xs:max-w-[270px] sm:max-w-[300px]">
-                <svg className="w-5 h-5 sm:w-7 sm:h-7 text-white/40 mb-1.5 sm:mb-2 fill-current" viewBox="0 0 24 24">
+                <svg
+                  className="w-5 h-5 sm:w-7 sm:h-7 text-white/40 mb-1.5 sm:mb-2 fill-current"
+                  viewBox="0 0 24 24"
+                >
                   <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
                 </svg>
                 <p className="font-display font-700 italic text-xs sm:text-base leading-snug text-white tracking-tight">
@@ -632,26 +866,55 @@ export default function Home() {
             <div>
               <div className="section-label reveal">About</div>
               <h2 className="font-display font-800 text-3xl sm:text-4xl text-navy mt-2 leading-tight reveal reveal-delay-1">
-                Meet Dr. Deep<br />Chakraborty
+                Meet Dr. Deep
+                <br />
+                Chakraborty
               </h2>
               <div className="w-12 h-1 bg-teal rounded mt-4 reveal reveal-delay-2" />
               <p className="text-navy-700 leading-relaxed mt-5 sm:mt-6 text-sm sm:text-base reveal reveal-delay-2">
-                Dr. Deep Chakraborty is a fellowship-trained orthopedic surgeon in Kolkata with over 15 years of clinical experience in joint replacement, robotic joint replacement, arthroscopic surgery, and sports injury treatment. After completing his MBBS from Dr. B.R. Ambedkar Medical College, Bangalore, and MS in Orthopedics from JJM Medical College, Davanagere, he pursued advanced fellowship training in arthroscopy, joint replacement, robotic surgery, and joint preservation in Kolkata, Dubai, and the USA.
+                Dr. Deep Chakraborty is a fellowship-trained orthopedic surgeon
+                in Kolkata with over 15 years of clinical experience in joint
+                replacement, robotic joint replacement, arthroscopic surgery,
+                and sports injury treatment. After completing his MBBS from Dr.
+                B.R. Ambedkar Medical College, Bangalore, and MS in Orthopedics
+                from JJM Medical College, Davanagere, he pursued advanced
+                fellowship training in arthroscopy, joint replacement, robotic
+                surgery, and joint preservation in Kolkata, Dubai, and the USA.
               </p>
               <p className="text-navy-700 leading-relaxed mt-3.5 sm:mt-4 text-sm sm:text-base reveal reveal-delay-3">
-                His practice focuses on providing personalized orthopedic care for knee, shoulder, elbow, and ankle conditions, including arthritis, sports injuries, and joint problems. With experience of 2,000+ conventional and robotic joint replacements and 1,000+ arthroscopic surgeries, Dr. Chakraborty believes in understanding each patient's concerns, explaining treatment options clearly, and helping them make informed decisions about their orthopedic health.
+                His practice focuses on providing personalized orthopedic care
+                for knee, shoulder, elbow, and ankle conditions, including
+                arthritis, sports injuries, and joint problems. With experience
+                of 2,000+ conventional and robotic joint replacements and 1,000+
+                arthroscopic surgeries, Dr. Chakraborty believes in
+                understanding each patient's concerns, explaining treatment
+                options clearly, and helping them make informed decisions about
+                their orthopedic health.
               </p>
 
               <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 sm:gap-4 mt-6 sm:mt-8 reveal reveal-delay-3">
                 {[
-                  { label: 'Specialization', value: 'Joint Replacement & Arthroscopy' },
-                  { label: 'Training', value: 'MS (Orthopedics) + Kolkata, USA, Dubai Fellowship' },
-                  { label: 'Languages', value: 'Bengali, Hindi, English' },
-                  { label: 'Practice', value: 'Newtown, Kolkata, West Bengal' },
+                  {
+                    label: "Specialization",
+                    value: "Joint Replacement & Arthroscopy",
+                  },
+                  {
+                    label: "Training",
+                    value: "MS (Orthopedics) + Kolkata, USA, Dubai Fellowship",
+                  },
+                  { label: "Languages", value: "Bengali, Hindi, English" },
+                  { label: "Practice", value: "Newtown, Kolkata, West Bengal" },
                 ].map((item) => (
-                  <div key={item.label} className="bg-soft-gray rounded-xl p-3.5 sm:p-4">
-                    <div className="text-[11px] sm:text-xs text-navy-700 font-medium uppercase tracking-wide">{item.label}</div>
-                    <div className="text-navy font-display font-700 text-xs sm:text-sm mt-0.5">{item.value}</div>
+                  <div
+                    key={item.label}
+                    className="bg-soft-gray rounded-xl p-3.5 sm:p-4"
+                  >
+                    <div className="text-[11px] sm:text-xs text-navy-700 font-medium uppercase tracking-wide">
+                      {item.label}
+                    </div>
+                    <div className="text-navy font-display font-700 text-xs sm:text-sm mt-0.5">
+                      {item.value}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -661,7 +924,14 @@ export default function Home() {
                 className="inline-flex items-center gap-2 mt-6 sm:mt-8 text-teal font-display font-700 hover:gap-3 transition-all reveal reveal-delay-4 text-sm sm:text-base"
               >
                 View Complete Profile
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
                   <line x1="5" y1="12" x2="19" y2="12" />
                   <polyline points="12 5 19 12 12 19" />
                 </svg>
@@ -672,7 +942,10 @@ export default function Home() {
       </section>
 
       {/* ── Conditions ── */}
-      <section className="relative py-14 sm:py-20 bg-gradient-to-b from-[#F8FAFC] via-white to-[#F8FAFC] overflow-hidden" ref={conditionsRef}>
+      <section
+        className="relative py-14 sm:py-20 bg-gradient-to-b from-[#F8FAFC] via-white to-[#F8FAFC] overflow-hidden"
+        ref={conditionsRef}
+      >
         {/* Background decorative runner on left */}
         <div className="absolute top-2 left-0 sm:left-4 w-40 sm:w-64 h-36 sm:h-52 opacity-15 pointer-events-none select-none mix-blend-multiply overflow-hidden">
           <img
@@ -685,17 +958,30 @@ export default function Home() {
         {/* Script text on left: "Stronger Everyday" (Hidden on mobile/tablet to avoid collision) */}
         <div className="hidden xl:block absolute top-10 left-8 xl:left-14 rotate-[-12deg] select-none pointer-events-none">
           <div className="font-script text-3xl xl:text-4xl text-teal font-bold leading-tight drop-shadow-xs tracking-wide">
-            Stronger<br />Everyday
+            Stronger
+            <br />
+            Everyday
           </div>
         </div>
 
         {/* Script text on right: "Move Better Live Brighter" (Hidden on mobile/tablet to avoid collision) */}
         <div className="hidden xl:block absolute top-8 right-8 xl:right-14 rotate-[-8deg] select-none pointer-events-none text-right">
           <div className="font-script text-3xl xl:text-4xl text-teal font-bold leading-tight drop-shadow-xs tracking-wide">
-            Move Better<br />Live Brighter
+            Move Better
+            <br />
+            Live Brighter
           </div>
-          <svg className="w-28 sm:w-36 h-4 text-teal/70 mt-1 ml-auto" viewBox="0 0 120 18" fill="none">
-            <path d="M4 14C40 4 85 5 116 11" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+          <svg
+            className="w-28 sm:w-36 h-4 text-teal/70 mt-1 ml-auto"
+            viewBox="0 0 120 18"
+            fill="none"
+          >
+            <path
+              d="M4 14C40 4 85 5 116 11"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+            />
           </svg>
         </div>
 
@@ -715,7 +1001,9 @@ export default function Home() {
             </h2>
 
             <p className="text-navy-700 mt-2.5 sm:mt-3.5 max-w-xl mx-auto text-xs sm:text-base leading-relaxed reveal reveal-delay-2 font-normal">
-              Comprehensive orthopedic care for a wide range of bone, joint and soft tissue conditions. Get the right diagnosis and the right treatment.
+              Comprehensive orthopedic care for a wide range of bone, joint and
+              soft tissue conditions. Get the right diagnosis and the right
+              treatment.
             </p>
           </div>
 
@@ -733,8 +1021,10 @@ export default function Home() {
                     alt={c.label}
                     className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-500"
                     style={{
-                      maskImage: 'linear-gradient(to right, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%)',
-                      WebkitMaskImage: 'linear-gradient(to right, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%)',
+                      maskImage:
+                        "linear-gradient(to right, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%)",
+                      WebkitMaskImage:
+                        "linear-gradient(to right, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%)",
                     }}
                   />
                 </div>
@@ -786,7 +1076,9 @@ export default function Home() {
       <section className="py-14 sm:py-20 bg-navy" ref={treatRef}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8 sm:mb-12">
-            <div className="section-label reveal" style={{ color: '#0EA5E9' }}>Treatments & Specialities</div>
+            <div className="section-label reveal" style={{ color: "#0EA5E9" }}>
+              Treatments & Specialities
+            </div>
             <h2 className="font-display font-800 text-3xl sm:text-4xl text-white mt-2 reveal reveal-delay-1">
               World-Class Surgical Expertise
             </h2>
@@ -806,8 +1098,10 @@ export default function Home() {
                     alt={t.title}
                     className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-500"
                     style={{
-                      maskImage: 'linear-gradient(to right, rgba(0,0,0,1) 52%, rgba(0,0,0,0) 100%)',
-                      WebkitMaskImage: 'linear-gradient(to right, rgba(0,0,0,1) 52%, rgba(0,0,0,0) 100%)',
+                      maskImage:
+                        "linear-gradient(to right, rgba(0,0,0,1) 52%, rgba(0,0,0,0) 100%)",
+                      WebkitMaskImage:
+                        "linear-gradient(to right, rgba(0,0,0,1) 52%, rgba(0,0,0,0) 100%)",
                     }}
                   />
                 </div>
@@ -851,7 +1145,9 @@ export default function Home() {
                 Care That Goes Beyond the Operating Theatre
               </h2>
               <p className="text-navy-700 mt-3 sm:mt-4 leading-relaxed text-sm sm:text-base reveal reveal-delay-2">
-                Every aspect of Dr. Deep's practice is designed to make your orthopedic journey as seamless, transparent and effective as possible.
+                Every aspect of Dr. Deep's practice is designed to make your
+                orthopedic journey as seamless, transparent and effective as
+                possible.
               </p>
               <div className="mt-6 sm:mt-8 aspect-[4/3] rounded-2xl sm:rounded-3xl overflow-hidden bg-soft-gray border border-border/40 shadow-lg reveal reveal-delay-3">
                 <img
@@ -872,13 +1168,20 @@ export default function Home() {
                     {item.icon}
                   </div>
                   <div>
-                    <h3 className="font-display font-700 text-navy text-sm sm:text-base">{item.title}</h3>
-                    <p className="text-xs sm:text-sm text-navy-700/80 mt-0.5 sm:mt-1 leading-relaxed">{item.desc}</p>
+                    <h3 className="font-display font-700 text-navy text-sm sm:text-base">
+                      {item.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-navy-700/80 mt-0.5 sm:mt-1 leading-relaxed">
+                      {item.desc}
+                    </p>
                   </div>
                 </div>
               ))}
               <div className="reveal pt-2">
-                <Link to="/about" className="btn-primary w-full sm:w-auto justify-center text-sm min-h-[44px]">
+                <Link
+                  to="/about"
+                  className="btn-primary w-full sm:w-auto justify-center text-sm min-h-[44px]"
+                >
                   Learn More →
                 </Link>
               </div>
@@ -896,7 +1199,8 @@ export default function Home() {
               Your Path to Recovery
             </h2>
             <p className="text-navy-700 mt-2.5 sm:mt-3 max-w-md mx-auto text-xs sm:text-base reveal reveal-delay-2">
-              A clear, step-by-step process designed to guide you from first consultation to full recovery.
+              A clear, step-by-step process designed to guide you from first
+              consultation to full recovery.
             </p>
           </div>
 
@@ -908,11 +1212,17 @@ export default function Home() {
                 className={`reveal reveal-delay-${(i % 6) + 1} flex items-start gap-3.5 p-4 rounded-2xl bg-white border border-border/70 shadow-2xs`}
               >
                 <div className="w-11 h-11 rounded-xl bg-teal/10 border border-teal/25 flex items-center justify-center flex-shrink-0">
-                  <span className="font-display font-800 text-teal text-base leading-none">{step.num}</span>
+                  <span className="font-display font-800 text-teal text-base leading-none">
+                    {step.num}
+                  </span>
                 </div>
                 <div>
-                  <h4 className="font-display font-700 text-navy text-sm">{step.label}</h4>
-                  <p className="text-xs text-navy-700/80 mt-0.5 leading-relaxed">{step.desc}</p>
+                  <h4 className="font-display font-700 text-navy text-sm">
+                    {step.label}
+                  </h4>
+                  <p className="text-xs text-navy-700/80 mt-0.5 leading-relaxed">
+                    {step.desc}
+                  </p>
                 </div>
               </div>
             ))}
@@ -928,17 +1238,26 @@ export default function Home() {
                   className={`reveal reveal-delay-${(i % 6) + 1} flex flex-col items-center text-center group`}
                 >
                   <div className="w-13 sm:w-14 lg:w-16 h-13 sm:h-14 lg:h-16 rounded-2xl bg-white border-2 border-border group-hover:border-teal group-hover:shadow-lg transition-all flex flex-col items-center justify-center relative z-10 mb-3">
-                    <div className="font-display font-800 text-teal text-base lg:text-lg leading-none">{step.num}</div>
+                    <div className="font-display font-800 text-teal text-base lg:text-lg leading-none">
+                      {step.num}
+                    </div>
                   </div>
-                  <h4 className="font-display font-700 text-navy text-xs lg:text-sm">{step.label}</h4>
-                  <p className="text-[11px] lg:text-xs text-navy-700 mt-1 leading-relaxed line-clamp-3">{step.desc}</p>
+                  <h4 className="font-display font-700 text-navy text-xs lg:text-sm">
+                    {step.label}
+                  </h4>
+                  <p className="text-[11px] lg:text-xs text-navy-700 mt-1 leading-relaxed line-clamp-3">
+                    {step.desc}
+                  </p>
                 </div>
               ))}
             </div>
           </div>
 
           <div className="text-center mt-8 sm:mt-10 reveal">
-            <Link to="/patient-resources" className="btn-primary w-full sm:w-auto justify-center text-sm min-h-[44px]">
+            <Link
+              to="/patient-resources"
+              className="btn-primary w-full sm:w-auto justify-center text-sm min-h-[44px]"
+            >
               Know the Complete Process →
             </Link>
           </div>
@@ -963,9 +1282,11 @@ export default function Home() {
               >
                 <div>
                   <div className="text-teal mb-3 sm:mb-4 text-sm sm:text-base">
-                    {'★'.repeat(t.stars)}
+                    {"★".repeat(t.stars)}
                   </div>
-                  <p className="text-navy-700 text-xs sm:text-sm leading-relaxed italic">"{t.text}"</p>
+                  <p className="text-navy-700 text-xs sm:text-sm leading-relaxed italic">
+                    "{t.text}"
+                  </p>
                 </div>
                 <div className="flex items-center gap-3 mt-5 pt-4 sm:mt-6 sm:pt-5 border-t border-border/50">
                   <img
@@ -974,11 +1295,17 @@ export default function Home() {
                     className="w-10 h-10 sm:w-11 sm:h-11 rounded-full object-cover bg-border flex-shrink-0"
                   />
                   <div className="min-w-0">
-                    <div className="font-display font-700 text-navy text-xs sm:text-sm truncate">{t.name}</div>
-                    <div className="text-[11px] sm:text-xs text-navy-700 truncate">{t.procedure} · Age {t.age}</div>
+                    <div className="font-display font-700 text-navy text-xs sm:text-sm truncate">
+                      {t.name}
+                    </div>
+                    <div className="text-[11px] sm:text-xs text-navy-700 truncate">
+                      {t.procedure} · Age {t.age}
+                    </div>
                   </div>
                   <div className="ml-auto flex-shrink-0">
-                    <div className="text-[11px] sm:text-xs text-teal font-semibold">Google ★</div>
+                    <div className="text-[11px] sm:text-xs text-teal font-semibold">
+                      Google ★
+                    </div>
                   </div>
                 </div>
               </div>
@@ -986,7 +1313,10 @@ export default function Home() {
           </div>
 
           <div className="text-center mt-8 sm:mt-10 reveal">
-            <Link to="/patient-resources" className="btn-primary w-full sm:w-auto justify-center text-sm min-h-[44px]">
+            <Link
+              to="/patient-resources"
+              className="btn-primary w-full sm:w-auto justify-center text-sm min-h-[44px]"
+            >
               Read More Stories →
             </Link>
           </div>
@@ -1003,7 +1333,10 @@ export default function Home() {
                 Insights from Dr. Deep
               </h2>
             </div>
-            <Link to="/blog" className="text-teal font-display font-700 hover:gap-3 flex items-center gap-2 transition-all reveal text-sm sm:text-base">
+            <Link
+              to="/blog"
+              className="text-teal font-display font-700 hover:gap-3 flex items-center gap-2 transition-all reveal text-sm sm:text-base"
+            >
               Visit Blog →
             </Link>
           </div>
@@ -1024,14 +1357,22 @@ export default function Home() {
                 </div>
                 <div className="p-4 sm:p-6">
                   <div className="flex items-center justify-between mb-2 sm:mb-3">
-                    <span className="text-[11px] sm:text-xs font-700 text-teal bg-teal/10 px-2.5 py-0.5 rounded-full">{post.category}</span>
-                    <span className="text-[11px] sm:text-xs text-navy-700">{post.readTime}</span>
+                    <span className="text-[11px] sm:text-xs font-700 text-teal bg-teal/10 px-2.5 py-0.5 rounded-full">
+                      {post.category}
+                    </span>
+                    <span className="text-[11px] sm:text-xs text-navy-700">
+                      {post.readTime}
+                    </span>
                   </div>
                   <h3 className="font-display font-700 text-navy text-sm sm:text-base leading-snug group-hover:text-teal transition-colors line-clamp-2">
                     {post.title}
                   </h3>
-                  <p className="text-xs sm:text-sm text-navy-700 mt-2 leading-relaxed line-clamp-2">{post.excerpt}</p>
-                  <div className="text-[11px] sm:text-xs text-navy-700/60 mt-3 sm:mt-4">{post.date}</div>
+                  <p className="text-xs sm:text-sm text-navy-700 mt-2 leading-relaxed line-clamp-2">
+                    {post.excerpt}
+                  </p>
+                  <div className="text-[11px] sm:text-xs text-navy-700/60 mt-3 sm:mt-4">
+                    {post.date}
+                  </div>
                 </div>
               </Link>
             ))}
@@ -1049,7 +1390,10 @@ export default function Home() {
                 A Glimpse Into the Practice
               </h2>
             </div>
-            <Link to="/gallery" className="text-teal font-display font-700 flex items-center gap-2 hover:gap-3 transition-all reveal text-sm sm:text-base">
+            <Link
+              to="/gallery"
+              className="text-teal font-display font-700 flex items-center gap-2 hover:gap-3 transition-all reveal text-sm sm:text-base"
+            >
               View Full Gallery →
             </Link>
           </div>
@@ -1094,7 +1438,10 @@ export default function Home() {
           </div>
 
           <div className="text-center mt-8 sm:mt-10 reveal">
-            <Link to="/patient-resources" className="btn-primary w-full sm:w-auto justify-center text-sm min-h-[44px]">
+            <Link
+              to="/patient-resources"
+              className="btn-primary w-full sm:w-auto justify-center text-sm min-h-[44px]"
+            >
               View All FAQs →
             </Link>
           </div>
@@ -1111,40 +1458,41 @@ export default function Home() {
                 Ready to Start Your Recovery?
               </h2>
               <p className="text-navy-700 mt-3 sm:mt-4 leading-relaxed text-sm sm:text-base reveal reveal-delay-2">
-                Consultations are available across multiple clinic locations in Kolkata. Same-week appointments are usually available.
+                Consultations are available across multiple clinic locations in
+                Kolkata. Same-week appointments are usually available.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6 sm:mt-8">
                 {[
                   {
-                    clinic: 'Alexa Newtown',
-                    addr: 'Snehodiya, Street No 165, BC Block, Action Area I, Newtown, Kolkata 700163',
-                    time: 'Mon–Sat: 6:00 PM – 8:00 PM',
+                    clinic: "Alexa Newtown",
+                    addr: "Snehodiya, Street No 165, BC Block, Action Area I, Newtown, Kolkata 700163",
+                    time: "Mon–Sat: 6:00 PM – 8:00 PM",
                   },
                   {
-                    clinic: 'Manipal Hospital Broadway',
-                    addr: 'JC-16 & 17, No. 3A, Broadway Road, Sector 3, Salt Lake, Kolkata 700106',
-                    time: 'Mon & Fri: 4:00 PM – 5:00 PM',
+                    clinic: "Manipal Hospital Broadway",
+                    addr: "JC-16 & 17, No. 3A, Broadway Road, Sector 3, Salt Lake, Kolkata 700106",
+                    time: "Mon & Fri: 4:00 PM – 5:00 PM",
                   },
                   {
-                    clinic: 'Narayana Barasat',
-                    addr: '78, Jessore Road (South), Barasat, North 24 Parganas, Kolkata 700127',
-                    time: 'Wed & Sat: 12:00 PM – 2:00 PM',
+                    clinic: "Narayana Barasat",
+                    addr: "78, Jessore Road (South), Barasat, North 24 Parganas, Kolkata 700127",
+                    time: "Wed & Sat: 12:00 PM – 2:00 PM",
                   },
                   {
-                    clinic: 'Fortis',
-                    addr: '730, Eastern Metropolitan Bypass, Anandapur, Kolkata 700107',
-                    time: 'Sat: 3:00 PM – 5:00 PM',
+                    clinic: "Fortis",
+                    addr: "730, Eastern Metropolitan Bypass, Anandapur, Kolkata 700107",
+                    time: "Sat: 3:00 PM – 5:00 PM",
                   },
                   {
-                    clinic: 'Daffodil Laketown',
-                    addr: '276, Canal Street, Sreebhumi, Lake Town, South Dumdum, Kolkata 700048',
-                    time: 'Wed: 7:30 PM – 9:00 PM | Sat: 10:30 AM – 11:30 AM',
+                    clinic: "Daffodil Laketown",
+                    addr: "276, Canal Street, Sreebhumi, Lake Town, South Dumdum, Kolkata 700048",
+                    time: "Wed: 7:30 PM – 9:00 PM | Sat: 10:30 AM – 11:30 AM",
                   },
                   {
-                    clinic: 'Apollo Clinic Newtown',
-                    addr: 'The Galleria, 1B, Street Number 124, BG Block, Action Area I, Newtown, Kolkata 700163',
-                    time: 'Tue, Thu, Fri, Sun: 4:30 PM – 6:00 PM',
+                    clinic: "Apollo Clinic Newtown",
+                    addr: "The Galleria, 1B, Street Number 124, BG Block, Action Area I, Newtown, Kolkata 700163",
+                    time: "Tue, Thu, Fri, Sun: 4:30 PM – 6:00 PM",
                   },
                 ].map((loc, i) => (
                   <div
@@ -1152,15 +1500,28 @@ export default function Home() {
                     className={`reveal reveal-delay-${(i % 3) + 2} flex items-start gap-3.5 sm:gap-4 bg-soft-gray rounded-xl p-3.5 sm:p-4 hover:bg-teal/5 transition-colors border border-border/40`}
                   >
                     <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-teal/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0284C7" strokeWidth="2">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#0284C7"
+                        strokeWidth="2"
+                      >
                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
                         <circle cx="12" cy="10" r="3" />
                       </svg>
                     </div>
                     <div className="min-w-0">
-                      <div className="font-display font-700 text-navy text-sm sm:text-base leading-tight">{loc.clinic}</div>
-                      <div className="text-xs sm:text-sm text-navy-700 mt-1 leading-snug line-clamp-2">{loc.addr}</div>
-                      <div className="text-xs text-teal font-semibold mt-1.5 leading-snug">{loc.time}</div>
+                      <div className="font-display font-700 text-navy text-sm sm:text-base leading-tight">
+                        {loc.clinic}
+                      </div>
+                      <div className="text-xs sm:text-sm text-navy-700 mt-1 leading-snug line-clamp-2">
+                        {loc.addr}
+                      </div>
+                      <div className="text-xs text-teal font-semibold mt-1.5 leading-snug">
+                        {loc.time}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -1191,7 +1552,10 @@ export default function Home() {
                   />
                   <span>WhatsApp</span>
                 </a>
-                <Link to="/contact" className="flex items-center justify-center gap-2 bg-soft-gray text-navy rounded-xl px-5 py-3 text-sm font-display font-600 hover:bg-border/60 transition-colors min-h-[44px]">
+                <Link
+                  to="/contact"
+                  className="flex items-center justify-center gap-2 bg-soft-gray text-navy rounded-xl px-5 py-3 text-sm font-display font-600 hover:bg-border/60 transition-colors min-h-[44px]"
+                >
                   View All Locations →
                 </Link>
               </div>
@@ -1208,14 +1572,28 @@ export default function Home() {
                 <div className="absolute inset-0 flex items-center justify-center p-4">
                   <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-5 sm:p-6 text-center shadow-xl max-w-xs w-full">
                     <div className="w-10 h-10 sm:w-12 sm:h-12 bg-teal rounded-xl flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-md">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="white"
+                        strokeWidth="2"
+                      >
                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
                         <circle cx="12" cy="10" r="3" />
                       </svg>
                     </div>
-                    <h3 className="font-display font-700 text-navy text-base sm:text-lg">Visit Our Clinic</h3>
-                    <p className="text-xs sm:text-sm text-navy-700 mt-1 sm:mt-2">Multiple convenient locations across Kolkata</p>
-                    <Link to="/book-appointment" className="btn-primary mt-3 sm:mt-4 w-full justify-center text-xs sm:text-sm min-h-[44px]">
+                    <h3 className="font-display font-700 text-navy text-base sm:text-lg">
+                      Visit Our Clinic
+                    </h3>
+                    <p className="text-xs sm:text-sm text-navy-700 mt-1 sm:mt-2">
+                      Multiple convenient locations across Kolkata
+                    </p>
+                    <Link
+                      to="/book-appointment"
+                      className="btn-primary mt-3 sm:mt-4 w-full justify-center text-xs sm:text-sm min-h-[44px]"
+                    >
                       Book Appointment
                     </Link>
                   </div>

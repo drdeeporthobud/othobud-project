@@ -8,8 +8,11 @@ export interface CalendarEvent {
 }
 
 // Helper to convert date and 12-hr time string to ISO-like Date object
-function parseEventDateTime(dateStr: string, timeStr: string): { start: Date; end: Date } {
-  const [year, month, day] = dateStr.split('-').map(Number)
+function parseEventDateTime(
+  dateStr: string,
+  timeStr: string,
+): { start: Date; end: Date } {
+  const [year, month, day] = dateStr.split("-").map(Number)
   const timeMatch = timeStr.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i)
 
   let hour = 17
@@ -20,8 +23,8 @@ function parseEventDateTime(dateStr: string, timeStr: string): { start: Date; en
     minute = parseInt(timeMatch[2], 10)
     const ampm = timeMatch[3].toUpperCase()
 
-    if (ampm === 'PM' && h < 12) h += 12
-    if (ampm === 'AM' && h === 12) h = 0
+    if (ampm === "PM" && h < 12) h += 12
+    if (ampm === "AM" && h === 12) h = 0
     hour = h
   }
 
@@ -32,15 +35,15 @@ function parseEventDateTime(dateStr: string, timeStr: string): { start: Date; en
 }
 
 function formatDateToICS(d: Date): string {
-  const pad = (n: number) => (n < 10 ? '0' + n : '' + n)
+  const pad = (n: number) => (n < 10 ? "0" + n : "" + n)
   return (
     d.getFullYear() +
     pad(d.getMonth() + 1) +
     pad(d.getDate()) +
-    'T' +
+    "T" +
     pad(d.getHours()) +
     pad(d.getMinutes()) +
-    '00'
+    "00"
   )
 }
 
@@ -53,34 +56,34 @@ export function downloadICSFile(event: CalendarEvent) {
   const endFormatted = formatDateToICS(end)
 
   const icsContent = [
-    'BEGIN:VCALENDAR',
-    'VERSION:2.0',
-    'PRODID:-//Orthobud//Dr. Deep Chakraborty Clinic//EN',
-    'CALSCALE:GREGORIAN',
-    'METHOD:PUBLISH',
-    'BEGIN:VEVENT',
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//Orthobud//Dr. Deep Chakraborty Clinic//EN",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH",
+    "BEGIN:VEVENT",
     `UID:orthobud-${Date.now()}@orthobud.in`,
     `DTSTAMP:${formatDateToICS(new Date())}Z`,
     `DTSTART:${startFormatted}`,
     `DTEND:${endFormatted}`,
     `SUMMARY:${event.title}`,
-    `DESCRIPTION:${event.description.replace(/\n/g, '\\n')}`,
-    `LOCATION:${event.location.replace(/,/g, '\\,')}`,
-    'STATUS:CONFIRMED',
-    'BEGIN:VALARM',
-    'TRIGGER:-PT2H',
-    'ACTION:DISPLAY',
-    'DESCRIPTION:Reminder: Orthopedic Consultation with Dr. Deep in 2 hours',
-    'END:VALARM',
-    'END:VEVENT',
-    'END:VCALENDAR',
-  ].join('\r\n')
+    `DESCRIPTION:${event.description.replace(/\n/g, "\\n")}`,
+    `LOCATION:${event.location.replace(/,/g, "\\,")}`,
+    "STATUS:CONFIRMED",
+    "BEGIN:VALARM",
+    "TRIGGER:-PT2H",
+    "ACTION:DISPLAY",
+    "DESCRIPTION:Reminder: Orthopedic Consultation with Dr. Deep in 2 hours",
+    "END:VALARM",
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].join("\r\n")
 
-  const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' })
+  const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" })
   const url = URL.createObjectURL(blob)
-  const link = document.createElement('a')
+  const link = document.createElement("a")
   link.href = url
-  link.setAttribute('download', `appointment-${event.startDate}.ics`)
+  link.setAttribute("download", `appointment-${event.startDate}.ics`)
   document.body.appendChild(link)
   link.click()
   document.body.removeChild(link)
@@ -96,7 +99,7 @@ export function getGoogleCalendarUrl(event: CalendarEvent): string {
   const endFormatted = formatDateToICS(end)
 
   const params = new URLSearchParams({
-    action: 'TEMPLATE',
+    action: "TEMPLATE",
     text: event.title,
     dates: `${startFormatted}/${endFormatted}`,
     details: event.description,
