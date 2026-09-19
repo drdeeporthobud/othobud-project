@@ -1,5 +1,5 @@
-import { useNavigate } from 'react-router-dom'
-import { ArrowLeft } from 'lucide-react'
+import { useNavigate } from "react-router-dom"
+import { ArrowLeft } from "lucide-react"
 
 export default function BookingNavigation() {
   const navigate = useNavigate()
@@ -8,7 +8,7 @@ export default function BookingNavigation() {
     if (window.history.length > 1) {
       navigate(-1)
     } else {
-      navigate('/')
+      navigate("/")
     }
   }
 

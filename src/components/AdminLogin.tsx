@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect, useCallback } from "react"
+import { Link } from "react-router-dom"
 import {
   Lock,
   User,
@@ -10,16 +10,16 @@ import {
   Globe,
   ArrowRight,
   Timer,
-} from 'lucide-react'
-import { staffAuthService, StaffSession } from '@/services/staffAuthService'
+} from "lucide-react"
+import { staffAuthService, StaffSession } from "@/services/staffAuthService"
 
 interface AdminLoginProps {
   onLoginSuccess: (session: StaffSession) => void
 }
 
 export default function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [capsLockActive, setCapsLockActive] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -46,41 +46,50 @@ export default function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.getModifierState) {
-        setCapsLockActive(e.getModifierState('CapsLock'))
+        setCapsLockActive(e.getModifierState("CapsLock"))
       }
     }
-    window.addEventListener('keydown', handleKey)
-    window.addEventListener('keyup', handleKey)
+    window.addEventListener("keydown", handleKey)
+    window.addEventListener("keyup", handleKey)
     return () => {
-      window.removeEventListener('keydown', handleKey)
-      window.removeEventListener('keyup', handleKey)
+      window.removeEventListener("keydown", handleKey)
+      window.removeEventListener("keyup", handleKey)
     }
   }, [])
 
-  const handleSubmit = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError(null)
-    setLoading(true)
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault()
+      setError(null)
+      setLoading(true)
 
-    try {
-      const res = await staffAuthService.login(username, password)
-      if (res.success && res.session) {
-        onLoginSuccess(res.session)
-      } else {
-        setError(res.error || 'Authentication failed. Please check your credentials.')
-        // Check if rate limiter kicked in
-        const status = staffAuthService.getRateLimitStatus()
-        if (status.isLocked) {
-          setCooldownSeconds(Math.ceil(status.retryAfterMs / 1000))
+      try {
+        const res = await staffAuthService.login(username, password)
+        if (res.success && res.session) {
+          onLoginSuccess(res.session)
+        } else {
+          setError(
+            res.error ||
+              "Authentication failed. Please check your credentials.",
+          )
+          // Check if rate limiter kicked in
+          const status = staffAuthService.getRateLimitStatus()
+          if (status.isLocked) {
+            setCooldownSeconds(Math.ceil(status.retryAfterMs / 1000))
+          }
         }
+      } catch (err: unknown) {
+        const message =
+          err instanceof Error
+            ? err.message
+            : "An unexpected error occurred during login."
+        setError(message)
+      } finally {
+        setLoading(false)
       }
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'An unexpected error occurred during login.'
-      setError(message)
-    } finally {
-      setLoading(false)
-    }
-  }, [username, password, onLoginSuccess])
+    },
+    [username, password, onLoginSuccess],
+  )
 
   const isLocked = cooldownSeconds > 0
 
@@ -123,7 +132,10 @@ export default function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
             {isLocked && (
               <div className="mb-4 p-3 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs flex items-center gap-2.5 animate-fadeIn">
                 <Timer className="w-4 h-4 shrink-0 text-amber-400" />
-                <span>Too many failed attempts. Try again in <strong>{cooldownSeconds}s</strong></span>
+                <span>
+                  Too many failed attempts. Try again in{" "}
+                  <strong>{cooldownSeconds}s</strong>
+                </span>
               </div>
             )}
 
@@ -166,7 +178,7 @@ export default function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
                 <div className="relative">
                   <Lock className="w-4 h-4 text-white/40 absolute left-3.5 top-1/2 -translate-y-1/2" />
                   <input
-                    type={showPassword ? 'text' : 'password'}
+                    type={showPassword ? "text" : "password"}
                     required
                     autoComplete="current-password"
                     value={password}
@@ -180,7 +192,11 @@ export default function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/80 transition-colors p-1 cursor-pointer"
                     tabIndex={-1}
                   >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
                   </button>
                 </div>
               </div>

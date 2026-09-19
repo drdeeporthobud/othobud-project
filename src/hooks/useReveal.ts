@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef } from "react"
 
 export function useReveal() {
   const ref = useRef<HTMLDivElement>(null)
@@ -11,17 +11,17 @@ export function useReveal() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('visible')
+            entry.target.classList.add("visible")
           }
         })
       },
-      { threshold: 0.08, rootMargin: '0px 0px -20px 0px' }
+      { threshold: 0.08, rootMargin: "0px 0px -20px 0px" },
     )
 
     const observeElements = () => {
-      const children = el.querySelectorAll('.reveal')
+      const children = el.querySelectorAll(".reveal")
       children.forEach((child) => observer.observe(child))
-      if (el.classList.contains('reveal')) observer.observe(el)
+      if (el.classList.contains("reveal")) observer.observe(el)
     }
 
     observeElements()
@@ -65,7 +65,7 @@ export function useCountUp(target: number, duration = 1800) {
           }
         })
       },
-      { threshold: 0.5 }
+      { threshold: 0.5 },
     )
     observer.observe(el)
     return () => observer.disconnect()

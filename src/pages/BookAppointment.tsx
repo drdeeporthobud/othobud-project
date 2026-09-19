@@ -1,13 +1,13 @@
-import { useState, useEffect, useRef } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { useState, useEffect, useRef } from "react"
+import { Link, useSearchParams } from "react-router-dom"
 import {
   appointmentService,
   Clinic,
   SlotInfo,
   DEFAULT_CLINICS,
-} from '@/services/appointmentService'
-import { downloadICSFile, getGoogleCalendarUrl } from '@/utils/calendar'
-import { getWhatsAppConfirmationUrl } from '@/services/notificationService'
+} from "@/services/appointmentService"
+import { downloadICSFile, getGoogleCalendarUrl } from "@/utils/calendar"
+import { getWhatsAppConfirmationUrl } from "@/services/notificationService"
 import {
   Clock,
   Building2,
@@ -23,33 +23,36 @@ import {
   ChevronDown,
   Check,
   ExternalLink,
-} from 'lucide-react'
+} from "lucide-react"
 
 type Step = 1 | 2 | 3
 
 const conditions = [
-  'Knee Pain / Arthritis',
-  'Hip Pain',
-  'Shoulder Pain / Frozen Shoulder',
-  'Sports Injury',
-  'Back / Spine Pain',
-  'Fracture / Trauma',
-  'Post-Surgical Follow-up',
-  'Second Opinion',
-  'Pediatric Concern',
-  'Other',
+  "Knee Pain / Arthritis",
+  "Hip Pain",
+  "Shoulder Pain / Frozen Shoulder",
+  "Sports Injury",
+  "Back / Spine Pain",
+  "Fracture / Trauma",
+  "Post-Surgical Follow-up",
+  "Second Opinion",
+  "Pediatric Concern",
+  "Other",
 ]
 
 // Helper to get tomorrow's date formatted as YYYY-MM-DD
 function getTomorrowDate(): string {
   const d = new Date()
   d.setDate(d.getDate() + 1)
-  return d.toISOString().split('T')[0]
+  return d.toISOString().split("T")[0]
 }
 
 // Get next valid operating date for a clinic starting from today or a given date
-function getNextOperatingDate(operatingDays: number[], fromDate?: string): string {
-  const start = fromDate ? new Date(fromDate + 'T00:00:00') : new Date()
+function getNextOperatingDate(
+  operatingDays: number[],
+  fromDate?: string,
+): string {
+  const start = fromDate ? new Date(fromDate + "T00:00:00") : new Date()
   // Start from tomorrow (never today)
   const d = new Date(start)
   d.setDate(d.getDate() + 1)
@@ -58,7 +61,7 @@ function getNextOperatingDate(operatingDays: number[], fromDate?: string): strin
     const jsDay = d.getDay() // 0=Sun
     const isoDay = jsDay === 0 ? 7 : jsDay // 1=Mon..7=Sun
     if (operatingDays.includes(isoDay)) {
-      return d.toISOString().split('T')[0]
+      return d.toISOString().split("T")[0]
     }
     d.setDate(d.getDate() + 1)
   }
@@ -67,33 +70,35 @@ function getNextOperatingDate(operatingDays: number[], fromDate?: string): strin
 }
 
 // Day name helper
-const DAY_NAMES = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+const DAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
 export default function BookAppointment() {
   const [searchParams] = useSearchParams()
   const [step, setStep] = useState<Step>(1)
   const [clinics, setClinics] = useState<Clinic[]>(DEFAULT_CLINICS)
-  const [selectedClinic, setSelectedClinic] = useState<Clinic>(DEFAULT_CLINICS[0])
+  const [selectedClinic, setSelectedClinic] = useState<Clinic>(
+    DEFAULT_CLINICS[0],
+  )
 
   // Automatically scroll to the top whenever the step changes
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" })
   }, [step])
 
   const [form, setForm] = useState({
     clinicId: DEFAULT_CLINICS[0].id,
     clinicName: DEFAULT_CLINICS[0].name,
     date: getNextOperatingDate(DEFAULT_CLINICS[0].operatingDays),
-    timeSlot: '',
-    name: '',
-    age: '',
-    gender: '',
-    phone: '',
-    email: '',
-    condition: '',
-    notes: '',
-    insurance: '',
-    firstVisit: 'yes',
+    timeSlot: "",
+    name: "",
+    age: "",
+    gender: "",
+    phone: "",
+    email: "",
+    condition: "",
+    notes: "",
+    insurance: "",
+    firstVisit: "yes",
   })
 
   const [slotData, setSlotData] = useState<{
@@ -109,20 +114,23 @@ export default function BookAppointment() {
   const [loadingSlots, setLoadingSlots] = useState<boolean>(false)
   const [submitting, setSubmitting] = useState<boolean>(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
-  const [bookingRef, setBookingRef] = useState<string>('')
+  const [bookingRef, setBookingRef] = useState<string>("")
   const [clinicDropdownOpen, setClinicDropdownOpen] = useState<boolean>(false)
   const clinicDropdownRef = useRef<HTMLDivElement>(null)
 
   // Close dropdown on click outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (clinicDropdownRef.current && !clinicDropdownRef.current.contains(event.target as Node)) {
+      if (
+        clinicDropdownRef.current &&
+        !clinicDropdownRef.current.contains(event.target as Node)
+      ) {
         setClinicDropdownOpen(false)
       }
     }
-    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener("mousedown", handleClickOutside)
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener("mousedown", handleClickOutside)
     }
   }, [])
 
@@ -134,9 +142,11 @@ export default function BookAppointment() {
         setClinics(data)
 
         // Check if clinic was passed in query params
-        const urlClinic = searchParams.get('clinic')?.toLowerCase()
+        const urlClinic = searchParams.get("clinic")?.toLowerCase()
         const matched = data.find(
-          (c) => c.slug.toLowerCase() === urlClinic || c.name.toLowerCase().includes(urlClinic || '')
+          (c) =>
+            c.slug.toLowerCase() === urlClinic ||
+            c.name.toLowerCase().includes(urlClinic || ""),
         )
         const initialClinic = matched || data[0]
         setSelectedClinic(initialClinic)
@@ -146,7 +156,7 @@ export default function BookAppointment() {
           clinicName: initialClinic.name,
           // Auto-advance date to next operating day for this clinic
           date: getNextOperatingDate(initialClinic.operatingDays),
-          timeSlot: '',
+          timeSlot: "",
         }))
       }
     }
@@ -155,10 +165,10 @@ export default function BookAppointment() {
 
   // Check condition in query params
   useEffect(() => {
-    const urlCondition = searchParams.get('condition')
+    const urlCondition = searchParams.get("condition")
     if (urlCondition) {
       const matchedCond = conditions.find((c) =>
-        c.toLowerCase().includes(urlCondition.toLowerCase())
+        c.toLowerCase().includes(urlCondition.toLowerCase()),
       )
       if (matchedCond) {
         setForm((prev) => ({ ...prev, condition: matchedCond }))
@@ -183,15 +193,16 @@ export default function BookAppointment() {
           // If current timeSlot is no longer available in the new date/clinic, reset it
           if (
             form.timeSlot &&
-            (!res.isOpen || !res.slots.some((s) => s.time === form.timeSlot && s.available))
+            (!res.isOpen ||
+              !res.slots.some((s) => s.time === form.timeSlot && s.available))
           ) {
-            setForm((prev) => ({ ...prev, timeSlot: '' }))
+            setForm((prev) => ({ ...prev, timeSlot: "" }))
           }
         }
       })
       .catch((err) => {
         if (isMounted) {
-          console.error('Error loading slots:', err)
+          console.error("Error loading slots:", err)
           setLoadingSlots(false)
         }
       })
@@ -209,14 +220,15 @@ export default function BookAppointment() {
       clinicName: clinic.name,
       // Auto-advance to next valid day for the newly selected clinic
       date: getNextOperatingDate(clinic.operatingDays),
-      timeSlot: '',
+      timeSlot: "",
     }))
   }
 
   const update = (field: string, value: string) =>
     setForm((prev) => ({ ...prev, [field]: value }))
 
-  const canProceed1 = form.clinicId && form.date && form.timeSlot && slotData.isOpen
+  const canProceed1 =
+    form.clinicId && form.date && form.timeSlot && slotData.isOpen
   const canProceed2 =
     form.name.trim() &&
     form.age.trim() &&
@@ -240,11 +252,11 @@ export default function BookAppointment() {
         patientPhone: form.phone.trim(),
         patientEmail: form.email.trim() || undefined,
         patientAge: Number(form.age),
-        patientGender: form.gender || 'Other',
+        patientGender: form.gender || "Other",
         condition: form.condition,
         notes: form.notes.trim() || undefined,
         insurance: form.insurance.trim() || undefined,
-        firstVisit: form.firstVisit === 'yes',
+        firstVisit: form.firstVisit === "yes",
       })
 
       if (res.success && res.bookingReference) {
@@ -253,14 +265,20 @@ export default function BookAppointment() {
       } else {
         setSubmitError(
           res.error ||
-            'Could not reserve this time slot. It may have just been booked. Please choose an adjacent time slot.'
+            "Could not reserve this time slot. It may have just been booked. Please choose an adjacent time slot.",
         )
         // Refresh slots in background
-        const refreshed = await appointmentService.getAvailableSlots(form.clinicId, form.date)
+        const refreshed = await appointmentService.getAvailableSlots(
+          form.clinicId,
+          form.date,
+        )
         setSlotData(refreshed)
       }
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'An error occurred while booking. Please try again.'
+      const message =
+        err instanceof Error
+          ? err.message
+          : "An error occurred while booking. Please try again."
       setSubmitError(message)
     } finally {
       setSubmitting(false)
@@ -296,17 +314,32 @@ export default function BookAppointment() {
 
           {/* Header */}
           <h2 className="font-display font-800 text-lg sm:text-xl text-navy tracking-tight leading-snug">
-            Request Received <span className="text-amber-800 font-bold whitespace-nowrap">(Pending Review)</span>
+            Request Received{" "}
+            <span className="text-amber-800 font-bold whitespace-nowrap">
+              (Pending Review)
+            </span>
           </h2>
           <p className="text-navy-700/80 mt-2 text-xs sm:text-[13px] leading-relaxed max-w-md mx-auto">
-            Thank you, <strong className="text-navy font-semibold">{form.name}</strong>. Your appointment request for <strong className="text-navy font-semibold">{form.date} at {form.timeSlot}</strong> has been submitted to the front desk at <strong className="text-navy font-semibold">{form.clinicName}</strong> for confirmation.
+            Thank you,{" "}
+            <strong className="text-navy font-semibold">{form.name}</strong>.
+            Your appointment request for{" "}
+            <strong className="text-navy font-semibold">
+              {form.date} at {form.timeSlot}
+            </strong>{" "}
+            has been submitted to the front desk at{" "}
+            <strong className="text-navy font-semibold">
+              {form.clinicName}
+            </strong>{" "}
+            for confirmation.
           </p>
 
           {/* Appointment Summary Box */}
           <div className="bg-soft-gray/70 rounded-xl p-3 sm:p-3.5 mt-4 text-left border border-border/60 text-xs divide-y divide-border/50">
             <div className="flex items-center justify-between py-1.5 first:pt-0">
               <span className="text-navy-700/70">Booking Reference</span>
-              <span className="font-mono font-bold text-navy">{bookingRef}</span>
+              <span className="font-mono font-bold text-navy">
+                {bookingRef}
+              </span>
             </div>
             <div className="flex items-center justify-between py-1.5">
               <span className="text-navy-700/70">Status</span>
@@ -324,7 +357,10 @@ export default function BookAppointment() {
             </div>
             <div className="flex items-center justify-between py-1.5">
               <span className="text-navy-700/70 shrink-0">Address</span>
-              <span className="font-display font-medium text-navy-700 text-right truncate max-w-[220px] inline-flex items-center gap-1" title={selectedClinic.address}>
+              <span
+                className="font-display font-medium text-navy-700 text-right truncate max-w-[220px] inline-flex items-center gap-1"
+                title={selectedClinic.address}
+              >
                 <MapPin className="w-3 h-3 text-navy-700/50 shrink-0" />
                 {selectedClinic.address}
               </span>
@@ -404,7 +440,8 @@ export default function BookAppointment() {
             <FileText className="w-3.5 h-3.5 text-teal shrink-0 mt-0.5" />
             <div>
               <span className="font-semibold text-navy">What to bring: </span>
-              Prior X-rays, MRI scans, previous orthopedic prescriptions, and a valid photo ID.
+              Prior X-rays, MRI scans, previous orthopedic prescriptions, and a
+              valid photo ID.
             </div>
           </div>
 
@@ -432,19 +469,22 @@ export default function BookAppointment() {
   // ---------------------------------------------------------------------------
   // MAIN WIZARD VIEW (STEPS 1 & 2)
   // ---------------------------------------------------------------------------
-  const todayString = new Date().toISOString().split('T')[0]
+  const todayString = new Date().toISOString().split("T")[0]
 
   return (
     <div className="min-h-screen pt-20">
       {/* Header */}
       <section className="bg-navy py-16">
         <div className="max-w-3xl mx-auto px-6 text-center">
-          <div className="section-label" style={{ color: '#0EA5E9' }}>
+          <div className="section-label" style={{ color: "#0EA5E9" }}>
             Schedule Visit
           </div>
-          <h1 className="font-display font-800 text-4xl text-white mt-2">Book an Appointment</h1>
+          <h1 className="font-display font-800 text-4xl text-white mt-2">
+            Book an Appointment
+          </h1>
           <p className="text-white/70 mt-3 text-sm">
-            Select your preferred clinic branch and date to view live availability.
+            Select your preferred clinic branch and date to view live
+            availability.
           </p>
 
           {/* Progress */}
@@ -453,21 +493,36 @@ export default function BookAppointment() {
               <div key={s} className="flex items-center gap-3">
                 <div
                   className={`w-9 h-9 rounded-full flex items-center justify-center font-display font-700 text-sm transition-all ${
-                    step >= s ? 'bg-teal text-white shadow-lg' : 'bg-white/10 text-white/40'
+                    step >= s
+                      ? "bg-teal text-white shadow-lg"
+                      : "bg-white/10 text-white/40"
                   }`}
                 >
                   {step > s ? (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="white"
+                      strokeWidth="2.5"
+                    >
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
                   ) : (
                     s
                   )}
                 </div>
-                <span className={`text-xs font-display font-600 hidden sm:block ${step >= s ? 'text-white' : 'text-white/30'}`}>
-                  {s === 1 ? 'Choose Slot' : 'Your Details'}
+                <span
+                  className={`text-xs font-display font-600 hidden sm:block ${
+                    step >= s ? "text-white" : "text-white/30"
+                  }`}
+                >
+                  {s === 1 ? "Choose Slot" : "Your Details"}
                 </span>
-                {s < 2 && <div className="w-12 h-px bg-white/20 hidden sm:block" />}
+                {s < 2 && (
+                  <div className="w-12 h-px bg-white/20 hidden sm:block" />
+                )}
               </div>
             ))}
           </div>
@@ -478,14 +533,15 @@ export default function BookAppointment() {
       <section className="py-12 bg-soft-gray">
         <div className="max-w-2xl mx-auto px-6">
           <div className="bg-white rounded-3xl p-8 shadow-sm border border-border/50">
-
             {/* ---------------------------------------------------------------- */}
             {/* STEP 1: CLINIC, DATE & DYNAMIC TIME SLOT SELECTION                */}
             {/* ---------------------------------------------------------------- */}
             {step === 1 && (
               <div className="space-y-6 animate-fade-up">
                 <div className="flex items-center justify-between">
-                  <h2 className="font-display font-700 text-navy text-2xl">Choose Your Slot</h2>
+                  <h2 className="font-display font-700 text-navy text-2xl">
+                    Choose Your Slot
+                  </h2>
                   <span className="text-xs text-navy-700 bg-soft-gray px-3 py-1 rounded-full font-medium">
                     Live Schedule
                   </span>
@@ -507,7 +563,9 @@ export default function BookAppointment() {
                     type="button"
                     onClick={() => setClinicDropdownOpen((prev) => !prev)}
                     className={`w-full text-left bg-white border-2 rounded-2xl p-3.5 sm:p-4 transition-all flex items-center justify-between shadow-xs hover:border-teal cursor-pointer ${
-                      clinicDropdownOpen ? 'border-teal ring-2 ring-teal/20' : 'border-border/80'
+                      clinicDropdownOpen
+                        ? "border-teal ring-2 ring-teal/20"
+                        : "border-border/80"
                     }`}
                   >
                     <div className="flex items-center gap-3.5 min-w-0 pr-2">
@@ -520,19 +578,23 @@ export default function BookAppointment() {
                             {selectedClinic.name}
                           </span>
                           <span className="text-[11px] font-display font-600 px-2.5 py-0.5 rounded-full bg-teal/10 text-teal border border-teal/20">
-                            {selectedClinic.hoursDescription.split('|')[0].trim()}
+                            {selectedClinic.hoursDescription
+                              .split("|")[0]
+                              .trim()}
                           </span>
                         </div>
                         <div className="text-xs text-navy-700/70 mt-0.5 truncate flex items-center gap-1">
                           <MapPin className="w-3 h-3 text-navy-700/40 shrink-0" />
-                          <span className="truncate">{selectedClinic.address}</span>
+                          <span className="truncate">
+                            {selectedClinic.address}
+                          </span>
                         </div>
                       </div>
                     </div>
                     <div className="w-8 h-8 rounded-lg bg-soft-gray flex items-center justify-center shrink-0 text-navy-700">
                       <ChevronDown
                         className={`w-4 h-4 transition-transform duration-200 ${
-                          clinicDropdownOpen ? 'rotate-180 text-teal' : ''
+                          clinicDropdownOpen ? "rotate-180 text-teal" : ""
                         }`}
                       />
                     </div>
@@ -553,16 +615,16 @@ export default function BookAppointment() {
                             }}
                             className={`w-full text-left p-3.5 sm:p-4 transition-colors flex items-center justify-between gap-3 group cursor-pointer ${
                               isSelected
-                                ? 'bg-teal/5 text-navy font-semibold'
-                                : 'hover:bg-soft-gray text-navy'
+                                ? "bg-teal/5 text-navy font-semibold"
+                                : "hover:bg-soft-gray text-navy"
                             }`}
                           >
                             <div className="flex items-start gap-3 min-w-0">
                               <div
                                 className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5 transition-colors ${
                                   isSelected
-                                    ? 'bg-teal text-white shadow-xs'
-                                    : 'bg-soft-gray text-navy-700 group-hover:bg-white'
+                                    ? "bg-teal text-white shadow-xs"
+                                    : "bg-soft-gray text-navy-700 group-hover:bg-white"
                                 }`}
                               >
                                 <Building2 className="w-4 h-4" />
@@ -638,20 +700,23 @@ export default function BookAppointment() {
                     </label>
                     <span className="text-xs text-teal font-medium flex items-center gap-1">
                       <Clock className="w-3 h-3" />
-                      Open: {selectedClinic.operatingDays.map((d) => DAY_NAMES[d - 1]).join(', ')}
+                      Open:{" "}
+                      {selectedClinic.operatingDays
+                        .map((d) => DAY_NAMES[d - 1])
+                        .join(", ")}
                     </span>
                   </div>
                   <input
                     type="date"
                     value={form.date}
                     min={todayString}
-                    onChange={(e) => update('date', e.target.value)}
+                    onChange={(e) => update("date", e.target.value)}
                     className="w-full border-2 border-border/60 rounded-xl px-4 py-3 text-navy text-sm focus:outline-none focus:border-teal bg-white"
                   />
                   {/* Quick jump to next valid date buttons */}
                   <div className="flex flex-wrap gap-1.5 mt-2">
                     {(() => {
-                      const nextDates: { label: string; date: string }[] = []
+                      const nextDates: { label: string date: string }[] = []
                       const today = new Date()
                       let d = new Date(today)
                       d.setDate(d.getDate() + 1)
@@ -659,9 +724,16 @@ export default function BookAppointment() {
                         const jsDay = d.getDay()
                         const isoDay = jsDay === 0 ? 7 : jsDay
                         if (selectedClinic.operatingDays.includes(isoDay)) {
-                          const dateStr = d.toISOString().split('T')[0]
-                          const diff = Math.round((d.getTime() - today.getTime()) / 86400000)
-                          const label = diff === 1 ? 'Tomorrow' : diff <= 7 ? DAY_NAMES[isoDay - 1] + ' ' + d.getDate() : dateStr
+                          const dateStr = d.toISOString().split("T")[0]
+                          const diff = Math.round(
+                            (d.getTime() - today.getTime()) / 86400000,
+                          )
+                          const label =
+                            diff === 1
+                              ? "Tomorrow"
+                              : diff <= 7
+                                ? DAY_NAMES[isoDay - 1] + " " + d.getDate()
+                                : dateStr
                           nextDates.push({ label, date: dateStr })
                         }
                         d = new Date(d)
@@ -671,11 +743,11 @@ export default function BookAppointment() {
                         <button
                           key={date}
                           type="button"
-                          onClick={() => update('date', date)}
+                          onClick={() => update("date", date)}
                           className={`px-2.5 py-1 rounded-lg text-[11px] font-display font-600 border transition-all ${
                             form.date === date
-                              ? 'bg-teal text-white border-teal shadow-xs'
-                              : 'bg-white text-navy-700 border-border/60 hover:border-teal hover:text-teal'
+                              ? "bg-teal text-white border-teal shadow-xs"
+                              : "bg-white text-navy-700 border-border/60 hover:border-teal hover:text-teal"
                           }`}
                         >
                           {label}
@@ -692,7 +764,9 @@ export default function BookAppointment() {
                       Available Time Slots *
                     </label>
                     {loadingSlots && (
-                      <span className="text-xs text-teal animate-pulse">Checking live slots...</span>
+                      <span className="text-xs text-teal animate-pulse">
+                        Checking live slots...
+                      </span>
                     )}
                   </div>
 
@@ -703,10 +777,11 @@ export default function BookAppointment() {
                         <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                         <div>
                           <strong className="font-semibold block text-navy-800">
-                            {slotData.reason || 'Clinic Closed on this date'}
+                            {slotData.reason || "Clinic Closed on this date"}
                           </strong>
                           <span className="text-xs text-navy-700 mt-0.5 block">
-                            Please select an active operating date from the calendar above.
+                            Please select an active operating date from the
+                            calendar above.
                           </span>
                         </div>
                       </div>
@@ -729,13 +804,13 @@ export default function BookAppointment() {
                                 key={slot.time}
                                 type="button"
                                 disabled={!slot.available}
-                                onClick={() => update('timeSlot', slot.time)}
+                                onClick={() => update("timeSlot", slot.time)}
                                 className={`py-2.5 px-2 rounded-xl text-xs font-display font-600 border-2 transition-all relative ${
                                   !slot.available
-                                    ? 'bg-border/30 border-border/40 text-navy-700/40 cursor-not-allowed line-through'
+                                    ? "bg-border/30 border-border/40 text-navy-700/40 cursor-not-allowed line-through"
                                     : isSelected
-                                    ? 'border-teal bg-teal text-white shadow-md'
-                                    : 'border-border/60 text-navy hover:border-teal hover:text-teal'
+                                      ? "border-teal bg-teal text-white shadow-md"
+                                      : "border-border/60 text-navy hover:border-teal hover:text-teal"
                                 }`}
                               >
                                 {slot.time}
@@ -759,8 +834,8 @@ export default function BookAppointment() {
                   disabled={!canProceed1}
                   className={`w-full py-3.5 rounded-xl font-display font-700 text-sm transition-all ${
                     canProceed1
-                      ? 'bg-teal text-white hover:bg-teal-dark shadow-md hover:shadow-lg'
-                      : 'bg-border/50 text-navy-700/40 cursor-not-allowed'
+                      ? "bg-teal text-white hover:bg-teal-dark shadow-md hover:shadow-lg"
+                      : "bg-border/50 text-navy-700/40 cursor-not-allowed"
                   }`}
                 >
                   Continue to Patient Details →
@@ -772,35 +847,63 @@ export default function BookAppointment() {
             {/* STEP 2: PATIENT CLINICAL TRIAGE INTAKE                           */}
             {/* ---------------------------------------------------------------- */}
             {step === 2 && (
-              <form onSubmit={handleBookingSubmit} className="space-y-5 animate-fade-up">
+              <form
+                onSubmit={handleBookingSubmit}
+                className="space-y-5 animate-fade-up"
+              >
                 <div className="flex items-center gap-3">
                   <button
                     type="button"
                     onClick={() => setStep(1)}
                     className="w-8 h-8 rounded-lg bg-soft-gray flex items-center justify-center hover:bg-border/60 transition-colors"
                   >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0F172A" strokeWidth="2">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#0F172A"
+                      strokeWidth="2"
+                    >
                       <line x1="19" y1="12" x2="5" y2="12" />
                       <polyline points="12 19 5 12 12 5" />
                     </svg>
                   </button>
-                  <h2 className="font-display font-700 text-navy text-2xl">Your Details</h2>
+                  <h2 className="font-display font-700 text-navy text-2xl">
+                    Your Details
+                  </h2>
                 </div>
 
                 {/* Booking summary banner */}
                 <div className="bg-teal/8 rounded-xl p-3 xs:p-3.5 sm:p-4 flex items-center gap-2.5 xs:gap-3 text-xs xs:text-[13px] sm:text-sm">
-                  <svg className="w-4.5 h-4.5 sm:w-5 sm:h-5 text-teal flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <svg
+                    className="w-4.5 h-4.5 sm:w-5 sm:h-5 text-teal flex-shrink-0"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
                     <rect x="3" y="4" width="18" height="18" rx="2" />
                     <line x1="16" y1="2" x2="16" y2="6" />
                     <line x1="8" y1="2" x2="8" y2="6" />
                     <line x1="3" y1="10" x2="21" y2="10" />
                   </svg>
                   <div className="flex flex-wrap items-center gap-x-1.5 xs:gap-x-2 gap-y-0.5 min-w-0 leading-normal">
-                    <span className="font-display font-700 text-navy whitespace-nowrap">{form.clinicName}</span>
-                    <span className="text-navy-700/50 font-normal select-none">·</span>
-                    <span className="text-navy-700 font-medium whitespace-nowrap">{form.date}</span>
-                    <span className="text-navy-700/50 font-normal select-none">·</span>
-                    <span className="text-teal font-semibold whitespace-nowrap">{form.timeSlot}</span>
+                    <span className="font-display font-700 text-navy whitespace-nowrap">
+                      {form.clinicName}
+                    </span>
+                    <span className="text-navy-700/50 font-normal select-none">
+                      ·
+                    </span>
+                    <span className="text-navy-700 font-medium whitespace-nowrap">
+                      {form.date}
+                    </span>
+                    <span className="text-navy-700/50 font-normal select-none">
+                      ·
+                    </span>
+                    <span className="text-teal font-semibold whitespace-nowrap">
+                      {form.timeSlot}
+                    </span>
                   </div>
                 </div>
 
@@ -820,7 +923,7 @@ export default function BookAppointment() {
                       type="text"
                       required
                       value={form.name}
-                      onChange={(e) => update('name', e.target.value)}
+                      onChange={(e) => update("name", e.target.value)}
                       className="w-full border-2 border-border/60 rounded-xl px-4 py-3 text-navy text-sm focus:outline-none focus:border-teal"
                       placeholder="e.g. Sudipta Banerjee"
                     />
@@ -836,7 +939,7 @@ export default function BookAppointment() {
                       min="1"
                       max="110"
                       value={form.age}
-                      onChange={(e) => update('age', e.target.value)}
+                      onChange={(e) => update("age", e.target.value)}
                       className="w-full border-2 border-border/60 rounded-xl px-4 py-3 text-navy text-sm focus:outline-none focus:border-teal"
                       placeholder="e.g. 45"
                     />
@@ -848,7 +951,7 @@ export default function BookAppointment() {
                     </label>
                     <select
                       value={form.gender}
-                      onChange={(e) => update('gender', e.target.value)}
+                      onChange={(e) => update("gender", e.target.value)}
                       className="w-full border-2 border-border/60 rounded-xl px-4 py-3 text-navy text-sm focus:outline-none focus:border-teal bg-white"
                     >
                       <option value="">Select</option>
@@ -867,7 +970,7 @@ export default function BookAppointment() {
                       type="tel"
                       required
                       value={form.phone}
-                      onChange={(e) => update('phone', e.target.value)}
+                      onChange={(e) => update("phone", e.target.value)}
                       className="w-full border-2 border-border/60 rounded-xl px-4 py-3 text-navy text-sm focus:outline-none focus:border-teal"
                       placeholder="+91 79801 44046"
                     />
@@ -881,7 +984,7 @@ export default function BookAppointment() {
                     <input
                       type="email"
                       value={form.email}
-                      onChange={(e) => update('email', e.target.value)}
+                      onChange={(e) => update("email", e.target.value)}
                       className="w-full border-2 border-border/60 rounded-xl px-4 py-3 text-navy text-sm focus:outline-none focus:border-teal"
                       placeholder="patient@example.com"
                     />
@@ -898,11 +1001,11 @@ export default function BookAppointment() {
                       <button
                         key={c}
                         type="button"
-                        onClick={() => update('condition', c)}
+                        onClick={() => update("condition", c)}
                         className={`text-left px-3 py-2.5 rounded-xl text-xs font-medium border-2 transition-all ${
                           form.condition === c
-                            ? 'border-teal bg-teal/10 text-navy font-semibold ring-1 ring-teal/30'
-                            : 'border-border/60 text-navy-700 hover:border-border'
+                            ? "border-teal bg-teal/10 text-navy font-semibold ring-1 ring-teal/30"
+                            : "border-border/60 text-navy-700 hover:border-border"
                         }`}
                       >
                         {c}
@@ -919,7 +1022,7 @@ export default function BookAppointment() {
                   <textarea
                     rows={3}
                     value={form.notes}
-                    onChange={(e) => update('notes', e.target.value)}
+                    onChange={(e) => update("notes", e.target.value)}
                     className="w-full border-2 border-border/60 rounded-xl px-4 py-3 text-navy text-sm focus:outline-none focus:border-teal resize-none"
                     placeholder="Describe pain duration, prior joint surgery, or questions for Dr. Deep..."
                   />
@@ -935,7 +1038,7 @@ export default function BookAppointment() {
                     <input
                       type="text"
                       value={form.insurance}
-                      onChange={(e) => update('insurance', e.target.value)}
+                      onChange={(e) => update("insurance", e.target.value)}
                       className="w-full border-2 border-border/60 rounded-xl px-4 py-3 text-navy text-sm focus:outline-none focus:border-teal"
                       placeholder="e.g. Star Health / TPA (Optional)"
                     />
@@ -947,18 +1050,18 @@ export default function BookAppointment() {
                       First Visit?
                     </label>
                     <div className="flex gap-2">
-                      {['yes', 'no'].map((v) => (
+                      {["yes", "no"].map((v) => (
                         <button
                           key={v}
                           type="button"
-                          onClick={() => update('firstVisit', v)}
+                          onClick={() => update("firstVisit", v)}
                           className={`flex-1 py-2.5 rounded-xl text-xs font-display font-600 border-2 capitalize transition-all ${
                             form.firstVisit === v
-                              ? 'border-teal bg-teal text-white'
-                              : 'border-border/60 text-navy'
+                              ? "border-teal bg-teal text-white"
+                              : "border-border/60 text-navy"
                           }`}
                         >
-                          {v === 'yes' ? 'First Visit' : 'Follow-up'}
+                          {v === "yes" ? "First Visit" : "Follow-up"}
                         </button>
                       ))}
                     </div>
@@ -970,15 +1073,18 @@ export default function BookAppointment() {
                   disabled={!canProceed2 || submitting}
                   className={`w-full py-3.5 rounded-xl font-display font-700 text-sm transition-all ${
                     canProceed2 && !submitting
-                      ? 'bg-teal text-white hover:bg-teal-dark shadow-md hover:shadow-lg'
-                      : 'bg-border/50 text-navy-700/40 cursor-not-allowed'
+                      ? "bg-teal text-white hover:bg-teal-dark shadow-md hover:shadow-lg"
+                      : "bg-border/50 text-navy-700/40 cursor-not-allowed"
                   }`}
                 >
-                  {submitting ? 'Reserving Your Slot...' : 'Confirm Appointment Reservation →'}
+                  {submitting
+                    ? "Reserving Your Slot..."
+                    : "Confirm Appointment Reservation →"}
                 </button>
 
                 <p className="text-xs text-navy-700/60 text-center leading-relaxed">
-                  By submitting, your slot is locked in the clinic system. You will receive an instant reference number.
+                  By submitting, your slot is locked in the clinic system. You
+                  will receive an instant reference number.
                 </p>
               </form>
             )}
