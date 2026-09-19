@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo } from "react"
 import {
   Users,
   UserPlus,
@@ -26,14 +26,14 @@ import {
   Eye,
   EyeOff,
   ChevronDown,
-} from 'lucide-react'
+} from "lucide-react"
 import {
   staffAuthService,
   StaffUser,
   StaffRole,
   validatePasswordStrength,
-} from '@/services/staffAuthService'
-import { Clinic } from '@/services/appointmentService'
+} from "@/services/staffAuthService"
+import { Clinic } from "@/services/appointmentService"
 
 interface StaffManagementProps {
   clinics: Clinic[]
@@ -48,9 +48,10 @@ export default function StaffManagement({
 }: StaffManagementProps) {
   const [staffList, setStaffList] = useState<StaffUser[]>([])
   const [loading, setLoading] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [roleFilter, setRoleFilter] = useState<'all' | StaffRole>('all')
-  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'suspended'>('all')
+  const [searchQuery, setSearchQuery] = useState("")
+  const [roleFilter, setRoleFilter] = useState<"all" | StaffRole>("all")
+  const [statusFilter, setStatusFilter] =
+    useState<"all" | "active" | "suspended">("all")
 
   // Add User Modal State
   const [addModalOpen, setAddModalOpen] = useState(false)
@@ -58,13 +59,13 @@ export default function StaffManagement({
   const [showPassword, setShowPassword] = useState(false)
   const [emailCustomized, setEmailCustomized] = useState(false)
   const [addForm, setAddForm] = useState({
-    fullName: '',
-    username: '',
-    email: '',
-    password: '',
-    role: 'receptionist' as StaffRole,
-    clinicId: clinics[0]?.id || '',
-    phone: '',
+    fullName: "",
+    username: "",
+    email: "",
+    password: "",
+    role: "receptionist" as StaffRole,
+    clinicId: clinics[0]?.id || "",
+    phone: "",
   })
   const [addError, setAddError] = useState<string | null>(null)
 
@@ -82,7 +83,7 @@ export default function StaffManagement({
   // Reset Password Modal State
   const [resetModalOpen, setResetModalOpen] = useState(false)
   const [targetUser, setTargetUser] = useState<StaffUser | null>(null)
-  const [newPassword, setNewPassword] = useState('')
+  const [newPassword, setNewPassword] = useState("")
   const [showResetPassword, setShowResetPassword] = useState(false)
   const [resetSubmitting, setResetSubmitting] = useState(false)
   const [resetError, setResetError] = useState<string | null>(null)
@@ -104,8 +105,8 @@ export default function StaffManagement({
       const list = await staffAuthService.getStaffUsers()
       setStaffList(list)
     } catch (err) {
-      console.error('Failed to load staff list:', err)
-      onToast('Failed to load staff directory.')
+      console.error("Failed to load staff list:", err)
+      onToast("Failed to load staff directory.")
     } finally {
       setLoading(false)
     }
@@ -116,22 +117,23 @@ export default function StaffManagement({
   }, [])
 
   const generateRandomPassword = () => {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$'
+    const chars =
+      "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$"
     const array = new Uint32Array(12)
     crypto.getRandomValues(array)
-    return Array.from(array, (x) => chars[x % chars.length]).join('')
+    return Array.from(array, (x) => chars[x % chars.length]).join("")
   }
 
   const handleOpenAddModal = () => {
-    const defaultUsername = ''
+    const defaultUsername = ""
     setAddForm({
-      fullName: '',
+      fullName: "",
       username: defaultUsername,
-      email: '',
+      email: "",
       password: generateRandomPassword(),
-      role: 'receptionist',
-      clinicId: clinics[0]?.id || '',
-      phone: '',
+      role: "receptionist",
+      clinicId: clinics[0]?.id || "",
+      phone: "",
     })
     setEmailCustomized(false)
     setShowPassword(false)
@@ -140,11 +142,15 @@ export default function StaffManagement({
   }
 
   const handleUsernameChange = (val: string) => {
-    const clean = val.toLowerCase().replace(/[^a-z0-9_]/g, '')
+    const clean = val.toLowerCase().replace(/[^a-z0-9_]/g, "")
     setAddForm((prev) => ({
       ...prev,
       username: clean,
-      email: emailCustomized ? prev.email : clean ? `${clean}@orthobud.internal` : '',
+      email: emailCustomized
+        ? prev.email
+        : clean
+          ? `${clean}@orthobud.internal`
+          : "",
     }))
   }
 
@@ -161,13 +167,14 @@ export default function StaffManagement({
         fullName: addForm.fullName,
         email: addForm.email || undefined,
         role: addForm.role,
-        clinicId: addForm.role === 'receptionist' ? addForm.clinicId : null,
-        clinicName: addForm.role === 'receptionist' ? selectedClinic?.name : null,
+        clinicId: addForm.role === "receptionist" ? addForm.clinicId : null,
+        clinicName:
+          addForm.role === "receptionist" ? selectedClinic?.name : null,
         phone: addForm.phone,
       })
 
       if (!res.success || !res.user) {
-        setAddError(res.error || 'Failed to create staff user.')
+        setAddError(res.error || "Failed to create staff user.")
         return
       }
 
@@ -177,14 +184,16 @@ export default function StaffManagement({
         email: res.user.email,
         password: addForm.password,
         role: addForm.role,
-        clinicName: addForm.role === 'receptionist' ? selectedClinic?.name : undefined,
+        clinicName:
+          addForm.role === "receptionist" ? selectedClinic?.name : undefined,
       })
 
       setAddModalOpen(false)
       onToast(`Staff user @${addForm.username} created successfully.`)
       await loadStaff()
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'An unexpected error occurred.'
+      const msg =
+        err instanceof Error ? err.message : "An unexpected error occurred."
       setAddError(msg)
     } finally {
       setSubmitting(false)
@@ -206,16 +215,20 @@ export default function StaffManagement({
     setResetSubmitting(true)
 
     try {
-      const res = await staffAuthService.resetStaffPassword(targetUser.id, newPassword)
+      const res = await staffAuthService.resetStaffPassword(
+        targetUser.id,
+        newPassword,
+      )
       if (!res.success) {
-        setResetError(res.error || 'Failed to reset password.')
+        setResetError(res.error || "Failed to reset password.")
         return
       }
 
       setResetModalOpen(false)
       onToast(`Password for @${targetUser.username} updated successfully.`)
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Error resetting password.'
+      const msg =
+        err instanceof Error ? err.message : "Error resetting password."
       setResetError(msg)
     } finally {
       setResetSubmitting(false)
@@ -233,19 +246,25 @@ export default function StaffManagement({
 
     try {
       const nextStatus = !userToToggle.isActive
-      const res = await staffAuthService.toggleStaffStatus(userToToggle.id, nextStatus)
+      const res = await staffAuthService.toggleStaffStatus(
+        userToToggle.id,
+        nextStatus,
+      )
       if (!res.success) {
-        onToast(res.error || 'Failed to update account status.')
+        onToast(res.error || "Failed to update account status.")
         return
       }
 
       onToast(
-        `Account @${userToToggle.username} is now ${nextStatus ? 'Active' : 'Suspended'}.`
+        `Account @${userToToggle.username} is now ${
+          nextStatus ? "Active" : "Suspended"
+        }.`,
       )
       setToggleModalOpen(false)
       await loadStaff()
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to update status.'
+      const msg =
+        err instanceof Error ? err.message : "Failed to update status."
       onToast(msg)
     } finally {
       setToggleSubmitting(false)
@@ -266,7 +285,7 @@ export default function StaffManagement({
     try {
       const res = await staffAuthService.deleteStaffUser(userToDelete.id)
       if (!res.success) {
-        setDeleteError(res.error || 'Failed to delete user account.')
+        setDeleteError(res.error || "Failed to delete user account.")
         return
       }
 
@@ -274,7 +293,7 @@ export default function StaffManagement({
       setDeleteModalOpen(false)
       await loadStaff()
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to delete user.'
+      const msg = err instanceof Error ? err.message : "Failed to delete user."
       setDeleteError(msg)
     } finally {
       setDeleteSubmitting(false)
@@ -290,16 +309,18 @@ export default function StaffManagement({
       `Email: ${createdCredential.email}`,
       `Password: ${createdCredential.password}`,
       `Role: ${createdCredential.role.toUpperCase()}`,
-      createdCredential.clinicName ? `Assigned Branch: ${createdCredential.clinicName}` : '',
+      createdCredential.clinicName
+        ? `Assigned Branch: ${createdCredential.clinicName}`
+        : "",
       `Sign-in URL: ${window.location.origin}/admin`,
     ]
       .filter(Boolean)
-      .join('\n')
+      .join("\n")
 
     navigator.clipboard.writeText(text)
     setCopied(true)
     setTimeout(() => setCopied(false), 2500)
-    onToast('Credentials copied to clipboard.')
+    onToast("Credentials copied to clipboard.")
   }
 
   // Filtered staff list
@@ -311,12 +332,12 @@ export default function StaffManagement({
         user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (user.phone && user.phone.includes(searchQuery))
 
-      const matchesRole = roleFilter === 'all' || user.role === roleFilter
+      const matchesRole = roleFilter === "all" || user.role === roleFilter
 
       const matchesStatus =
-        statusFilter === 'all' ||
-        (statusFilter === 'active' && user.isActive) ||
-        (statusFilter === 'suspended' && !user.isActive)
+        statusFilter === "all" ||
+        (statusFilter === "active" && user.isActive) ||
+        (statusFilter === "suspended" && !user.isActive)
 
       return matchesSearch && matchesRole && matchesStatus
     })
@@ -325,21 +346,27 @@ export default function StaffManagement({
   // Count stats
   const stats = useMemo(() => {
     const total = staffList.length
-    const doctors = staffList.filter((u) => u.role === 'doctor' && u.isActive).length
-    const receptionists = staffList.filter((u) => u.role === 'receptionist' && u.isActive).length
-    const admins = staffList.filter((u) => u.role === 'admin' && u.isActive).length
+    const doctors = staffList.filter(
+      (u) => u.role === "doctor" && u.isActive,
+    ).length
+    const receptionists = staffList.filter(
+      (u) => u.role === "receptionist" && u.isActive,
+    ).length
+    const admins = staffList.filter(
+      (u) => u.role === "admin" && u.isActive,
+    ).length
     const suspended = staffList.filter((u) => !u.isActive).length
     return { total, doctors, receptionists, admins, suspended }
   }, [staffList])
 
   const formatDate = (dateStr?: string) => {
-    if (!dateStr) return 'N/A'
+    if (!dateStr) return "N/A"
     try {
       const d = new Date(dateStr)
-      return d.toLocaleDateString('en-GB', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
+      return d.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
       })
     } catch {
       return dateStr
@@ -352,13 +379,19 @@ export default function StaffManagement({
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
         <div className="bg-white rounded-2xl p-4 sm:p-5 border border-border/60 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-navy-700">Total Staff</span>
+            <span className="text-xs font-medium text-navy-700">
+              Total Staff
+            </span>
             <div className="w-8 h-8 rounded-xl bg-navy/5 text-navy flex items-center justify-center">
               <Users className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-display font-800 text-navy mt-2">{stats.total}</div>
-          <span className="text-[11px] text-navy-700">All registered accounts</span>
+          <div className="text-2xl font-display font-800 text-navy mt-2">
+            {stats.total}
+          </div>
+          <span className="text-[11px] text-navy-700">
+            All registered accounts
+          </span>
         </div>
 
         <div className="bg-white rounded-2xl p-4 sm:p-5 border border-border/60 shadow-xs">
@@ -368,30 +401,46 @@ export default function StaffManagement({
               <Stethoscope className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-display font-800 text-navy mt-2">{stats.doctors}</div>
-          <span className="text-[11px] text-teal font-medium">Active surgeons</span>
+          <div className="text-2xl font-display font-800 text-navy mt-2">
+            {stats.doctors}
+          </div>
+          <span className="text-[11px] text-teal font-medium">
+            Active surgeons
+          </span>
         </div>
 
         <div className="bg-white rounded-2xl p-4 sm:p-5 border border-border/60 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-navy-700">Receptionists</span>
+            <span className="text-xs font-medium text-navy-700">
+              Receptionists
+            </span>
             <div className="w-8 h-8 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center">
               <ConciergeBell className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-display font-800 text-navy mt-2">{stats.receptionists}</div>
-          <span className="text-[11px] text-sky-600 font-medium">Branch coordinators</span>
+          <div className="text-2xl font-display font-800 text-navy mt-2">
+            {stats.receptionists}
+          </div>
+          <span className="text-[11px] text-sky-600 font-medium">
+            Branch coordinators
+          </span>
         </div>
 
         <div className="bg-white rounded-2xl p-4 sm:p-5 border border-border/60 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-navy-700">Administrators</span>
+            <span className="text-xs font-medium text-navy-700">
+              Administrators
+            </span>
             <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
               <ShieldCheck className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-display font-800 text-navy mt-2">{stats.admins}</div>
-          <span className="text-[11px] text-purple-600 font-medium">System access</span>
+          <div className="text-2xl font-display font-800 text-navy mt-2">
+            {stats.admins}
+          </div>
+          <span className="text-[11px] text-purple-600 font-medium">
+            System access
+          </span>
         </div>
       </div>
 
@@ -409,7 +458,7 @@ export default function StaffManagement({
           />
           {searchQuery && (
             <button
-              onClick={() => setSearchQuery('')}
+              onClick={() => setSearchQuery("")}
               className="absolute right-2.5 top-1/2 -translate-y-1/2 text-navy-700/50 hover:text-navy cursor-pointer"
             >
               <X className="w-3.5 h-3.5" />
@@ -456,7 +505,9 @@ export default function StaffManagement({
             className="p-2 text-navy-700 hover:text-navy hover:bg-slate-100 rounded-xl border border-border/70 transition-colors cursor-pointer disabled:opacity-50"
             title="Refresh list"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw
+              className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`}
+            />
           </button>
 
           {/* Primary Action Button */}
@@ -487,26 +538,36 @@ export default function StaffManagement({
             <tbody className="divide-y divide-border/50 text-xs">
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="py-12 text-center text-navy-700/60">
+                  <td
+                    colSpan={6}
+                    className="py-12 text-center text-navy-700/60"
+                  >
                     <RefreshCw className="w-5 h-5 animate-spin mx-auto text-teal mb-2" />
                     <span>Loading staff directory...</span>
                   </td>
                 </tr>
               ) : filteredStaff.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-12 text-center text-navy-700/60">
+                  <td
+                    colSpan={6}
+                    className="py-12 text-center text-navy-700/60"
+                  >
                     <Users className="w-8 h-8 mx-auto text-navy-700/30 mb-2" />
-                    <p className="font-medium text-navy text-sm">No staff accounts found</p>
+                    <p className="font-medium text-navy text-sm">
+                      No staff accounts found
+                    </p>
                     <p className="text-xs text-navy-700/60 mt-0.5">
                       {searchQuery
-                        ? 'Try adjusting your search query or role filter.'
+                        ? "Try adjusting your search query or role filter."
                         : 'Click "Add Staff Member" above to create an account.'}
                     </p>
                   </td>
                 </tr>
               ) : (
                 filteredStaff.map((user) => {
-                  const isCurrentAdmin = Boolean(currentAdminId && user.id === currentAdminId)
+                  const isCurrentAdmin = Boolean(
+                    currentAdminId && user.id === currentAdminId,
+                  )
 
                   return (
                     <tr
@@ -551,7 +612,7 @@ export default function StaffManagement({
 
                       {/* Column 3: Assigned Role */}
                       <td className="py-3.5 px-4">
-                        {user.role === 'admin' ? (
+                        {user.role === "admin" ? (
                           <div>
                             <span className="inline-flex items-center gap-1.5 bg-purple-50 text-purple-700 font-display font-700 text-[11px] px-2.5 py-1 rounded-full border border-purple-200">
                               <ShieldCheck className="w-3.5 h-3.5 text-purple-600 shrink-0" />
@@ -561,7 +622,7 @@ export default function StaffManagement({
                               Universal System Access
                             </div>
                           </div>
-                        ) : user.role === 'doctor' ? (
+                        ) : user.role === "doctor" ? (
                           <div>
                             <span className="inline-flex items-center gap-1.5 bg-teal/10 text-teal font-display font-700 text-[11px] px-2.5 py-1 rounded-full border border-teal/20">
                               <Stethoscope className="w-3.5 h-3.5 text-teal shrink-0" />
@@ -579,7 +640,9 @@ export default function StaffManagement({
                             </span>
                             <div className="text-[10px] text-navy-700/60 mt-0.5 flex items-center gap-1 pl-1">
                               <Building2 className="w-3 h-3 text-navy-700/40 shrink-0" />
-                              <span>{user.assignedClinicName || 'Branch unassigned'}</span>
+                              <span>
+                                {user.assignedClinicName || "Branch unassigned"}
+                              </span>
                             </div>
                           </div>
                         )}
@@ -626,15 +689,15 @@ export default function StaffManagement({
                             disabled={isCurrentAdmin}
                             className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
                               user.isActive
-                                ? 'text-amber-700 hover:text-amber-800 hover:bg-amber-100/60'
-                                : 'text-emerald-700 hover:text-emerald-800 hover:bg-emerald-100/60'
+                                ? "text-amber-700 hover:text-amber-800 hover:bg-amber-100/60"
+                                : "text-emerald-700 hover:text-emerald-800 hover:bg-emerald-100/60"
                             } disabled:opacity-30 disabled:cursor-not-allowed`}
                             title={
                               isCurrentAdmin
-                                ? 'Cannot suspend your own account'
+                                ? "Cannot suspend your own account"
                                 : user.isActive
-                                ? 'Suspend account'
-                                : 'Activate account'
+                                  ? "Suspend account"
+                                  : "Activate account"
                             }
                           >
                             {user.isActive ? (
@@ -651,8 +714,8 @@ export default function StaffManagement({
                             className="p-1.5 text-rose-600 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
                             title={
                               isCurrentAdmin
-                                ? 'Cannot delete your own account'
-                                : 'Permanently delete account'
+                                ? "Cannot delete your own account"
+                                : "Permanently delete account"
                             }
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -679,7 +742,9 @@ export default function StaffManagement({
                   <UserPlus className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-display font-800 text-lg text-navy">Add Staff Member</h3>
+                  <h3 className="font-display font-800 text-lg text-navy">
+                    Add Staff Member
+                  </h3>
                   <p className="text-xs text-navy-700 mt-0.5">
                     Create new user credentials with role-based access.
                   </p>
@@ -712,7 +777,10 @@ export default function StaffManagement({
                   placeholder="e.g. Dr. Deep Chakraborty or Priya Sharma"
                   value={addForm.fullName}
                   onChange={(e) =>
-                    setAddForm((prev) => ({ ...prev, fullName: e.target.value }))
+                    setAddForm((prev) => ({
+                      ...prev,
+                      fullName: e.target.value,
+                    }))
                   }
                   className="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-border rounded-xl text-navy placeholder:text-navy-700/40 focus:outline-none focus:ring-2 focus:ring-teal/30 focus:border-teal transition-all"
                 />
@@ -785,12 +853,15 @@ export default function StaffManagement({
                 </div>
                 <div className="relative">
                   <input
-                    type={showPassword ? 'text' : 'password'}
+                    type={showPassword ? "text" : "password"}
                     required
                     minLength={8}
                     value={addForm.password}
                     onChange={(e) =>
-                      setAddForm((prev) => ({ ...prev, password: e.target.value }))
+                      setAddForm((prev) => ({
+                        ...prev,
+                        password: e.target.value,
+                      }))
                     }
                     className="w-full pl-3.5 pr-9 py-2.5 text-xs bg-slate-50 border border-border rounded-xl font-mono text-navy focus:outline-none focus:ring-2 focus:ring-teal/30 focus:border-teal transition-all"
                   />
@@ -810,28 +881,36 @@ export default function StaffManagement({
                 <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-navy-700/70">
                   <span
                     className={
-                      addForm.password.length >= 8 ? 'text-emerald-600 font-semibold' : ''
+                      addForm.password.length >= 8
+                        ? "text-emerald-600 font-semibold"
+                        : ""
                     }
                   >
                     • 8+ chars
                   </span>
                   <span
                     className={
-                      /[A-Z]/.test(addForm.password) ? 'text-emerald-600 font-semibold' : ''
+                      /[A-Z]/.test(addForm.password)
+                        ? "text-emerald-600 font-semibold"
+                        : ""
                     }
                   >
                     • Uppercase
                   </span>
                   <span
                     className={
-                      /[a-z]/.test(addForm.password) ? 'text-emerald-600 font-semibold' : ''
+                      /[a-z]/.test(addForm.password)
+                        ? "text-emerald-600 font-semibold"
+                        : ""
                     }
                   >
                     • Lowercase
                   </span>
                   <span
                     className={
-                      /[0-9]/.test(addForm.password) ? 'text-emerald-600 font-semibold' : ''
+                      /[0-9]/.test(addForm.password)
+                        ? "text-emerald-600 font-semibold"
+                        : ""
                     }
                   >
                     • Number
@@ -847,11 +926,13 @@ export default function StaffManagement({
                 <div className="grid grid-cols-3 gap-2">
                   <button
                     type="button"
-                    onClick={() => setAddForm((prev) => ({ ...prev, role: 'doctor' }))}
+                    onClick={() =>
+                      setAddForm((prev) => ({ ...prev, role: "doctor" }))
+                    }
                     className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
-                      addForm.role === 'doctor'
-                        ? 'border-teal bg-teal/5 ring-2 ring-teal/20 text-navy'
-                        : 'border-border/70 hover:bg-slate-50 text-navy-700'
+                      addForm.role === "doctor"
+                        ? "border-teal bg-teal/5 ring-2 ring-teal/20 text-navy"
+                        : "border-border/70 hover:bg-slate-50 text-navy-700"
                     }`}
                   >
                     <Stethoscope className="w-4 h-4 text-teal mb-1" />
@@ -863,15 +944,19 @@ export default function StaffManagement({
 
                   <button
                     type="button"
-                    onClick={() => setAddForm((prev) => ({ ...prev, role: 'receptionist' }))}
+                    onClick={() =>
+                      setAddForm((prev) => ({ ...prev, role: "receptionist" }))
+                    }
                     className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
-                      addForm.role === 'receptionist'
-                        ? 'border-teal bg-teal/5 ring-2 ring-teal/20 text-navy'
-                        : 'border-border/70 hover:bg-slate-50 text-navy-700'
+                      addForm.role === "receptionist"
+                        ? "border-teal bg-teal/5 ring-2 ring-teal/20 text-navy"
+                        : "border-border/70 hover:bg-slate-50 text-navy-700"
                     }`}
                   >
                     <ConciergeBell className="w-4 h-4 text-sky-600 mb-1" />
-                    <div className="font-display font-700 text-xs">Receptionist</div>
+                    <div className="font-display font-700 text-xs">
+                      Receptionist
+                    </div>
                     <div className="text-[10px] text-navy-700/60 leading-tight mt-0.5">
                       Branch Desk
                     </div>
@@ -879,11 +964,13 @@ export default function StaffManagement({
 
                   <button
                     type="button"
-                    onClick={() => setAddForm((prev) => ({ ...prev, role: 'admin' }))}
+                    onClick={() =>
+                      setAddForm((prev) => ({ ...prev, role: "admin" }))
+                    }
                     className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
-                      addForm.role === 'admin'
-                        ? 'border-teal bg-teal/5 ring-2 ring-teal/20 text-navy'
-                        : 'border-border/70 hover:bg-slate-50 text-navy-700'
+                      addForm.role === "admin"
+                        ? "border-teal bg-teal/5 ring-2 ring-teal/20 text-navy"
+                        : "border-border/70 hover:bg-slate-50 text-navy-700"
                     }`}
                   >
                     <ShieldCheck className="w-4 h-4 text-purple-600 mb-1" />
@@ -896,27 +983,32 @@ export default function StaffManagement({
               </div>
 
               {/* Clinic Branch (Required for Receptionist, optional for others) */}
-              {addForm.role === 'receptionist' && (
+              {addForm.role === "receptionist" && (
                 <div>
                   <label className="block text-xs font-display font-700 text-navy mb-1">
-                    Assigned Clinic Branch <span className="text-rose-500">*</span>
+                    Assigned Clinic Branch{" "}
+                    <span className="text-rose-500">*</span>
                   </label>
                   <select
                     required
                     value={addForm.clinicId}
                     onChange={(e) =>
-                      setAddForm((prev) => ({ ...prev, clinicId: e.target.value }))
+                      setAddForm((prev) => ({
+                        ...prev,
+                        clinicId: e.target.value,
+                      }))
                     }
                     className="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-border rounded-xl text-navy focus:outline-none focus:ring-2 focus:ring-teal/30 focus:border-teal transition-all cursor-pointer"
                   >
                     {clinics.map((c) => (
                       <option key={c.id} value={c.id}>
-                        {c.name} ({c.address.split(',')[0]})
+                        {c.name} ({c.address.split(",")[0]})
                       </option>
                     ))}
                   </select>
                   <p className="text-[10px] text-navy-700/60 mt-1">
-                    Receptionists only have access to appointments for their assigned branch.
+                    Receptionists only have access to appointments for their
+                    assigned branch.
                   </p>
                 </div>
               )}
@@ -930,7 +1022,9 @@ export default function StaffManagement({
                   type="tel"
                   placeholder="+91 79801 44046"
                   value={addForm.phone}
-                  onChange={(e) => setAddForm((prev) => ({ ...prev, phone: e.target.value }))}
+                  onChange={(e) =>
+                    setAddForm((prev) => ({ ...prev, phone: e.target.value }))
+                  }
                   className="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-border rounded-xl text-navy placeholder:text-navy-700/40 focus:outline-none focus:ring-2 focus:ring-teal/30 focus:border-teal transition-all"
                 />
               </div>
@@ -949,7 +1043,7 @@ export default function StaffManagement({
                   disabled={submitting}
                   className="btn-primary text-xs py-2.5 px-5 shadow-sm cursor-pointer disabled:opacity-50"
                 >
-                  {submitting ? 'Creating User...' : 'Create Staff Account'}
+                  {submitting ? "Creating User..." : "Create Staff Account"}
                 </button>
               </div>
             </form>
@@ -966,7 +1060,9 @@ export default function StaffManagement({
             </div>
 
             <div>
-              <h3 className="font-display font-800 text-lg text-navy">Account Created!</h3>
+              <h3 className="font-display font-800 text-lg text-navy">
+                Account Created!
+              </h3>
               <p className="text-xs text-navy-700 mt-1">
                 Copy and securely share these credentials with the staff member.
               </p>
@@ -975,11 +1071,15 @@ export default function StaffManagement({
             <div className="bg-slate-50 rounded-2xl p-4 border border-border text-left font-mono text-xs space-y-2 select-all">
               <div className="flex justify-between">
                 <span className="text-navy-700/60 font-sans">Full Name:</span>
-                <span className="text-navy font-semibold font-sans">{createdCredential.fullName}</span>
+                <span className="text-navy font-semibold font-sans">
+                  {createdCredential.fullName}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-navy-700/60 font-sans">Username:</span>
-                <span className="text-navy font-bold">@{createdCredential.username}</span>
+                <span className="text-navy font-bold">
+                  @{createdCredential.username}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-navy-700/60 font-sans">Email:</span>
@@ -987,16 +1087,22 @@ export default function StaffManagement({
               </div>
               <div className="flex justify-between">
                 <span className="text-navy-700/60 font-sans">Password:</span>
-                <span className="text-teal font-bold">{createdCredential.password}</span>
+                <span className="text-teal font-bold">
+                  {createdCredential.password}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-navy-700/60 font-sans">Role:</span>
-                <span className="text-navy font-sans capitalize">{createdCredential.role}</span>
+                <span className="text-navy font-sans capitalize">
+                  {createdCredential.role}
+                </span>
               </div>
               {createdCredential.clinicName && (
                 <div className="flex justify-between">
                   <span className="text-navy-700/60 font-sans">Branch:</span>
-                  <span className="text-navy font-sans">{createdCredential.clinicName}</span>
+                  <span className="text-navy font-sans">
+                    {createdCredential.clinicName}
+                  </span>
                 </div>
               )}
             </div>
@@ -1006,8 +1112,14 @@ export default function StaffManagement({
                 onClick={handleCopyCredentials}
                 className="btn-primary flex-1 text-xs py-2.5 justify-center flex items-center gap-2"
               >
-                {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                <span>{copied ? 'Copied to Clipboard!' : 'Copy Credentials'}</span>
+                {copied ? (
+                  <Check className="w-4 h-4" />
+                ) : (
+                  <Copy className="w-4 h-4" />
+                )}
+                <span>
+                  {copied ? "Copied to Clipboard!" : "Copy Credentials"}
+                </span>
               </button>
               <button
                 onClick={() => setCreatedCredential(null)}
@@ -1030,7 +1142,9 @@ export default function StaffManagement({
                   <KeyRound className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-display font-800 text-base text-navy">Reset Password</h3>
+                  <h3 className="font-display font-800 text-base text-navy">
+                    Reset Password
+                  </h3>
                   <p className="text-xs text-navy-700 mt-0.5">
                     Update password for @{targetUser.username}
                   </p>
@@ -1068,7 +1182,7 @@ export default function StaffManagement({
                 </div>
                 <div className="relative">
                   <input
-                    type={showResetPassword ? 'text' : 'password'}
+                    type={showResetPassword ? "text" : "password"}
                     required
                     minLength={8}
                     value={newPassword}
@@ -1102,7 +1216,7 @@ export default function StaffManagement({
                   disabled={resetSubmitting}
                   className="btn-primary text-xs py-2 px-4 shadow-sm cursor-pointer disabled:opacity-50"
                 >
-                  {resetSubmitting ? 'Updating...' : 'Update Password'}
+                  {resetSubmitting ? "Updating..." : "Update Password"}
                 </button>
               </div>
             </form>
@@ -1117,8 +1231,8 @@ export default function StaffManagement({
             <div
               className={`w-12 h-12 rounded-2xl flex items-center justify-center mx-auto ${
                 userToToggle.isActive
-                  ? 'bg-amber-50 text-amber-600'
-                  : 'bg-emerald-50 text-emerald-600'
+                  ? "bg-amber-50 text-amber-600"
+                  : "bg-emerald-50 text-emerald-600"
               }`}
             >
               {userToToggle.isActive ? (
@@ -1130,7 +1244,9 @@ export default function StaffManagement({
 
             <div>
               <h3 className="font-display font-800 text-base text-navy">
-                {userToToggle.isActive ? 'Suspend Staff Account?' : 'Activate Staff Account?'}
+                {userToToggle.isActive
+                  ? "Suspend Staff Account?"
+                  : "Activate Staff Account?"}
               </h3>
               <p className="text-xs text-navy-700/70 mt-1">
                 {userToToggle.isActive
@@ -1153,15 +1269,15 @@ export default function StaffManagement({
                 onClick={handleToggleConfirm}
                 className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-display font-700 text-white transition-all cursor-pointer ${
                   userToToggle.isActive
-                    ? 'bg-amber-600 hover:bg-amber-700'
-                    : 'bg-emerald-600 hover:bg-emerald-700'
+                    ? "bg-amber-600 hover:bg-amber-700"
+                    : "bg-emerald-600 hover:bg-emerald-700"
                 } disabled:opacity-50`}
               >
                 {toggleSubmitting
-                  ? 'Updating...'
+                  ? "Updating..."
                   : userToToggle.isActive
-                  ? 'Suspend'
-                  : 'Activate'}
+                    ? "Suspend"
+                    : "Activate"}
               </button>
             </div>
           </div>
@@ -1177,18 +1293,23 @@ export default function StaffManagement({
             </div>
 
             <div>
-              <h3 className="font-display font-800 text-lg text-navy">Delete Staff Account</h3>
+              <h3 className="font-display font-800 text-lg text-navy">
+                Delete Staff Account
+              </h3>
               <p className="text-xs text-navy-700/80 mt-1.5 leading-relaxed">
-                Are you sure you want to permanently delete the account for{' '}
-                <span className="font-bold text-navy">@{userToDelete.username}</span> (
-                {userToDelete.fullName})?
+                Are you sure you want to permanently delete the account for{" "}
+                <span className="font-bold text-navy">
+                  @{userToDelete.username}
+                </span>{" "}
+                ({userToDelete.fullName})?
               </p>
             </div>
 
             <div className="bg-rose-50 border border-rose-200/80 rounded-2xl p-3.5 text-left text-xs text-rose-800 flex items-start gap-2.5">
               <AlertTriangle className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" />
               <span className="text-[11px] leading-relaxed">
-                This action is irreversible. The user will be immediately removed from authentication and profile registries.
+                This action is irreversible. The user will be immediately
+                removed from authentication and profile registries.
               </span>
             </div>
 
@@ -1213,7 +1334,7 @@ export default function StaffManagement({
                 onClick={handleDeleteConfirm}
                 className="flex-1 py-2.5 px-4 rounded-xl text-xs font-display font-700 bg-rose-600 hover:bg-rose-700 text-white transition-all cursor-pointer disabled:opacity-50"
               >
-                {deleteSubmitting ? 'Deleting...' : 'Permanently Delete'}
+                {deleteSubmitting ? "Deleting..." : "Permanently Delete"}
               </button>
             </div>
           </div>
