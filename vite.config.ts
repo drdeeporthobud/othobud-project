@@ -105,17 +105,19 @@ function figmaSiteConfiguration(config: FigmaSiteConfiguration): Plugin {
     return html.replace(`<!-- ${slotName} -->`, content)
   }
 
-  const title = config.title ?? "Figma Make App"
-  const description = config.description ?? ''
-  const favicon = config.icons?.icon ?? ''
-  const socialImage = config.openGraph?.image ?? ''
+  const title = config.title ?? "Dr. Deep Chakraborty | Senior Orthopedic Surgeon in Kolkata"
+  const description = config.description ?? "Consult Dr. Deep Chakraborty, fellowship-trained Senior Orthopedic Surgeon in Kolkata with 15+ years experience specializing in Robotic Knee & Hip Replacement, Arthroscopy, and Sports Injuries across 6 clinic locations."
+  const favicon = config.icons?.icon ?? "/favicon.svg"
+  const socialImage = config.openGraph?.image ?? "https://www.orthobud.com/images/doctor/dr-deep-hero.webp"
   const language = sanitizeHtmlValue(config.language) || 'en'
   const googleAnalyticsId = sanitizeHtmlValue(config.analytics?.googleAnalyticsId)
   const headStart = config.customScripts?.headStart ?? ''
   const headEnd = config.customScripts?.headEnd ?? ''
   const bodyStart = config.customScripts?.bodyStart ?? ''
   const bodyEnd = config.customScripts?.bodyEnd ?? ''
-  const robotsTxt = config.robots?.index === false ? 'User-agent: *\nDisallow: /\n' : ''
+  const robotsTxt = config.robots?.index === false
+    ? 'User-agent: *\nDisallow: /\n'
+    : 'User-agent: *\nAllow: /\n\nSitemap: https://www.orthobud.com/sitemap.xml\n'
 
   return {
     name: 'figma-site-configuration',
@@ -148,25 +150,32 @@ function figmaSiteConfiguration(config: FigmaSiteConfiguration): Plugin {
         result = replaceHtmlCommentSlot(result, 'figma:body-end', bodyEnd)
 
         const tags: HtmlTagDescriptor[] = []
-        if (description) {
+        if (description && !html.includes('name="description"')) {
           tags.push({ tag: 'meta', attrs: { name: 'description', content: description }, injectTo: 'head' })
         }
         if (config.robots?.index === false) {
           tags.push({ tag: 'meta', attrs: { name: 'robots', content: 'noindex, nofollow' }, injectTo: 'head' })
+        } else if (!html.includes('name="robots"')) {
+          tags.push({ tag: 'meta', attrs: { name: 'robots', content: 'index, follow' }, injectTo: 'head' })
         }
-        if (favicon) {
+        if (favicon && !html.includes('rel="icon"')) {
           tags.push({ tag: 'link', attrs: { rel: 'icon', href: favicon }, injectTo: 'head' })
         }
-        if (title) {
+        if (title && !html.includes('property="og:title"')) {
           tags.push({ tag: 'meta', attrs: { property: 'og:title', content: title }, injectTo: 'head' })
         }
-        if (description) {
+        if (description && !html.includes('property="og:description"')) {
           tags.push({ tag: 'meta', attrs: { property: 'og:description', content: description }, injectTo: 'head' })
         }
-        if (socialImage) {
+        if (socialImage && !html.includes('property="og:image"')) {
           tags.push(
             { tag: 'meta', attrs: { property: 'og:image', content: socialImage }, injectTo: 'head' },
+            { tag: 'meta', attrs: { property: 'og:type', content: 'website' }, injectTo: 'head' },
+            { tag: 'meta', attrs: { property: 'og:url', content: 'https://www.orthobud.com/' }, injectTo: 'head' },
+            { tag: 'meta', attrs: { property: 'og:site_name', content: 'Orthobud · Dr. Deep Chakraborty' }, injectTo: 'head' },
             { tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' }, injectTo: 'head' },
+            { tag: 'meta', attrs: { name: 'twitter:title', content: title }, injectTo: 'head' },
+            { tag: 'meta', attrs: { name: 'twitter:description', content: description }, injectTo: 'head' },
             { tag: 'meta', attrs: { name: 'twitter:image', content: socialImage }, injectTo: 'head' },
           )
         }
