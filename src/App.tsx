@@ -7,6 +7,7 @@ import {
 } from "react-router-dom"
 import { useEffect, lazy, Suspense } from "react"
 import { SpeedInsights } from "@vercel/speed-insights/react"
+import { Analytics } from "@vercel/analytics/react"
 import Navigation from "./components/Navigation"
 import BookingNavigation from "./components/BookingNavigation"
 import Footer from "./components/Footer"
@@ -127,6 +128,7 @@ export default function App() {
     <BrowserRouter>
       <Layout />
       <SpeedInsights />
+      <Analytics />
     </BrowserRouter>
   )
 }
